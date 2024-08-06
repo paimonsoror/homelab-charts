@@ -1,0 +1,34 @@
+# library chart values are purely for documentation purposes
+
+argoconfig:
+  application:
+    project: default
+    source:
+      repoURL: 'https://prometheus-community.github.io/helm-charts'
+      targetRevision: 61.7.1
+      helm:
+        values: |-
+          grafana:
+            enabled: true
+            ingress:
+              enabled: true
+              ingressClassName: cilium
+              annotations:
+                ingress.cilium.io/loadbalancer-mode: shared
+                cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
+              hosts:
+                - grafana.homelab
+              tls:
+                - secretName: grafana-tls
+                  hosts:
+                    - grafana.homelab
+      chart: kube-prometheus-stack
+    destination:
+      server: 'https://kubernetes.default.svc'
+      namespace: prometheus
+    syncPolicy:
+      automated: {}
+      syncOptions:
+        - CreateNamespace=true
+        - ServerSideApply=true
+
