@@ -4,4 +4,4 @@ metadata:
   name: testing
   namespace: testing
 spec:
-  {{ .Values.application }}
+  {{ .Values.argoconfig.application }}
