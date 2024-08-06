@@ -1,4 +1,6 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
+metadata: testing
+namespace: testing
 spec:
   {{ .Values.application }}
