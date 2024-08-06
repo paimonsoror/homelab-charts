@@ -4,4 +4,4 @@ metadata:
   name: testing
   namespace: testing
 spec:
-  {{ .Values.argoconfig.application }}
+  {{- toYaml .Values.argoconfig.application | nindent 2 }}
