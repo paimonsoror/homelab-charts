@@ -16,7 +16,7 @@ argoconfig:
                 additionalAnnotations:
                   ingress.cilium.io/loadbalancer-mode: shared
                   cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
-                hostname: vaultwarden.homelab
+                hostname: https://vaultwarden.homelab
                 tlsSecret: vaultwarden-tls
           chart: vaultwarden
         destination:
