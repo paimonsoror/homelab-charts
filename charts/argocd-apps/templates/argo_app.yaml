@@ -2,6 +2,6 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata: 
   name: testing
-  namespace: testing
+  namespace: argocd
 spec:
   {{- toYaml .Values.argoconfig.application | nindent 2 }}
