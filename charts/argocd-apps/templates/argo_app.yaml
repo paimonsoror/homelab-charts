@@ -1,7 +1,9 @@
+{{- range $v := .Values.argoconfig.application }}
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata: 
-  name: testing
+  name: {{$v.name}}
   namespace: argocd
 spec:
-  {{- toYaml .Values.argoconfig.application | nindent 2 }}
+  {{- toYaml $v.spec | nindent 2 }}
+{{- end }}
