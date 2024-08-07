@@ -10,13 +10,14 @@ argoconfig:
           targetRevision: 0.23.1
           helm:
             values: |-
+              domain: "https://vaultwarden.homelab"
               ingress:
                 enabled: true
                 class: cilium
                 additionalAnnotations:
                   ingress.cilium.io/loadbalancer-mode: shared
                   cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
-                hostname: https://vaultwarden.homelab
+                hostname: vaultwarden.homelab
                 tlsSecret: vaultwarden-tls
           chart: vaultwarden
         destination:
