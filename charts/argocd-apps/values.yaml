@@ -18,7 +18,10 @@ argoconfig:
                   ingress.cilium.io/loadbalancer-mode: shared
                   cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
                 hosts:
-                    - grafana.homelab
+                    - host: homeassistant.homelab
+                      paths:
+                        - path: /
+                          pathType: ImplementationSpecific
                 tls:
                   - secretName: homeassistant-tls
                     hosts:
