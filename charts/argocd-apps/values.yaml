@@ -24,6 +24,12 @@ argoconfig:
                     hosts:
                       - homeassistant.homelab
           chart: home-assistant
+        destination:
+          server: 'https://kubernetes.default.svc'
+          namespace: homeassistant
+        syncPolicy:
+          syncOptions:
+            - CreateNamespace=true
     - name: vaultwarden
       spec:
         project: default
