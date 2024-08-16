@@ -27,17 +27,13 @@ argoconfig:
                     hosts:
                       - homeassistant.homelab
 
-              configuration:
-                enabled: true
-                forceInit: false
-                trusted_proxies:
-                  - 0.0.0.0/0
 
           chart: home-assistant
         destination:
           server: 'https://kubernetes.default.svc'
           namespace: homeassistant
         syncPolicy:
+          automated: {}
           syncOptions:
             - CreateNamespace=true
     - name: vaultwarden
