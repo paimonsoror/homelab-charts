@@ -27,6 +27,9 @@ argoconfig:
                     hosts:
                       - homeassistant.homelab
 
+              configuration:
+                enabled: true
+                forceInit: false
 
           chart: home-assistant
         destination:
