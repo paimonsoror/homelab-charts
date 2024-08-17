@@ -34,6 +34,10 @@ argoconfig:
                   - 10.0.0.0/8
                   - 192.0.0.0/8
 
+              persistence:
+                enabled: true
+                size: "10Gi"
+
           chart: home-assistant
         destination:
           server: 'https://kubernetes.default.svc'
