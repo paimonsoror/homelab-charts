@@ -30,6 +30,9 @@ argoconfig:
               configuration:
                 enabled: true
                 forceInit: false
+                trusted_proxies:
+                  - 10.0.0.0/8
+                  - 192.0.0.0/8
 
           chart: home-assistant
         destination:
