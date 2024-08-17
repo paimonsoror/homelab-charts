@@ -16,13 +16,12 @@ argoconfig:
                 className: "cilium"
                 annotations:
                   ingress.cilium.io/loadbalancer-mode: shared
-                  ingress.cilium.io/tls-passthrough: "enabled"
                   cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
                 hosts:
                     - host: homeassistant.homelab
                       paths:
                         - path: /
-                          pathType: ImplementationSpecific
+                          pathType: Prefix
                 tls:
                   - secretName: homeassistant-tls
                     hosts:
