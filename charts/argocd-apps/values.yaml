@@ -11,7 +11,9 @@ argoconfig:
           helm:
             values: |-
               replicaCount: 1
-              
+              service:
+                externalTrafficPolicy: Local
+                
           chart: mosquitto
         destination:
           server: 'https://kubernetes.default.svc'
