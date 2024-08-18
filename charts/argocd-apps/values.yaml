@@ -2,6 +2,24 @@
 
 argoconfig:
   application:
+    - name: mosquitto-mqtt
+      spec:
+        project: default
+        source:
+          repoURL: https://storage.googleapis.com/t3n-helm-charts
+          targetRevision: 2.4.1
+          helm:
+            values: |-
+              replicaCount: 1
+              
+          chart: mosquitto
+        destination:
+          server: 'https://kubernetes.default.svc'
+          namespace: mosquitto-mqtt
+        syncPolicy:
+          automated: {}
+          syncOptions:
+            - CreateNamespace=true
     - name: homeassistant
       spec:
         project: default
