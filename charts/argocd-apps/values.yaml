@@ -2,22 +2,20 @@
 
 argoconfig:
   application:
-    - name: mosquitto-mqtt
+    - name: hivemq-mqtt
       spec:
         project: default
         source:
-          repoURL: https://storage.googleapis.com/t3n-helm-charts
-          targetRevision: 2.4.1
+          repoURL: https://hivemq.github.io/helm-charts
+          targetRevision: 0.2.9
           helm:
             values: |-
               replicaCount: 1
-              service:
-                externalTrafficPolicy: Local
                 
-          chart: mosquitto
+          chart: hivemq-operator
         destination:
           server: 'https://kubernetes.default.svc'
-          namespace: mosquitto-mqtt
+          namespace: hivemq
         syncPolicy:
           automated: {}
           syncOptions:
