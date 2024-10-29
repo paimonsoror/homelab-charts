@@ -2,6 +2,37 @@
 
 argoconfig:
   application:
+    - name: opensearch
+      spec:
+	project: default
+	source:
+	  repoURL: https://opensearch-project.github.io/helm-charts
+	  targetRevision: 2.26.1
+          helm:
+            values: |-
+              ingress:
+                enabled: true
+                className: "cilium"
+                annotations:
+                  ingress.cilium.io/loadbalancer-mode: shared
+                  cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
+                hosts:
+                    - host: opensearch.homelab
+                      paths:
+                        - path: /
+                          pathType: Prefix
+                tls:
+                  - secretName: opensearch-tls
+                    hosts:
+                      - opensearch.homelab
+          chart: opensearch
+        destination:
+	  server: 'https://kubernetes.default.svc'
+          namespace: opensearch
+        syncPolicy:
+          automated: {}
+          syncOptions:
+            - CreateNamespace=true
     - name: hivemq-mqtt-platform
       spec:
         project: default
