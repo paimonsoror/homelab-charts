@@ -12,7 +12,7 @@ argoconfig:
             values: |-
               extraEnvs: 
                 - name: OPENSEARCH_INITIAL_ADMIN_PASSWORD
-                  value: abc123
+                  value: abcdef123456
               ingress:
                 enabled: true
                 ingressClassName: "cilium"
