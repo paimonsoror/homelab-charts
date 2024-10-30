@@ -4,10 +4,10 @@ argoconfig:
   application:
     - name: opensearch
       spec:
-	project: default
-	source:
-	  repoURL: https://opensearch-project.github.io/helm-charts
-	  targetRevision: 2.26.1
+	      project: default
+	      source:
+	        repoURL: https://opensearch-project.github.io/helm-charts
+	        targetRevision: 2.26.1
           helm:
             values: |-
               ingress:
@@ -27,7 +27,7 @@ argoconfig:
                       - opensearch.homelab
           chart: opensearch
         destination:
-	  server: 'https://kubernetes.default.svc'
+	        server: 'https://kubernetes.default.svc'
           namespace: opensearch
         syncPolicy:
           automated: {}
