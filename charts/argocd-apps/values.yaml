@@ -10,6 +10,9 @@ argoconfig:
           targetRevision: 2.26.1
           helm:
             values: |-
+              extraEnvs: 
+                - name: OPENSEARCH_INITIAL_ADMIN_PASSWORD
+                  value: abc123
               ingress:
                 enabled: true
                 ingressClassName: "cilium"
