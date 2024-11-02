@@ -17,9 +17,10 @@ argoconfig:
                 annotations:
                   ingress.cilium.io/loadbalancer-mode: shared
                   cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
-                path: /
                 hosts:
-                    - opensearch-dash.homelab
+                    - host: opensearch-dash.homelab
+                      paths:
+                        - path: /
                 tls:
                   - secretName: opensearch-dash-tls
                     hosts:
