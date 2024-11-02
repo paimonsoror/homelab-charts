@@ -3,6 +3,16 @@ entries:
   homelab-charts:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2024-11-02T20:29:54.290966777Z"
+    description: A Helm chart for Kubernetes
+    digest: fe6ea95e92e61d76b492b10b131e238f466b7018fea1e9bb7f50b7c99fa7a835
+    name: homelab-charts
+    type: application
+    urls:
+    - https://github.com/paimonsoror/homelab-charts/releases/download/homelab-charts-0.1.42/homelab-charts-0.1.42.tgz
+    version: 0.1.42
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2024-11-02T20:27:37.634270826Z"
     description: A Helm chart for Kubernetes
     digest: 7597b1f8248822bb47e179b989f256e644d01957fa202ec702e7807c93eac34f
@@ -391,4 +401,4 @@ entries:
     urls:
     - https://github.com/paimonsoror/homelab-charts/releases/download/homelab-charts-0.1.0/homelab-charts-0.1.0.tgz
     version: 0.1.0
-generated: "2024-11-02T20:27:37.634647914Z"
+generated: "2024-11-02T20:29:54.291328593Z"
