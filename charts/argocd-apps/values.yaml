@@ -10,7 +10,6 @@ argoconfig:
           targetRevision: 2.24.1
           helm:
             values: |-
-              opensearchHosts: "https://opensearch.homelab"
               ingress:
                 enabled: true
                 ingressClassName: "cilium"
