@@ -7,7 +7,7 @@ argoconfig:
         project: default
         source:
           repoURL: https://opensearch-project.github.io/helm-charts
-          targetRevision: 2.17.1
+          targetRevision: 2.24.1
           helm:
             values: |-
               opensearchHosts: "https://opensearch.homelab"
