@@ -15,7 +15,7 @@ argoconfig:
                 - name: OPENSEARCH_INITIAL_ADMIN_PASSWORD
                   value: Th1s1sS3cure
                 - name: DISABLE_INSTALL_DEMO_CONFIG
-                  value: true
+                  value: "true"
               ingress:
                 enabled: true
                 ingressClassName: "cilium"
