@@ -10,10 +10,10 @@ argoconfig:
           targetRevision: 2.26.1
           helm:
             values: |-
-              # secretMounts:
-              #  - name: opensearch-tls
-              #    secretName: opensearch-tls
-              #    path: /usr/share/opensearch/config/certs
+              secretMounts:
+                - name: opensearch-tls
+                  secretName: opensearch-tls
+                  path: /usr/share/opensearch/config/certs
               persistence:
                 enabled: false
               extraEnvs: 
