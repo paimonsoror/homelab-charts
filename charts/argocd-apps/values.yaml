@@ -21,6 +21,9 @@ argoconfig:
                     - host: opensearch-dash.homelab
                       paths:
                         - path: /
+                          backend:
+                            serviceName: ""
+                            servicePort: ""
                 tls:
                   - secretName: opensearch-dash-tls
                     hosts:
