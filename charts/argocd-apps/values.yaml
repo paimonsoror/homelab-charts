@@ -68,6 +68,7 @@ argoconfig:
                   ######## End OpenSearch Security Demo Configuration ########
               persistence:
                 enabled: false
+              singleNode: true
               extraEnvs: 
                 - name: OPENSEARCH_INITIAL_ADMIN_PASSWORD
                   value: Th1s1sS3cure
