@@ -2,6 +2,41 @@
 
 argoconfig:
   application:
+    - name: immich
+      spec:
+        project: default
+        source:
+          repoURL: https://immich-app.github.io/immich-charts
+          targetRevision: 0.8.4
+          helm:
+            values: |-
+              server:
+                enabled: true
+                image:
+                  repository: ghcr.io/immich-app/immich-server
+                  pullPolicy: IfNotPresent
+                ingress:
+                  main:
+                    enabled: true
+                    annotations:
+                      ingress.cilium.io/loadbalancer-mode: shared
+                      cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
+                    hosts:
+                      - host: immich.homelab
+                        paths:
+                          - path: "/"
+                    tls: 
+                      - secretName: immich-tls
+                        hosts:
+                          - immich.homelab
+          chart: immich
+        destination:
+          server: 'https://kubernetes.default.svc'
+          namespace: immich
+        syncPolicy:
+          automated: {}
+          syncOptions:
+            - CreateNamespace=true
     - name: opensearch-dashboards
       spec:
         project: default
