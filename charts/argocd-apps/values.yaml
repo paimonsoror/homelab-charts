@@ -10,6 +10,12 @@ argoconfig:
           targetRevision: 0.8.4
           helm:
             values: |-
+              immich:
+                metrics:
+                  enabled: true
+                persistence:
+                  library:
+                    existingClaim: immich-pvc
               server:
                 enabled: true
                 image:
