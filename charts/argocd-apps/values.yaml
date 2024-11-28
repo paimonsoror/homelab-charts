@@ -16,6 +16,7 @@ argoconfig:
           automated: {}
           syncOptions:
             - CreateNamespace=true
+            - ServerSideApply=true
     - name: immich
       spec:
         project: default
