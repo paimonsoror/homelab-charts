@@ -20,6 +20,13 @@ argoconfig:
                 enabled: true
               redis:
                 enabled: true
+                resources:
+                  requests:
+                    cpu: 200m
+                    memory: 512Mi
+                  limits:
+                    cpu: 400m
+                    memory: 1024Mi
               server:
                 enabled: true
                 image:
