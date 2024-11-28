@@ -2,6 +2,20 @@
 
 argoconfig:
   application:
+    - name: fluentbit
+      spec:
+        project: default
+        source:
+          repoURL: https://fluent.github.io/helm-charts
+          targetRevision: 3.2.0
+          chart: fluent-operator
+        destination:
+          server: 'https://kubernetes.default.svc'
+          namespace: fluent
+        syncPolicy:
+          automated: {}
+          syncOptions:
+            - CreateNamespace=true
     - name: immich
       spec:
         project: default
