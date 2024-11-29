@@ -3,6 +3,7 @@
 argoconfig:
   application:
     - name: fluentbit
+      enabled: false
       spec:
         project: default
         source:
@@ -99,6 +100,7 @@ argoconfig:
           syncOptions:
             - CreateNamespace=true
     - name: opensearch-dashboards
+      enabled: false
       spec:
         project: default
         source:
@@ -132,6 +134,7 @@ argoconfig:
           syncOptions:
             - CreateNamespace=true
     - name: opensearch
+      enabled: false
       spec:
         project: default
         source:
