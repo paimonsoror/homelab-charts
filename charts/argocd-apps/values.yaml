@@ -23,6 +23,16 @@ argoconfig:
                     enableTLS: true
                     tls:
                       verify: false
+                    httpUser: 
+                      valueFrom: 
+                        secretKeyRef:
+                          name: opensearchpass
+                          key: username
+                    httpPassword:
+                      valueFrom: 
+                        secretKeyRef:
+                          name: opensearchpass
+                          key: password
           chart: fluent-operator
         destination:
           server: 'https://kubernetes.default.svc'
