@@ -14,7 +14,7 @@ argoconfig:
                 output:
                   es:
                     enable: true
-                    host: opensearch-cluster-masters
+                    host: opensearch-cluster-master
                     port: 9200
                     generateID: true
                     logstashPrefix: fluent-log-fb-only
