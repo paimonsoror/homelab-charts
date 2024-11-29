@@ -319,6 +319,8 @@ argoconfig:
           helm:
             values: |-
               domain: "https://vaultwarden.homelab"
+              storage:
+                existingVolumeClaim: "vaultwarden-pvc"
               ingress:
                 enabled: true
                 class: cilium
