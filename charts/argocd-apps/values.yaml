@@ -46,6 +46,7 @@ argoconfig:
             - CreateNamespace=true
             - ServerSideApply=true
     - name: immich
+      enabled: true
       spec:
         project: default
         source:
@@ -226,6 +227,7 @@ argoconfig:
           syncOptions:
             - CreateNamespace=true
     - name: hivemq-mqtt-platform
+      enabled: true
       spec:
         project: default
         source:
@@ -243,6 +245,7 @@ argoconfig:
           syncOptions:
             - CreateNamespace=true
     - name: hivemq-mqtt-operator
+      enabled: true
       spec:
         project: default
         source:
@@ -261,6 +264,7 @@ argoconfig:
           syncOptions:
             - CreateNamespace=true
     - name: homeassistant
+      enabled: true
       spec:
         project: default
         source:
@@ -305,6 +309,7 @@ argoconfig:
           syncOptions:
             - CreateNamespace=true
     - name: vaultwarden
+      enabled: true
       spec:
         project: default
         source:
@@ -329,6 +334,7 @@ argoconfig:
           syncOptions:
             - CreateNamespace=true
     - name: prometheus
+      enabled: true
       spec:
         project: default
         source:
