@@ -22,6 +22,7 @@ argoconfig:
                     timeKey: "@timestamp"
                     enableTLS: true
                     suppressTypeName: "On"
+                    index: "fluent-bit"
                     tls:
                       verify: false
                     httpUser: 
