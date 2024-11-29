@@ -20,6 +20,7 @@ argoconfig:
                     logstashPrefix: fluent-log-fb-only
                     logstashFormat: true
                     timeKey: "@timestamp"
+                    enableTLS: true
                     tls:
                       verify: false
           chart: fluent-operator
