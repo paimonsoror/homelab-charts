@@ -10,7 +10,7 @@ argoconfig:
           targetRevision: 3.2.0
           helm:
             values: |-
-              operator:
+              fluentbit:
                 output:
                   es:
                     enable: true
