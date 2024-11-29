@@ -318,9 +318,6 @@ argoconfig:
           helm:
             values: |-
               domain: "https://vaultwarden.homelab"
-              data:
-                name: "vaultwarden-pvc"
-                size: "15Gi"
               ingress:
                 enabled: true
                 class: cilium
