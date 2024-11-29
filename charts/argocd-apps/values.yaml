@@ -313,8 +313,9 @@ argoconfig:
       spec:
         project: default
         source:
-          repoURL: 'https://guerzon.github.io/vaultwarden'
-          targetRevision: 0.30.1
+          repoURL: 'https://github.com/paimonsoror/vaultwarden'
+          targetRevision: main
+          path: charts/vaultwarden
           helm:
             values: |-
               domain: "https://vaultwarden.homelab"
