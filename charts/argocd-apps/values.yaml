@@ -313,7 +313,7 @@ argoconfig:
       spec:
         project: default
         source:
-          repoURL: 'https://github.com/paimonsoror/vaultwarden'
+          repoURL: 'https://github.com/paimonsoror/vaultwarden.git'
           targetRevision: main
           path: charts/vaultwarden
           helm:
@@ -327,7 +327,6 @@ argoconfig:
                   cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
                 hostname: vaultwarden.homelab
                 tlsSecret: vaultwarden-tls
-          chart: vaultwarden
         destination:
           server: 'https://kubernetes.default.svc'
           namespace: vaultwarden
