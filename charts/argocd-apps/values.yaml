@@ -21,6 +21,7 @@ argoconfig:
                     logstashFormat: true
                     timeKey: "@timestamp"
                     enableTLS: true
+                    suppressTypeName: "On"
                     tls:
                       verify: false
                     httpUser: 
