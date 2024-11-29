@@ -8,6 +8,20 @@ argoconfig:
         source:
           repoURL: https://fluent.github.io/helm-charts
           targetRevision: 3.2.0
+          helm:
+            values: |-
+              operator:
+                output:
+                  es:
+                    enable: true
+                    host: opensearch-cluster-masters
+                    port: 9200
+                    generateID: true
+                    logstashPrefix: fluent-log-fb-only
+                    logstashFormat: true
+                    timeKey: "@timestamp"
+                    tls:
+                      verify: false
           chart: fluent-operator
         destination:
           server: 'https://kubernetes.default.svc'
