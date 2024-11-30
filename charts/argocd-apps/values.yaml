@@ -321,7 +321,7 @@ argoconfig:
               domain: "https://vaultwarden.homelab"
               storage:
                 existingVolumeClaim: 
-                  claimName: "vaultwarden-pvc"
+                  claimName: vaultwarden-pvc
               ingress:
                 enabled: true
                 class: cilium
