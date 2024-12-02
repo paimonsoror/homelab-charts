@@ -54,6 +54,8 @@ argoconfig:
           targetRevision: 0.8.4
           helm:
             values: |-
+              image:
+                tag: v1.121.0
               immich:
                 metrics:
                   enabled: true
