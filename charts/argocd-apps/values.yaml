@@ -344,7 +344,7 @@ argoconfig:
         project: default
         source:
           repoURL: https://grafana.github.io/helm-charts
-          targetRevision: 2.10.2
+          targetRevision: 6.23.0
           helm:
             values: |-
 
