@@ -50,12 +50,6 @@ argoconfig:
                         }
                       }
                 
-                      # Redirect HTTP to HTTPS
-                      $HTTP["scheme"] == "http" {
-                        $HTTP["host"] =~ ".*" {
-                          url.redirect = (".*" => "https://%0$0")
-                        }
-                      }
           chart: pihole
         destination:
           server: 'https://kubernetes.default.svc'
