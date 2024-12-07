@@ -347,15 +347,8 @@ argoconfig:
           targetRevision: 2.10.2
           helm:
             values: |-
-              loki:
-                enabled: true
-                url: http://{{(include "loki.serviceName" .)}}.loki.svc.cluster.local:{{ .Values.loki.service.port }}
-              fluent-bit:
-                enabled: true
-              promtail:
-                enablbed: true
 
-          chart: loki-stack
+          chart: loki
         destination:
           server: 'https://kubernetes.default.svc'
           namespace: loki
