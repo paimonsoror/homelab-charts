@@ -39,7 +39,7 @@ argoconfig:
                 
                         # Enable the SSL engine with a cert, only for this specific host
                         $SERVER["socket"] == ":443" {
-                          ssl.engine = "enable"
+                          ssl.engine = "disable"
                           ssl.pemfile = "/etc/ssl/lighttpd-private/tls.crt"
                           ssl.privkey = "/etc/ssl/lighttpd-private/tls.key"
                           ssl.ca-file = "/etc/ssl/lighttpd-private/ca.crt"
