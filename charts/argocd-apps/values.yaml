@@ -2,6 +2,37 @@
 
 argoconfig:
   application:
+    - name: pihole
+      enabled: true 
+      spec:
+        project: default
+        source: 
+          repoURL: https://mojo2600.github.io/pihole-kubernetes
+          targetRevision: 2.27.0
+          helm:
+            values: |-
+              ingress:
+                enabled: true
+                ingressClassName: cilium
+                annotations:
+                  ingress.cilium.io/loadbalancer-mode: shared
+                  cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
+                hosts:
+                  - pihole.homelab
+                path: /
+                tls: 
+                  - secretName: pihole-tls
+                    hosts:
+                      - pihole.homelab
+          chart: pihole
+        destination:
+          server: 'https://kubernetes.default.svc'
+          namespace: pihole
+        syncPolicy:
+          automated: {}
+          syncOptions:
+            - CreateNamespace=true
+            - ServerSideApply=true
     - name: fluentbit
       enabled: false
       spec:
