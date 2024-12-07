@@ -338,6 +338,28 @@ argoconfig:
         syncPolicy:
           syncOptions:
             - CreateNamespace=true
+    - name: loki
+      enabled: true
+      spec:
+        project: default
+        source:
+          repoURL: https://grafana.github.io/helm-charts
+          targetRevision:
+          helm:
+            values: |-
+              fluent-bit:
+                enabled: true
+              promtail:
+                enablbed: true
+
+          chart: loki-stack
+        destination:
+          server: 'https://kubernetes.default.svc'
+          namespace: loki
+        syncPolicy:
+          syncOptions:
+            - CreateNamespace=true
+            - ServerSideApply=true
     - name: prometheus
       enabled: true
       spec:
