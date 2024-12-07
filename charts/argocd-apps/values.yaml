@@ -3,7 +3,7 @@
 argoconfig:
   application:
     - name: pihole
-      enabled: false 
+      enabled: true 
       spec:
         project: default
         source: 
