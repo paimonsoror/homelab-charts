@@ -16,10 +16,12 @@ argoconfig:
                 annotations:             
                   io.cilium/lb-ipam-ips: 192.168.5.102
                   io.cilium/lb-ipam-sharing-key: pi-hole
+                type: LoadBalancer
               serviceDhcp:
                 annotations:             
                   io.cilium/lb-ipam-ips: 192.168.5.102
                   io.cilium/lb-ipam-sharing-key: pi-hole
+                type: LoadBalancer
               serviceWeb:
                 annotations:             
                   io.cilium/lb-ipam-ips: 192.168.5.102
@@ -28,11 +30,11 @@ argoconfig:
                   enabled: true
                 https:
                   enabled: false
+                type: LoadBalancer
               ingress:
-                enabled: true
+                enabled: false
+                ingressClassName: cilium
                 annotations:
-                  io.cilium/lb-ipam-ips: 192.168.5.102
-                  io.cilium/lb-ipam-sharing-key: pi-hole
                   ingress.cilium.io/loadbalancer-mode: dedicated
                   cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
                 hosts:
