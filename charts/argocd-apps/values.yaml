@@ -48,6 +48,9 @@ argoconfig:
                     hosts:
                       - pihole.homelab
               dnsmasq:
+                additionalDnsEntries:
+                  - address=/pihole.homelab/192.168.5.102
+                  - address=/pihole.pi/192.168.3.2
                 additionalHostsEntries:
                   - 127.0.0.1 pihole.homelab
                 
