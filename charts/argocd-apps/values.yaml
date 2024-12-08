@@ -15,7 +15,6 @@ argoconfig:
               serviceWeb:
                 http:
                   enabled: true
-                  port: 2310
                 https:
                   enabled: false
               ingress:
