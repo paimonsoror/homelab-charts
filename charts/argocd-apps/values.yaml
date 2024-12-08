@@ -14,15 +14,15 @@ argoconfig:
               virtualHost: pihole.homelab
               serviceDns:
                 annotations:             
-                  io.cilium/lb-ipam-ips: 192.168.5.101
+                  io.cilium/lb-ipam-ips: 192.168.5.102
                   io.cilium/lb-ipam-sharing-key: pi-hole
               serviceDhcp:
                 annotations:             
-                  io.cilium/lb-ipam-ips: 192.168.5.101
+                  io.cilium/lb-ipam-ips: 192.168.5.102
                   io.cilium/lb-ipam-sharing-key: pi-hole
               serviceWeb:
                 annotations:             
-                  io.cilium/lb-ipam-ips: 192.168.5.101
+                  io.cilium/lb-ipam-ips: 192.168.5.102
                   io.cilium/lb-ipam-sharing-key: pi-hole
                 http:
                   enabled: true
@@ -32,6 +32,8 @@ argoconfig:
                 enabled: true
                 ingressClassName: cilium
                 annotations:
+                  io.cilium/lb-ipam-ips: 192.168.5.102
+                  io.cilium/lb-ipam-sharing-key: pi-hole
                   ingress.cilium.io/loadbalancer-mode: dedicated
                   cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
                 hosts:
