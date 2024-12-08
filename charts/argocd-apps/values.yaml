@@ -32,7 +32,7 @@ argoconfig:
                       - pihole.homelab
               dnsmasq:
                 additionalHostsEntries:
-                  - 192.168.5.100 pihole.homelab
+                  - 127.0.0.1 pihole.homelab
                 
           chart: pihole
         destination:
