@@ -12,7 +12,12 @@ argoconfig:
           helm:
             values: |-
               virtualHost: pihole.homelab
-              webHttp: "2310"
+              serviceWeb:
+                http:
+                  enabled: true
+                  port: 2310
+                https:
+                  enabled: false
               ingress:
                 enabled: true
                 ingressClassName: cilium
