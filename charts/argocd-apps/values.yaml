@@ -53,6 +53,8 @@ argoconfig:
                   - address=/pihole.pi/192.168.3.2
                 additionalHostsEntries:
                   - 127.0.0.1 pihole.homelab
+              persistentVolumeClaim:
+                enabled: true
                 
           chart: pihole
         destination:
