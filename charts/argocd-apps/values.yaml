@@ -11,7 +11,7 @@ argoconfig:
           targetRevision: 2.27.0
           helm:
             values: |-
-              virtualHost: pihole.homelab
+              virtualHost: cilium.homelab
               ingress:
                 enabled: true
                 ingressClassName: cilium
