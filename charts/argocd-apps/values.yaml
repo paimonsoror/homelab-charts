@@ -38,6 +38,7 @@ argoconfig:
                 hosts:
                   - pihole.homelab
                 path: /
+                pathType: Prefix
                 tls: 
                   - secretName: pihole-tls
                     hosts:
