@@ -13,12 +13,12 @@ argoconfig:
             values: |-
               ingress:
                 enabled: true
+                ingressClassName: cilium
                 annotations:
-                  kubernetes.io/ingress.class: cilium
                   ingress.cilium.io/loadbalancer-mode: dedicated
                   cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
                 hosts:
-                  host: portainer.homelab
+                  - host: portainer.homelab
                 tls: 
                   - secretName: pihole-tls
                     hosts:
