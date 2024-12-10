@@ -2,6 +2,37 @@
 
 argoconfig:
   application:
+    - name: portainer
+      enabled: true
+      spec:
+        project: default
+        source:
+          repoURL: https://portainer.github.io/k8s/
+          targetRevision: 1.0.58
+          helm:
+            values: |-
+              ingress:
+                enabled: true
+                annotations:
+                  kubernetes.io/ingress.class: cilium
+                  ingress.cilium.io/loadbalancer-mode: dedicated
+                  cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
+                hosts:
+                  host: portainer.homelab
+                tls: 
+                  - secretName: pihole-tls
+                    hosts:
+                      - pihole.homelab
+
+          chart: portainer
+        destination:
+          server: 'https://kubernetes.default.svc'
+          namespace: portainer
+        syncPolicy:
+          automated: {}
+          syncOptions:
+            - CreateNamespace=true
+            - ServerSideApply=true
     - name: pihole
       enabled: true 
       spec:
