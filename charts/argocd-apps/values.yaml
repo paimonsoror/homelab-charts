@@ -22,9 +22,9 @@ argoconfig:
                     paths:
                       - path: "/"
                 tls: 
-                  - secretName: pihole-tls
+                  - secretName: portainer-tls
                     hosts:
-                      - pihole.homelab
+                      - portainer.homelab
 
           chart: portainer
         destination:
