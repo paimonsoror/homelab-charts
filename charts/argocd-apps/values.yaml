@@ -19,6 +19,8 @@ argoconfig:
                   cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
                 hosts:
                   - host: portainer.homelab
+                    paths:
+                      - path: "/"
                 tls: 
                   - secretName: pihole-tls
                     hosts:
