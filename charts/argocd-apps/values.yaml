@@ -456,7 +456,7 @@ argoconfig:
                   - secretName: prompush-tls
                     hosts:
                       - prompushgtwy.homelab
-          chart: kube-prometheus-stack
+          chart: prometheus-pushgateway
         destination:
           server: 'https://kubernetes.default.svc'
           namespace: prometheus
