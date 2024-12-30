@@ -16,6 +16,13 @@ spec:
   - host: graphite-exporter.homelab 
     http:
       paths:
+      - path: /ui
+        pathType: Prefix
+        backend:
+          service:
+            name: graphite-exporter 
+            port:
+              number: 9108
       - path: /
         pathType: Prefix
         backend:
