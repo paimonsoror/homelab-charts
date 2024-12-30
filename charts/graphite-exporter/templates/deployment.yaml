@@ -25,13 +25,10 @@ spec:
               mountPath: /config
           ports:
             - containerPort: 9108
-              name: eight
               protocol: TCP
             - containerPort: 9109
-              name: data
               protocol: TCP
             - containerPort: 9109
-              name: data
               protocol: UDP
       volumes:
         - name: config
