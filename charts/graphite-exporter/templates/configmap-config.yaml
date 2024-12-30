@@ -4,5 +4,4 @@ metadata:
     name: graphite-config
     namespace: prometheus
 data:
-    config.conf: {{ range .Files.Lines "config.conf" }}
-        {{ . }}{{ end }}
+    config.conf: | {{- tpl (.Files.Get "config.conf") $ | nindent 4 }}
