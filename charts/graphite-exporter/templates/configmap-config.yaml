@@ -5,3 +5,4 @@ metadata:
     namespace: prometheus
 data:
     config.conf: |
+    {{ .Files.Get "config.conf" }}
