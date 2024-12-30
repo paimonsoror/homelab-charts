@@ -11,6 +11,6 @@ spec:
     app.kubernetes.io/component: graphite-exporter
   ports:
     - name: data
-      port: 9109
+      port: 9108
       protocol: TCP
-      targetPort: 9109
+      targetPort: 9108
