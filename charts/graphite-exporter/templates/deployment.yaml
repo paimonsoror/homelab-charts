@@ -19,6 +19,16 @@ spec:
         - image: {{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           name: graphite-exporter
+          volumeMounts:
+            - name: config
+              mountPath: /config
+          volumes:
+            - name: config
+              configMap:
+                name: graphite-config
+                items:
+                  - key: config.conf
+                    path: /conf/config.conf
           ports:
             - containerPort: 9108
               name: eight
