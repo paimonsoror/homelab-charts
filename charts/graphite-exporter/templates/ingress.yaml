@@ -22,4 +22,4 @@ spec:
           service:
             name: graphite-exporter 
             port:
-              number: 9108
+              number: 9109
