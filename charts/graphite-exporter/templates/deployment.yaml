@@ -24,8 +24,8 @@ spec:
               name: eight
               protocol: TCP
             - containerPort: 9109
-              name: nine
+              name: data
               protocol: TCP
             - containerPort: 9109
-              name: nineu
+              name: data
               protocol: UDP

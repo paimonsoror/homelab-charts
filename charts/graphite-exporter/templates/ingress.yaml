@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: graphite-exporter 
+  namespace: prometheus 
+  annotations:
+    cert-manager.io/cluster-issuer: selfsigned-cluster-issuer 
+    ingress.kubernetes.io/rewrite-target: /
+    ingress.kubernetes.io/ssl-redirect: 'true'
+spec:
+  ingressClassName: default
+  tls:
+    - secretName: graphite-exporter 
+      hosts:
+        - graphite-exporter.homelab
+  rules:
+  - host: graphite-exporter.homelab 
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: graphite-exporter 
+            port:
+              name: data
