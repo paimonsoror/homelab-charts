@@ -38,4 +38,4 @@ spec:
             name: graphite-config
             items:
               - key: config.conf
-                path: /conf/config.conf
+                path: config.conf
