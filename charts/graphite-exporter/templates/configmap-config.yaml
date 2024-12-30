@@ -4,5 +4,5 @@ metadata:
     name: graphite-config
     namespace: prometheus
 data:
-    config.conf: |-
-    {{ .Files.Get "config.conf" }}
+    config.conf: {{ range .Files.Lines "config.conf" }}
+        {{ . }}{{ end }}
