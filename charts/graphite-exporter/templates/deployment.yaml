@@ -22,13 +22,6 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /config
-          volumes:
-            - name: config
-              configMap:
-                name: graphite-config
-                items:
-                  - key: config.conf
-                    path: /conf/config.conf
           ports:
             - containerPort: 9108
               name: eight
@@ -39,3 +32,10 @@ spec:
             - containerPort: 9109
               name: data
               protocol: UDP
+      volumes:
+        - name: config
+          configMap:
+            name: graphite-config
+            items:
+              - key: config.conf
+                path: /conf/config.conf
