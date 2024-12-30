@@ -1,0 +1,18 @@
+## @section Kubernetes settings
+##
+image:
+  ## @param image.registry Vaultwarden image registry
+  ##
+  registry: docker.io
+  ## @param image.repository Vaultwarden image repository
+  ##
+  repository: prom/graphite-exporter
+  ##
+  ## @param image.tag Vaultwarden image tag
+  ## Ref: https://hub.docker.com/r/vaultwarden/server/tags
+  ##
+  tag: "v0.16.0"
+  ## @param image.pullPolicy Vaultwarden image pull policy
+  ## ref: https://kubernetes.io/docs/user-guide/images/#pre-pulling-images
+  ##
+  pullPolicy: IfNotPresent
