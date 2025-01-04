@@ -64,6 +64,10 @@ argoconfig:
           targetRevision: 2.27.0
           helm:
             values: |-
+              admin:
+                enabled: true
+                existingSecret: pihole-password
+                passwordKey: "password"
               virtualHost: pihole.homelab
               DNS1: "1.1.1.1"
               DNS2: "1.0.0.1"
