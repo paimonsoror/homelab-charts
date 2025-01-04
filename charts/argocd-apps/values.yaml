@@ -2,6 +2,26 @@
 
 argoconfig:
   application:
+    - name: nextcloud
+      enabled: true
+      spec:
+        project: default
+        source:
+          repoURL: https://nextcloud.github.io/helm/
+          targetRevision: 6.5.2
+          helm:
+            values: |-
+
+          chart: nextcloud
+        destination:
+          server: 'https://kubernetes.default.svc'
+          namespace: nextcloud
+        syncPolicy:
+          automated: {}
+          syncOptions:
+            - CreateNamespace=true
+            - ServerSideApply=true
+
     - name: portainer
       enabled: true
       spec:
