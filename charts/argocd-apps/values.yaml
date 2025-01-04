@@ -114,11 +114,12 @@ argoconfig:
                 enabled: true
                 existingClaim: pihole-pvc
               extraVolumes:
-                custom-dnsmasq:
-                  mountPath: /etc/dnsmasq.d
-                  subPath: ./dnsmasq
-
-                
+                custom-dnsmasq-dir:
+                  persistentVolumeClaim:
+                    claimName: pihole-dnsmasq-pvc
+              extraVolumeMounts:
+                custom-dnsmasq-dir:
+                  mountPath: /etc/dnsmasq.d    
           chart: pihole
         destination:
           server: 'https://kubernetes.default.svc'
