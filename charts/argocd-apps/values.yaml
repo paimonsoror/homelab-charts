@@ -113,6 +113,11 @@ argoconfig:
               persistentVolumeClaim:
                 enabled: true
                 existingClaim: pihole-pvc
+              extraVolumeMounts:
+                external-conf:
+                  mountPath: /etc/dnsmasq.d
+                  subPath: /etc/pihole/dnsmasq
+
                 
           chart: pihole
         destination:
