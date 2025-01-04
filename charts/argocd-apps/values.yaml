@@ -3,7 +3,7 @@
 argoconfig:
   application:
     - name: nextcloud
-      enabled: true
+      enabled: false
       spec:
         project: default
         source:
