@@ -112,6 +112,7 @@ argoconfig:
                   - 127.0.0.1 pihole.homelab
               persistentVolumeClaim:
                 enabled: true
+                existingClaim: pihole-pvc
                 
           chart: pihole
         destination:
