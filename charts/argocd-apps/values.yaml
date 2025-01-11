@@ -182,7 +182,7 @@ argoconfig:
           helm:
             values: |-
               image:
-                tag: v1.123.0
+                tag: v1.124.2
               immich:
                 metrics:
                   enabled: true
