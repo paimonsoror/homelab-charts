@@ -428,6 +428,7 @@ argoconfig:
               persistence:
                 enabled: true
                 size: "10Gi"
+                existingVolume: homeassistant-pv
 
           chart: home-assistant
         destination:
