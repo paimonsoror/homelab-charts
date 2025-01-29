@@ -404,7 +404,7 @@ argoconfig:
         project: default
         source:
           repoURL: 'https://pajikos.github.io/home-assistant-helm-chart'
-          targetRevision: 0.2.72
+          targetRevision: 0.2.102
           helm:
             values: |-
               ingress:
