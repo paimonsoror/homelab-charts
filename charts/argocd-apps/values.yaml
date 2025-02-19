@@ -141,7 +141,6 @@ argoconfig:
                 readiness:
                   port: https
                   scheme: HTTPS
-          chart: pihole
         destination:
           server: 'https://kubernetes.default.svc'
           namespace: pihole
