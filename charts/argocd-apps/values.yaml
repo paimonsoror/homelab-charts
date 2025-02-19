@@ -126,22 +126,15 @@ argoconfig:
                 additionalHostsEntries:
                   - 127.0.0.1 pihole.homelab
               persistentVolumeClaim:
-                enabled: true
+                enabled: false
                 existingClaim: pihole-pvc
-              extraVolumes:
-                custom-dnsmasq-dir:
-                  persistentVolumeClaim:
-                    claimName: pihole-dnsmasq-pvc
+              #extraVolumes:
+              #  custom-dnsmasq-dir:
+              #    persistentVolumeClaim:
+              #      claimName: pihole-dnsmasq-pvc
               extraVolumeMounts:
                 custom-dnsmasq-dir:
                   mountPath: /etc/dnsmasq.d   
-              probes:
-                liveness:
-                  port: https
-                  scheme: HTTPS 
-                readiness:
-                  port: https
-                  scheme: HTTPS
         destination:
           server: 'https://kubernetes.default.svc'
           namespace: pihole
