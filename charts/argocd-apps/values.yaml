@@ -130,7 +130,14 @@ argoconfig:
                     claimName: pihole-dnsmasq-pvc
               extraVolumeMounts:
                 custom-dnsmasq-dir:
-                  mountPath: /etc/dnsmasq.d    
+                  mountPath: /etc/dnsmasq.d   
+              probes:
+                liveness:
+                  port: https
+                  scheme: HTTPS 
+                readiness:
+                  port: https
+                  scheme: HTTPS
           chart: pihole
         destination:
           server: 'https://kubernetes.default.svc'
