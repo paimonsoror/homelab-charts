@@ -61,7 +61,7 @@ argoconfig:
           syncOptions:
             - CreateNamespace=true
             - ServerSideApply=true
-    - name: pihole_v6
+    - name: pihole6
       enabled: true 
       spec:
         project: default
