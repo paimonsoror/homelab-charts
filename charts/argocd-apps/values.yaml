@@ -66,19 +66,19 @@ argoconfig:
       spec:
         project: default
         source: 
-          repoURL: https://mojo2600.github.io/pihole-kubernetes
-          targetRevision: 2.27.0
-          chart: pihole
-          #repoURL: https://github.com/paimonsoror/pihole-kubernetes.git
-          #path: "charts/pihole"
-          #targetRevision: HEAD
+          #repoURL: https://mojo2600.github.io/pihole-kubernetes
+          #targetRevision: 2.27.0
+          #chart: pihole
+          repoURL: https://github.com/paimonsoror/pihole-kubernetes.git
+          path: "charts/pihole"
+          targetRevision: HEAD
           helm:
             values: |-
               image:
                 # -- the repostory to pull the image from
                 repository: "pihole/pihole"
                 # -- the docker tag, if left empty it will get it from the chart's appVersion
-                #tag: "latest"
+                tag: "latest"
               admin:
                 enabled: true
                 existingSecret: pihole-password
@@ -135,13 +135,13 @@ argoconfig:
               extraVolumeMounts:
                 custom-dnsmasq-dir:
                   mountPath: /etc/dnsmasq.d   
-              #probes:
-              #  liveness:
-              #    port: https
-              #    scheme: HTTPS 
-              #  readiness:
-              #    port: https
-              #    scheme: HTTPS
+              probes:
+                liveness:
+                  port: https
+                  scheme: HTTPS 
+                readiness:
+                  port: https
+                  scheme: HTTPS
         destination:
           server: 'https://kubernetes.default.svc'
           namespace: pihole
