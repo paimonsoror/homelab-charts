@@ -66,11 +66,8 @@ argoconfig:
       spec:
         project: default
         source: 
-          #repoURL: https://mojo2600.github.io/pihole-kubernetes
-          #targetRevision: 2.27.0
-          repoURL: https://github.com/paimonsoror/pihole-kubernetes
-          path: "charts/pihole"
-          targetRevision: HEAD
+          repoURL: https://mojo2600.github.io/pihole-kubernetes
+          targetRevision: 2.27.0
           helm:
             values: |-
               image:
