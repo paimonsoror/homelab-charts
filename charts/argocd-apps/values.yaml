@@ -102,7 +102,7 @@ argoconfig:
                 http:
                   enabled: true
                 https:
-                  enabled: false
+                  enabled: true
                 type: LoadBalancer
               ingress:
                 enabled: false
