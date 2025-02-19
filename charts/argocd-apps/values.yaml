@@ -74,7 +74,7 @@ argoconfig:
                 # -- the repostory to pull the image from
                 repository: "pihole/pihole"
                 # -- the docker tag, if left empty it will get it from the chart's appVersion
-                #tag: "latest"
+                tag: "latest"
               admin:
                 enabled: true
                 existingSecret: pihole-password
@@ -82,6 +82,8 @@ argoconfig:
               virtualHost: pihole.homelab
               DNS1: "1.1.1.1"
               DNS2: "1.0.0.1"
+              ftl:
+                dns_upstreams: 1.1.1.1;1.0.0.1
               serviceDns:
                 annotations:             
                   io.cilium/lb-ipam-ips: 192.168.5.102
