@@ -70,7 +70,6 @@ argoconfig:
           #targetRevision: 2.27.0
           repoURL: https://github.com/paimonsoror/pihole-kubernetes.git
           path: charts/pihole
-          targetRevision: HEAD
           helm:
             values: |-
               image:
