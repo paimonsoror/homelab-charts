@@ -134,8 +134,6 @@ argoconfig:
               extraVolumeMounts:
                 custom-dnsmasq-dir:
                   mountPath: /etc/dnsmasq.d   
-              extraEnvVars:
-                DNSMASQ_USER: root
               probes:
                 liveness:
                   port: https
