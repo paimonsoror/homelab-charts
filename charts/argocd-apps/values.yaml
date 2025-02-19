@@ -61,15 +61,16 @@ argoconfig:
           syncOptions:
             - CreateNamespace=true
             - ServerSideApply=true
-    - name: pihole6
+    - name: pihole
       enabled: true 
       spec:
         project: default
         source: 
           #repoURL: https://mojo2600.github.io/pihole-kubernetes
           #targetRevision: 2.27.0
-          repoURL: https://github.com/paimonsoror/pihole-kubernetes.git
-          path: charts/pihole
+          repoURL: https://github.com/paimonsoror/pihole-kubernetes
+          path: "charts/pihole"
+          targetRevision: HEAD
           helm:
             values: |-
               image:
