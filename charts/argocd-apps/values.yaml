@@ -66,18 +66,19 @@ argoconfig:
       spec:
         project: default
         source: 
-          #repoURL: https://mojo2600.github.io/pihole-kubernetes
-          #targetRevision: 2.27.0
-          repoURL: https://github.com/paimonsoror/pihole-kubernetes.git
-          path: "charts/pihole"
-          targetRevision: HEAD
+          repoURL: https://mojo2600.github.io/pihole-kubernetes
+          targetRevision: 2.27.0
+          chart: pihole
+          #repoURL: https://github.com/paimonsoror/pihole-kubernetes.git
+          #path: "charts/pihole"
+          #targetRevision: HEAD
           helm:
             values: |-
               image:
                 # -- the repostory to pull the image from
                 repository: "pihole/pihole"
                 # -- the docker tag, if left empty it will get it from the chart's appVersion
-                tag: "latest"
+                #tag: "latest"
               admin:
                 enabled: true
                 existingSecret: pihole-password
