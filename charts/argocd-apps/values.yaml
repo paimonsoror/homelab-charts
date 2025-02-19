@@ -70,6 +70,11 @@ argoconfig:
           targetRevision: 2.27.0
           helm:
             values: |-
+              image:
+                # -- the repostory to pull the image from
+                repository: "pihole/pihole"
+                # -- the docker tag, if left empty it will get it from the chart's appVersion
+                tag: "latest"
               admin:
                 enabled: true
                 existingSecret: pihole-password
