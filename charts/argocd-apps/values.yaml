@@ -81,6 +81,7 @@ argoconfig:
                 tag: "latest"
               extraEnvVars:
                 PIHOLE_UID: 3005
+                PIHOLE_GID: 3003
               admin:
                 enabled: true
                 existingSecret: pihole-password
