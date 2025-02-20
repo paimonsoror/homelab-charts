@@ -82,7 +82,6 @@ argoconfig:
               extraEnvVars:
                 PIHOLE_UID: 3005
                 PIHOLE_GID: 3003
-                DNSMASQ_USER: root
               admin:
                 enabled: true
                 existingSecret: pihole-password
