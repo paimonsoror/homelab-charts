@@ -129,7 +129,7 @@ argoconfig:
                 additionalHostsEntries:
                   - 127.0.0.1 pihole.homelab
               persistentVolumeClaim:
-                enabled: false
+                enabled: true
                 existingClaim: pihole-pvc
               extraVolumes:
                 custom-dnsmasq-dir:
