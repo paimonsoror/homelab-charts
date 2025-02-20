@@ -79,6 +79,8 @@ argoconfig:
                 repository: "pihole/pihole"
                 # -- the docker tag, if left empty it will get it from the chart's appVersion
                 tag: "latest"
+              env:
+                PIHOLE_UID: 3005
               admin:
                 enabled: true
                 existingSecret: pihole-password
