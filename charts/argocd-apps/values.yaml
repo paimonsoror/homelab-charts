@@ -74,11 +74,6 @@ argoconfig:
           targetRevision: HEAD
           helm:
             values: |-
-              image:
-                # -- the repostory to pull the image from
-                repository: "pihole/pihole"
-                # -- the docker tag, if left empty it will get it from the chart's appVersion
-                tag: "2025.02.4"
               extraEnvVars:
                 PIHOLE_UID: 3005
                 PIHOLE_GID: 3003
