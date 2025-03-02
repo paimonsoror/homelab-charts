@@ -77,7 +77,6 @@ argoconfig:
               extraEnvVars:
                 PIHOLE_UID: 3005
                 PIHOLE_GID: 3003
-                FTLCONF_misc_etc_dnsmasq_d: true
               admin:
                 enabled: true
                 existingSecret: pihole-password
