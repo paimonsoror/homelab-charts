@@ -187,7 +187,7 @@ argoconfig:
         project: default
         source:
           repoURL: https://immich-app.github.io/immich-charts
-          targetRevision: 0.8.4
+          targetRevision: 0.9.1
           helm:
             values: |-
               image:
