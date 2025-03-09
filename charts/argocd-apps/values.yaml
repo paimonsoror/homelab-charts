@@ -204,6 +204,23 @@ argoconfig:
           targetRevision: 0.9.1
           helm:
             values: |-
+              env:
+                DB_HOSTNAME:
+                  secretKeyRef:
+                    name: immich-postgres-user
+                    key: host
+                DB_USERNAME:
+                  secretKeyRef:
+                    name: immich-postgres-user
+                    key: username
+                DB_DATABASE_NAME:
+                  secretKeyRef:
+                    name: immich-postgres-user
+                    key: dbname
+                DB_PASSWORD:
+                  secretKeyRef:
+                    name: immich-postgres-user
+                    key: password
               image:
                 tag: v1.129.0
               immich:
@@ -213,7 +230,7 @@ argoconfig:
                   library:
                     existingClaim: immich-pvc
               postgresql:
-                enabled: true
+                enabled: false
                 primary:
                   resources:
                     requests:
