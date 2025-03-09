@@ -34,7 +34,7 @@ argoconfig:
                 enabled: true
                 image:
                   repository: portainer/portainer-ee
-                  tag: 2.21.5
+                  tag: 2.27.1
                   pullPolicy: Always
               ingress:
                 enabled: true
