@@ -304,12 +304,12 @@ argoconfig:
           syncOptions:
             - CreateNamespace=true
     - name: opensearch
-      enabled: false
+      enabled: true
       spec:
         project: default
         source:
           repoURL: https://opensearch-project.github.io/helm-charts
-          targetRevision: 2.26.1
+          targetRevision: 2.28.0
           helm:
             values: |-
               secretMounts:
