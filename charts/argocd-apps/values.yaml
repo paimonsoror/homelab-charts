@@ -270,7 +270,7 @@ argoconfig:
           syncOptions:
             - CreateNamespace=true
     - name: opensearch-dashboards
-      enabled: true
+      enabled: false
       spec:
         project: default
         source:
@@ -304,7 +304,7 @@ argoconfig:
           syncOptions:
             - CreateNamespace=true
     - name: opensearch
-      enabled: true
+      enabled: false
       spec:
         project: default
         source:
