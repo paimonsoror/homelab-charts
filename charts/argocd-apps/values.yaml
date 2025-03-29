@@ -329,15 +329,15 @@ argoconfig:
                     security:
                       ssl:
                         transport:
-                          pemcert_filepath: certs/esnode.pem
-                          pemkey_filepath: certs/esnode-key.pem
-                          pemtrustedcas_filepath: certs/root-ca.pem
+                          pemcert_filepath: esnode.pem
+                          pemkey_filepath: esnode-key.pem
+                          pemtrustedcas_filepath: root-ca.pem
                           enforce_hostname_verification: false
                         http:
                           enabled: true
-                          pemcert_filepath: certs/esnode.pem
-                          pemkey_filepath: certs/esnode-key.pem
-                          pemtrustedcas_filepath: certs/root-ca.pem
+                          pemcert_filepath: esnode.pem
+                          pemkey_filepath: esnode-key.pem
+                          pemtrustedcas_filepath: root-ca.pem
                       allow_unsafe_democertificates: true
                       allow_default_init_securityindex: true
                       authcz:
