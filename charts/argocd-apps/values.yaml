@@ -138,7 +138,7 @@ argoconfig:
             - CreateNamespace=true
             - ServerSideApply=true
     - name: fluentbit
-      enabled: false
+      enabled: true
       spec:
         project: default
         source:
@@ -148,29 +148,10 @@ argoconfig:
             values: |-
               fluentbit:
                 output:
-                  es:
+                  loki:
                     enable: true
-                    host: opensearch-cluster-master.opensearch.svc.cluster.local
-                    port: 9200
-                    generateID: true
-                    logstashPrefix: fluent-log-fb-only
-                    logstashFormat: true
-                    timeKey: "@timestamp"
-                    enableTLS: true
-                    suppressTypeName: "On"
-                    index: "fluent-bit"
-                    tls:
-                      verify: false
-                    httpUser: 
-                      valueFrom: 
-                        secretKeyRef:
-                          name: opensearchpass
-                          key: username
-                    httpPassword:
-                      valueFrom: 
-                        secretKeyRef:
-                          name: opensearchpass
-                          key: password
+                    host: loki-loki-distributed-gateway.loki.svc.cluster.local
+                    port: 3100
           chart: fluent-operator
         destination:
           server: 'https://kubernetes.default.svc'
