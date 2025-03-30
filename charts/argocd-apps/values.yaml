@@ -494,6 +494,35 @@ argoconfig:
           syncOptions:
             - CreateNamespace=true
             - ServerSideApply=true
+    - name: loki
+      enabled: true
+      spec:
+        project: default
+        source:
+          repoURL: https://grafana.github.io/helm-charts
+          targetRevision: 0.80.2
+          helm:
+            values: |-
+              ingress:
+                enabled: true
+                ingressClassName: cilium
+                annotations:
+                  ingress.cilium.io/loadbalancer-mode: shared
+                  cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
+                hosts:
+                  - loki.homelab
+                tls:
+                  - secretName: loki-tls
+                    hosts:
+                      - loki.homelab
+          chart: hivemq-platform
+        destination:
+          server: 'https://kubernetes.default.svc'
+          namespace: loki
+        syncPolicy:
+          automated: {}
+          syncOptions:
+            - CreateNamespace=true
     - name: prometheus
       enabled: true
       spec:
