@@ -517,7 +517,7 @@ argoconfig:
                         - path: /
                           pathType: Prefix
                   tls:
-                    - secretName: loki=gateway-tls
+                    - secretName: loki-gateway-tls
                       hosts:
                         - loki.gateway.homelab
           chart: loki-distributed
