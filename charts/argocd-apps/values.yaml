@@ -487,6 +487,7 @@ argoconfig:
             values: |-
               ingester:
                 replicas: 3
+                maxUnavailable: 2
               gateway:
                 enabled: true
                 ingress:
