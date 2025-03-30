@@ -485,6 +485,8 @@ argoconfig:
           targetRevision: 0.80.2
           helm:
             values: |-
+              ingester:
+                replicas: 3
               gateway:
                 enabled: true
                 ingress:
