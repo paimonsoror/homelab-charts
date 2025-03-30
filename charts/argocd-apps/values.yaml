@@ -150,7 +150,7 @@ argoconfig:
                 output:
                   loki:
                     enable: true
-                    host: loki-loki-distributed-ingester.loki.svc.cluster.local
+                    host: loki-loki-distributed-gateway.loki.svc.cluster.local
                     port: 3100
           chart: fluent-operator
         destination:
