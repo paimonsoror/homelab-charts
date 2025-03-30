@@ -486,9 +486,7 @@ argoconfig:
           helm:
             values: |-
               ingester:
-                replicas: 3
-                maxUnavailable: 2
-                affinity: null
+                replicas: 1
               gateway:
                 enabled: true
                 ingress:
