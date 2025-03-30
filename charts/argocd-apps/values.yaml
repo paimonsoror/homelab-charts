@@ -147,7 +147,7 @@ argoconfig:
           helm:
             values: |-
               fluentbit:
-                enable: false
+                enable: true
                 output:
                   loki:
                     enable: true
