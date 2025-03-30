@@ -515,7 +515,7 @@ argoconfig:
                   - secretName: loki-tls
                     hosts:
                       - loki.homelab
-          chart: hivemq-platform
+          chart: loki-distributed
         destination:
           server: 'https://kubernetes.default.svc'
           namespace: loki
