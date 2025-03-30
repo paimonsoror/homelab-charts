@@ -354,7 +354,7 @@ argoconfig:
           syncOptions:
             - CreateNamespace=true
     - name: hivemq-mqtt-platform
-      enabled: true
+      enabled: false
       spec:
         project: default
         source:
@@ -372,7 +372,7 @@ argoconfig:
           syncOptions:
             - CreateNamespace=true
     - name: hivemq-mqtt-operator
-      enabled: true
+      enabled: false
       spec:
         project: default
         source:
