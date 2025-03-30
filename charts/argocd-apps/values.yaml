@@ -488,6 +488,7 @@ argoconfig:
               ingester:
                 replicas: 3
                 maxUnavailable: 2
+                affinity: null
               gateway:
                 enabled: true
                 ingress:
