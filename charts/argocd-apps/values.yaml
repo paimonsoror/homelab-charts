@@ -495,6 +495,8 @@ argoconfig:
                       size: 10Gi
               serviceMonitor:
                 enabled: true
+                labels:
+                  release: prometheus
               ingester:
                 replicas: 1
               gateway:
