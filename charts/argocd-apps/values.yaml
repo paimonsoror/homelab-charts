@@ -536,6 +536,7 @@ argoconfig:
               prometheus:
                 enabled: true
                 prometheusSpec:
+                  serviceMonitorSelectorNilUsesHelmValues: false
                   additionalScrapeConfigs:
                     - job_name: "netdata-exporter"
                       metrics_path: '/api/v1/allmetrics'
