@@ -485,6 +485,14 @@ argoconfig:
           targetRevision: 0.80.2
           helm:
             values: |-
+              compactor:
+                enabled: true
+                persistence:
+                  enabled: true
+                  size: 10Gi
+                  claims:
+                    - name: data
+                      size: 10Gi
               serviceMonitor:
                 enabled: true
               ingester:
