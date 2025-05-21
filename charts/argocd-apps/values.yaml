@@ -490,16 +490,18 @@ argoconfig:
                 enabled: true
                 persistence:
                   enabled: true
-                  size: 10Gi
-                  claims:
-                    - name: data
-                      size: 10Gi
+                  existingClaim: pvc-loki
+                  subPath: index
               serviceMonitor:
                 enabled: true
                 labels:
                   release: prometheus
               ingester:
                 replicas: 1
+                persistence:
+                  enabled: true
+                  existingClaim: pvc-loki
+                  subPath: chunks
               gateway:
                 enabled: true
                 ingress:
