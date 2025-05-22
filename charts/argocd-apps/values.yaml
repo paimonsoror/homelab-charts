@@ -216,7 +216,7 @@ argoconfig:
                   [OUTPUT]
                       Name            http
                       Match           *
-                      Host            vector.vector.cluster.local
+                      Host            vector.vector.svc.cluster.local
                       Port            8080
                       URI             /
                       Format          json
