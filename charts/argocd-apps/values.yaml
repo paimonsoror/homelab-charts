@@ -11,7 +11,13 @@ argoconfig:
           targetRevision: 0.43.0
           helm:
             values: |-
-
+              sources:
+                fluentbit_in:
+                  type: http
+                  address: 0.0.0.0
+                  port: 8080
+                  encoding:
+                    codec: json
           chart: vector
         destination:
           server: 'https://kubernetes.default.svc'
@@ -30,7 +36,7 @@ argoconfig:
           targetRevision: 6.5.2
           helm:
             values: |-
-
+            
           chart: nextcloud
         destination:
           server: 'https://kubernetes.default.svc'
@@ -169,10 +175,22 @@ argoconfig:
               fluentbit:
                 enable: true
                 output:
-                  loki:
+                  http:
                     enable: true
-                    host: loki-loki-distributed-distributor.loki.svc.cluster.local
-                    port: 3100
+                    match: "*"
+                    host: vector.vector.svc.cluster.local
+                    port: 8080
+                    uri: /
+                    format: json
+                    jsonDateKey: timestamp
+                    jsonDateFormat: iso8601
+                    header:
+                      - key: Content-Type
+                        value: application/json
+                  #loki:
+                  #  enable: true
+                  #  host: loki-loki-distributed-distributor.loki.svc.cluster.local
+                  #  port: 3100
           chart: fluent-operator
         destination:
           server: 'https://kubernetes.default.svc'
