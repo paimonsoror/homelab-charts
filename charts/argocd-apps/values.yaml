@@ -42,10 +42,7 @@ argoconfig:
                         pathType: Prefix
                         port:
                           number: 514
-                tls: 
-                  - secretName: vector-tls
-                    hosts:
-                      - syslog.homelab
+
               customConfig:
                 sources:
                   syslog_udp:
