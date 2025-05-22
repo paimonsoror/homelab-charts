@@ -61,7 +61,6 @@ argoconfig:
                   tag_syslog:
                     type: remap
                     inputs:
-                      - syslog_tcp
                       - syslog_udp
                     source: |
                       .job = "syslog"
