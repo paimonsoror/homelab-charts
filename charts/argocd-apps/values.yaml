@@ -74,11 +74,17 @@ argoconfig:
                         "unknown"
                       }
                 sinks:
+                  debug_console:
+                    type: console
+                    inputs:
+                      - syslog_in
+                    target: stdout
+                    encoding:
+                      codec: json
                   loki_out:
                     type: loki
                     inputs:
-                      - ensure_host      
-                      - tag_syslog
+                      - ensure_host  
                     endpoint: http://loki-loki-distributed-distributor.loki.svc.cluster.local:3100
                     encoding:
                       codec: json
