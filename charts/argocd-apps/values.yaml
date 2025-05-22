@@ -39,7 +39,7 @@ argoconfig:
                       - path: /
                         pathType: Prefix
                         port:
-                          name: http
+                          name: syslog
                 tls: 
                   - secretName: vector-tls
                     hosts:
