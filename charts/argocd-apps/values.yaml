@@ -11,6 +11,11 @@ argoconfig:
           targetRevision: 0.43.0
           helm:
             values: |-
+              containerPorts:
+                - name: http
+                  containerPort: 8080
+                - name: vector
+                  containerPort: 6000
               service:
                 enabled: true
                 ports:
