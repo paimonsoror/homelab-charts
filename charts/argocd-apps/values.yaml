@@ -175,22 +175,10 @@ argoconfig:
               fluentbit:
                 enable: true
                 output:
-                  http:
+                  loki:
                     enable: true
-                    match: "*"
-                    host: vector.vector.svc.cluster.local
-                    port: 8080
-                    uri: /
-                    format: json
-                    jsonDateKey: timestamp
-                    jsonDateFormat: iso8601
-                    header:
-                      - key: Content-Type
-                        value: application/json
-                  #loki:
-                  #  enable: true
-                  #  host: loki-loki-distributed-distributor.loki.svc.cluster.local
-                  #  port: 3100
+                    host: loki-loki-distributed-distributor.loki.svc.cluster.local
+                    port: 3100
           chart: fluent-operator
         destination:
           server: 'https://kubernetes.default.svc'
