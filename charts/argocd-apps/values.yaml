@@ -14,19 +14,17 @@ argoconfig:
               containerPorts:
                 - name: http
                   containerPort: 8080
-                - name: syslog-udp
+                - name: syslog
                   containerPort: 9000
-                  protocol: UDP
               service:
                 enabled: true
                 ports:
                   - name: http
                     port: 8080
                     targetPort: 8080
-                  - name: syslog-udp
+                  - name: syslog
                     port: 9000
                     targetPort: 9000
-                    protocol: UDP
               serviceHeadless:
                 enabled: false
               ingress:
@@ -48,10 +46,10 @@ argoconfig:
                       - syslog.homelab
               customConfig:
                 sources:
-                  syslog_udp:
+                  syslog_in:
                     type: syslog
                     address: 0.0.0.0:9000
-                    mode: udp
+                    mode: tcp
                     host_key: host
                   fluentbit_in:
                     type: http
@@ -61,7 +59,7 @@ argoconfig:
                   tag_syslog:
                     type: remap
                     inputs:
-                      - syslog_udp
+                      - syslog_in
                     source: |
                       .job = "syslog"
                       .source_type = "syslog"
