@@ -11,11 +11,14 @@ argoconfig:
           targetRevision: 0.43.0
           helm:
             values: |-
+              env:
+                - name: VECTOR_HOSTNAME
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.name
               containerPorts:
                 - name: http
                   containerPort: 8080
-                - name: vector
-                  containerPort: 6000
               service:
                 enabled: true
                 ports:
@@ -26,10 +29,6 @@ argoconfig:
                 enabled: false
               customConfig:
                 sources:
-                  vector:
-                    address: 0.0.0.0:6000
-                    type: vector
-                    version: "2"
                   fluentbit_in:
                     type: http
                     address: 0.0.0.0:8080
@@ -40,7 +39,7 @@ argoconfig:
                     inputs:
                       - fluentbit_in
                     source: |
-                      .host = get_env("HOSTNAME") ?? "unknown"
+                      .host = env.VECTOR_HOSTNAME ?? "unknown"
                 sinks:
                   loki_out:
                     type: loki
