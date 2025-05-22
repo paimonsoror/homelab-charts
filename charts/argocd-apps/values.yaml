@@ -14,12 +14,17 @@ argoconfig:
               containerPorts:
                 - name: http
                   containerPort: 8080
+                - name: syslog
+                  containerPort: 514
               service:
                 enabled: true
                 ports:
                   - name: http
                     port: 8080
                     targetPort: 8080
+                  - name: syslog
+                    port: 514
+                    targetPort: 514
               serviceHeadless:
                 enabled: false
               ingress:
