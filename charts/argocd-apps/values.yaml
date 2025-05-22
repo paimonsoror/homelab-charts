@@ -11,15 +11,14 @@ argoconfig:
           targetRevision: 0.43.0
           helm:
             values: |-
-              vector:
-                service:
-                  enabled: true
-                  ports:
-                    - name: http
-                      port: 8080
-                      targetPort: 8080
-                headless:
-                  enabled: false
+              service:
+                enabled: true
+                ports:
+                  - name: http
+                    port: 8080
+                    targetPort: 8080
+              serviceHeadless:
+                enabled: false
               customConfig:
                 sources:
                   vector:
@@ -43,7 +42,7 @@ argoconfig:
                   loki_out:
                     type: loki
                     inputs:
-                      - fluentbit_in
+                      - ensure_host   
                     endpoint: loki-loki-distributed-distributor.loki.svc.cluster.local
                     encoding:
                       codec: json
