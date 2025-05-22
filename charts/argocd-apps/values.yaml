@@ -22,18 +22,55 @@ argoconfig:
                     targetPort: 8080
               serviceHeadless:
                 enabled: false
+              ingress:
+                enabled: true
+                className: cilium
+                annotations:
+                  ingress.cilium.io/loadbalancer-mode: shared
+                  cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
+                hosts:
+                  - host: syslog.homelab
+                    paths:
+                      - path: /
+                        pathType: Prefix
+                        port:
+                          number: 514
+                tls: 
+                  - secretName: vector-tls
+                    hosts:
+                      - syslog.homelab
               customConfig:
                 sources:
+                  syslog_tcp:
+                    type: syslog
+                    address: 0.0.0.0:514
+                    mode: tcp
+                    host_key: host
+                  syslog_udp:
+                    type: syslog
+                    address: 0.0.0.0:514
+                    mode: udp
+                    host_key: host
                   fluentbit_in:
                     type: http
                     address: 0.0.0.0:8080
                     encoding: json
                 transforms:
+                  tag_syslog:
+                    type: remap
+                    inputs:
+                      - syslog_tcp
+                      - syslog_udp
+                    source: |
+                      .job = "syslog"
+                      .source_type = "syslog"
                   ensure_host:
                     type: remap
                     inputs:
                       - fluentbit_in
                     source: |
+                      .job = "fluentbit"
+                      .source_type = "fluentbit"
                       .host = if exists(.host) {
                         .host
                       } else if exists(.hostname) {
@@ -45,13 +82,15 @@ argoconfig:
                   loki_out:
                     type: loki
                     inputs:
-                      - ensure_host   
+                      - ensure_host      
+                      - tag_syslog
                     endpoint: http://loki-loki-distributed-distributor.loki.svc.cluster.local:3100
                     encoding:
                       codec: json
                     labels:
-                      job: "fluentbit"
+                      job: "{{`{{ job }}`}}"
                       host: "{{`{{ host }}`}}"
+                      source: "{{`{{ source_type }}`}}"
                     remove_label_fields: true
                     remove_timestamp: false
           chart: vector
