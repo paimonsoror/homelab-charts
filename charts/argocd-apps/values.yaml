@@ -2,6 +2,25 @@
 
 argoconfig:
   application:
+    - name: vector
+      enabled: true
+      spec:
+        project: default
+        source:
+          repoURL: https://helm.vector.dev
+          targetRevision: 0.43.0
+          helm:
+            values: |-
+
+          chart: vector
+        destination:
+          server: 'https://kubernetes.default.svc'
+          namespace: nextcloud
+        syncPolicy:
+          automated: {}
+          syncOptions:
+            - CreateNamespace=true
+            - ServerSideApply=true
     - name: nextcloud
       enabled: false
       spec:
@@ -490,8 +509,6 @@ argoconfig:
                 enabled: true
                 persistence:
                   enabled: true
-                  existingClaim: pvc-loki
-                  subPath: index
               serviceMonitor:
                 enabled: true
                 labels:
@@ -500,8 +517,6 @@ argoconfig:
                 replicas: 1
                 persistence:
                   enabled: true
-                  existingClaim: pvc-loki
-                  subPath: chunks
               gateway:
                 enabled: true
                 ingress:
