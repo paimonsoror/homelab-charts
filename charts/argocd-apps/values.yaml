@@ -11,13 +11,14 @@ argoconfig:
           targetRevision: 0.43.0
           helm:
             values: |-
-              sources:
-                fluentbit_in:
-                  type: http
-                  address: 0.0.0.0
-                  port: 8080
-                  encoding:
-                    codec: json
+              customConfig:
+                sources:
+                  fluentbit_in:
+                    type: http
+                    address: 0.0.0.0
+                    port: 8080
+                    encoding:
+                      codec: json
           chart: vector
         destination:
           server: 'https://kubernetes.default.svc'
