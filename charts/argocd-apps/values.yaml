@@ -33,10 +33,11 @@ argoconfig:
                 enabled: true
                 className: cilium
                 annotations:
+                  io.cilium/lb-ipam-ips: 192.168.5.200
                   ingress.cilium.io/loadbalancer-mode: dedicated
                   cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
                 hosts:
-                  - host: 192.168.5.101
+                  - host: syslog.homelab
                     paths:
                       - path: /
                         pathType: Prefix
