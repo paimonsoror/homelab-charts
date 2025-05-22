@@ -33,8 +33,7 @@ argoconfig:
                   fluentbit_in:
                     type: http
                     address: 0.0.0.0:8080
-                    encoding:
-                      codec: json
+                    encoding: json
                 transforms:
                   ensure_host:
                     type: remap
