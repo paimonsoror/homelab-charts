@@ -15,7 +15,7 @@ argoconfig:
                 - name: http
                   containerPort: 8080
                 - name: syslog-udp
-                  containerPort: 514
+                  containerPort: 9000
                   protocol: UDP
               service:
                 enabled: true
@@ -24,8 +24,8 @@ argoconfig:
                     port: 8080
                     targetPort: 8080
                   - name: syslog-udp
-                    port: 514
-                    targetPort: 514
+                    port: 9000
+                    targetPort: 9000
                     protocol: UDP
               serviceHeadless:
                 enabled: false
@@ -50,7 +50,7 @@ argoconfig:
                 sources:
                   syslog_udp:
                     type: syslog
-                    address: 0.0.0.0:514
+                    address: 0.0.0.0:9000
                     mode: udp
                     host_key: host
                   fluentbit_in:
