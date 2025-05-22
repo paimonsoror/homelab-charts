@@ -39,8 +39,9 @@ argoconfig:
                   - host: syslog.homelab
                     paths:
                       - path: /
+                        pathType: Prefix
                         port:
-                          name: syslog-udp
+                          name: http
                 tls: 
                   - secretName: vector-tls
                     hosts:
