@@ -11,6 +11,15 @@ argoconfig:
           targetRevision: 0.43.0
           helm:
             values: |-
+              vector:
+                service:
+                  enabled: true
+                  ports:
+                    - name: http
+                      port: 8080
+                      targetPort: 8080
+                headless:
+                  enabled: false
               customConfig:
                 sources:
                   vector:
