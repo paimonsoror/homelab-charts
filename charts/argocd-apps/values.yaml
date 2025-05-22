@@ -15,7 +15,7 @@ argoconfig:
           chart: vector
         destination:
           server: 'https://kubernetes.default.svc'
-          namespace: nextcloud
+          namespace: vector
         syncPolicy:
           automated: {}
           syncOptions:
