@@ -13,12 +13,29 @@ argoconfig:
             values: |-
               customConfig:
                 sources:
+                  vector:
+                    address: 0.0.0.0:6000
+                    type: vector
+                    version: "2"
                   fluentbit_in:
                     type: http
                     address: 0.0.0.0
                     port: 8080
                     encoding:
                       codec: json
+                sinks:
+                  loki_out:
+                    type: loki
+                    inputs:
+                      - fluentbit_in
+                    endpoint: loki-loki-distributed-distributor.loki.svc.cluster.local
+                    encoding:
+                      codec: json
+                    labels:
+                      job: "fluentbit"
+                      host: "{{ host }}"
+                    remove_label_fields: true
+                    remove_timestamp: false
           chart: vector
         destination:
           server: 'https://kubernetes.default.svc'
