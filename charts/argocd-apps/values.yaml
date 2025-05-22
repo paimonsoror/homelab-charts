@@ -40,10 +40,7 @@ argoconfig:
                         pathType: Prefix
                         port:
                           name: syslog
-                tls: 
-                  - secretName: vector-tls
-                    hosts:
-                      - syslog.homelab
+
               customConfig:
                 sources:
                   syslog_in:
