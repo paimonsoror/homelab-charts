@@ -46,7 +46,7 @@ argoconfig:
                     type: loki
                     inputs:
                       - ensure_host   
-                    endpoint: http://loki-loki-distributed-distributor.loki.svc.cluster.local
+                    endpoint: http://loki-loki-distributed-distributor.loki.svc.cluster.local:3100
                     encoding:
                       codec: json
                     labels:
