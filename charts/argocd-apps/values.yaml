@@ -40,6 +40,7 @@ argoconfig:
                     paths:
                       - path: /
                         pathType: Prefix
+                        name: cilium-ingress-vector
                         port:
                           number: 514
 
