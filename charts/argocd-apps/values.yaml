@@ -45,7 +45,7 @@ argoconfig:
                   syslog_in:
                     type: syslog
                     address: 0.0.0.0:9000
-                    mode: tcp
+                    mode: udp
                     host_key: host
                   fluentbit_in:
                     type: http
