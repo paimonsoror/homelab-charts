@@ -48,11 +48,6 @@ argoconfig:
                       - syslog.homelab
               customConfig:
                 sources:
-                  syslog_tcp:
-                    type: syslog
-                    address: 0.0.0.0:514
-                    mode: tcp
-                    host_key: host
                   syslog_udp:
                     type: syslog
                     address: 0.0.0.0:514
