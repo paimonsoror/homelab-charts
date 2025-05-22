@@ -36,7 +36,7 @@ argoconfig:
                   ingress.cilium.io/loadbalancer-mode: dedicated
                   cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
                 hosts:
-                  - host: syslog.homelab
+                  - host: 192.168.5.101
                     paths:
                       - path: /
                         pathType: Prefix
