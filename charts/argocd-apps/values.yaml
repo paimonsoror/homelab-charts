@@ -34,7 +34,13 @@ argoconfig:
                     inputs:
                       - fluentbit_in
                     source: |
-                      .host = exists(.host) ? .host : (exists(.hostname) ? .hostname : "unknown")
+                      .host = if exists(.host) {
+                        .host
+                      } else if exists(.hostname) {
+                        .hostname
+                      } else {
+                        "unknown"
+                      }
                 sinks:
                   loki_out:
                     type: loki
