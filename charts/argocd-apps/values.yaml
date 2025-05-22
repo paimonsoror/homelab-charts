@@ -41,7 +41,7 @@ argoconfig:
                       - path: /
                         pathType: Prefix
                         port:
-                          name: syslog-udp
+                          number: 514
                 tls: 
                   - secretName: vector-tls
                     hosts:
