@@ -40,7 +40,7 @@ argoconfig:
                       codec: json
                     labels:
                       job: "fluentbit"
-                      host: "{{ host }}"
+                      host: "{{`{{ host }}`}}"
                     remove_label_fields: true
                     remove_timestamp: false
           chart: vector
