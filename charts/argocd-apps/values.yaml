@@ -23,6 +23,13 @@ argoconfig:
                     port: 8080
                     encoding:
                       codec: json
+                transforms:
+                  ensure_host:
+                    type: remap
+                    inputs:
+                      - fluentbit_in
+                    source: |
+                      .host = get_env("HOSTNAME") ?? "unknown"
                 sinks:
                   loki_out:
                     type: loki
