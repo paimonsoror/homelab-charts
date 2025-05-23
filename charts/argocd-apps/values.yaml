@@ -623,6 +623,13 @@ argoconfig:
           targetRevision: 0.80.2
           helm:
             values: |-
+              loki:
+                config:
+                  compactor:
+                    retention_enabled: true
+                    delete_request_cancel_period: 5m
+                  limits_config:
+                    retention_period: 168h
               compactor:
                 enabled: true
                 persistence:
