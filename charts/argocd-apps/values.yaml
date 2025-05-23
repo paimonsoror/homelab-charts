@@ -16,6 +16,7 @@ argoconfig:
                   containerPort: 8080
                 - name: syslog
                   containerPort: 9000
+                  protocol: TCP
               service:
                 enabled: true
                 ports:
@@ -24,7 +25,7 @@ argoconfig:
                     targetPort: 8080
                   - name: syslog
                     port: 9000
-                    targetPort: 9000
+                    protocol: TCP
               serviceHeadless:
                 enabled: false
               ingress:
