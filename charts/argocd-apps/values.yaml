@@ -656,6 +656,15 @@ argoconfig:
                 enabled: true
                 persistence:
                   enabled: true
+                extraArgs:
+                  - -config.expand-env=true
+                extraVolumeMounts:
+                  - name: compactor-data
+                    mountPath: /var/loki
+                extraVolumes:
+                  - name: compactor-data
+                    persistentVolumeClaim:
+                      claimName: data-loki-loki-distributed-compactor-0
               serviceMonitor:
                 enabled: true
                 labels:
