@@ -635,6 +635,8 @@ argoconfig:
                 replicas: 1
                 persistence:
                   enabled: true
+                  size: 10Gi
+                  storageClass: local-path
               gateway:
                 enabled: true
                 ingress:
