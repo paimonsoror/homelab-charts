@@ -716,3 +716,21 @@ argoconfig:
           syncOptions:
             - CreateNamespace=true
             - ServerSideApply=true
+    - name: influx
+      enabled: true
+      spec:
+        project: default
+        source:
+          repoURL: 'https://helm.influxdata.com'
+          targetRevision: 2.1.2
+          helm:
+            values: |-
+              
+          chart: influxdb2
+        destination:
+          server: 'https://kubernetes.default.svc'
+          namespace: influx
+        syncPolicy:
+          syncOptions:
+            - CreateNamespace=true
+            - ServerSideApply=true
