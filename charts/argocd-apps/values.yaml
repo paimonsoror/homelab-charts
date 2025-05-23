@@ -27,6 +27,7 @@ argoconfig:
                   - name: syslog
                     port: 9000
                     protocol: TCP
+                    NodePort: 9000
               serviceHeadless:
                 enabled: false
               customConfig:
