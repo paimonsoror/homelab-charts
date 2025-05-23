@@ -623,48 +623,10 @@ argoconfig:
           targetRevision: 0.80.2
           helm:
             values: |-
-              loki:
-                config: |
-                  auth_enabled: false
-
-                  compactor:
-                    retention_enabled: true
-                    delete_request_cancel_period: 5m
-
-                  limits_config:
-                    retention_period: 168h
-
-                  schema_config:
-                    configs:
-                      - from: 2024-01-01
-                        store: boltdb-shipper
-                        object_store: filesystem
-                        schema: v11
-                        index:
-                          prefix: index_
-                          period: 24h
-
-                  storage_config:
-                    boltdb_shipper:
-                      active_index_directory: /var/loki/index
-                      cache_location: /var/loki/cache
-                      shared_store: filesystem
-                    filesystem:
-                      directory: /var/loki/chunks
-
               compactor:
                 enabled: true
                 persistence:
                   enabled: true
-                extraArgs:
-                  - -config.expand-env=true
-                extraVolumeMounts:
-                  - name: compactor-data
-                    mountPath: /var/loki
-                extraVolumes:
-                  - name: compactor-data
-                    persistentVolumeClaim:
-                      claimName: data-loki-loki-distributed-compactor-0
               serviceMonitor:
                 enabled: true
                 labels:
