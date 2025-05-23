@@ -50,6 +50,13 @@ argoconfig:
                       .job = "syslog"
                       .source_type = "syslog"
                       .timestamp = now()
+                      .host = if exists(.host) {
+                        .host
+                      } else if exists(.hostname) {
+                        .hostname
+                      } else {
+                        "unknown"
+                      }
                   ensure_host:
                     type: remap
                     inputs:
