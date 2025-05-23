@@ -49,6 +49,7 @@ argoconfig:
                     source: |
                       .job = "syslog"
                       .source_type = "syslog"
+                      .timestamp = now()
                   ensure_host:
                     type: remap
                     inputs:
