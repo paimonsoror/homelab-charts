@@ -31,7 +31,8 @@ argoconfig:
                 enabled: true
                 className: cilium
                 annotations:
-                  ingress.cilium.io/loadbalancer-mode: dedicated
+                  ingress.cilium.io/loadbalancer-mode: shared
+                  cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
                 hosts:
                   - host: syslog.homelab
                     paths:
@@ -39,13 +40,16 @@ argoconfig:
                         pathType: Prefix
                         port:
                           name: syslog
-
+                tls: 
+                  - secretName: vector-tls
+                    hosts:
+                      - syslog.homelab
               customConfig:
                 sources:
                   syslog_in:
                     type: syslog
                     address: 0.0.0.0:9000
-                    mode: udp
+                    mode: tcp
                     host_key: host
                   fluentbit_in:
                     type: http
@@ -84,7 +88,8 @@ argoconfig:
                   loki_out:
                     type: loki
                     inputs:
-                      - ensure_host  
+                      - ensure_host      
+                      - tag_syslog
                     endpoint: http://loki-loki-distributed-distributor.loki.svc.cluster.local:3100
                     encoding:
                       codec: json
