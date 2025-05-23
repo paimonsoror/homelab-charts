@@ -19,7 +19,7 @@ argoconfig:
                   protocol: UDP
               service:
                 enabled: true
-                type: "NodePort"
+                type: "LoadBalancer"
                 ports:
                   - name: http
                     port: 8080
@@ -27,7 +27,6 @@ argoconfig:
                   - name: syslog
                     port: 9000
                     protocol: UDP
-                    nodePort: 30000
               serviceHeadless:
                 enabled: false
               customConfig:
