@@ -16,7 +16,7 @@ argoconfig:
                   containerPort: 8080
                 - name: syslog
                   containerPort: 9000
-                  protocol: TCP
+                  protocol: UDP
               service:
                 enabled: true
                 type: "NodePort"
@@ -26,7 +26,7 @@ argoconfig:
                     targetPort: 8080
                   - name: syslog
                     port: 9000
-                    protocol: TCP
+                    protocol: UDP
                     nodePort: 30000
               serviceHeadless:
                 enabled: false
