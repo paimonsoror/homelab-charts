@@ -64,13 +64,6 @@ argoconfig:
                         "unknown"
                       }
                 sinks:
-                  debug_console:
-                    type: console
-                    inputs:
-                      - syslog_in
-                    target: stdout
-                    encoding:
-                      codec: json
                   loki_out:
                     type: loki
                     inputs:
