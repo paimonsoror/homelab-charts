@@ -740,7 +740,8 @@ argoconfig:
           targetRevision: 2.11.2-Chart6
           helm:
             values: |-
-              
+              dashboards:
+                create: false
           chart: unpoller
         destination:
           server: 'https://kubernetes.default.svc'
