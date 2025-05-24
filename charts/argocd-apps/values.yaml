@@ -750,7 +750,7 @@ argoconfig:
                   ingress.cilium.io/loadbalancer-mode: shared
                   cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
                 path: /
-          chart: cronograf
+          chart: chronograf
         destination:
           server: 'https://kubernetes.default.svc'
           namespace: influx
