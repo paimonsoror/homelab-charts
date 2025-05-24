@@ -731,7 +731,7 @@ argoconfig:
                 tls: true
                 secretName: influx-tls
                 hostname: influxdb.homelab
-                annotations: {}
+                annotations:
                   ingress.cilium.io/loadbalancer-mode: shared
                   cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
                 path: /
