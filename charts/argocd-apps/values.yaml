@@ -742,6 +742,8 @@ argoconfig:
             values: |-
               dashboards:
                 create: false
+                grafana:
+                  create: false
           chart: unpoller
         destination:
           server: 'https://kubernetes.default.svc'
