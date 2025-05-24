@@ -723,13 +723,28 @@ argoconfig:
         source:
           repoURL: 'https://helm.influxdata.com'
           targetRevision: 2.1.2
-          helm:
-            values: |-
-              
           chart: influxdb2
         destination:
           server: 'https://kubernetes.default.svc'
           namespace: influx
+        syncPolicy:
+          syncOptions:
+            - CreateNamespace=true
+            - ServerSideApply=true
+    - name: unpoller
+      enabled: true
+      spec:
+        project: default
+        source:
+          repoURL: 'https://unpoller.github.io/helm-chart'
+          targetRevision: 2.11.2-Chart6
+          helm:
+            values: |-
+              
+          chart: unpoller
+        destination:
+          server: 'https://kubernetes.default.svc'
+          namespace: unpoller
         syncPolicy:
           syncOptions:
             - CreateNamespace=true
