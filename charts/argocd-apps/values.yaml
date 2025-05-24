@@ -50,7 +50,9 @@ argoconfig:
                       .job = "syslog"
                       .source_type = "syslog"
                       .timestamp = now()
-                      .host = if exists(.host) {
+                      .host = if exists(.kubernetes.namespace_name ) {
+                        .kubernetes.namespace_name exists
+                      } else if exists(.host) {
                         .host
                       } else if exists(.hostname) {
                         .hostname
