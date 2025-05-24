@@ -65,7 +65,7 @@ argoconfig:
                       .job = "fluentbit"
                       .source_type = "fluentbit"
                       .host = if exists(.kubernetes.namespace_name ) {
-                        .kubernetes.namespace_name exists
+                        .kubernetes.namespace_name
                       } else if exists(.host) {
                         .host
                       } else if exists(.hostname) {
