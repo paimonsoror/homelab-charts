@@ -723,6 +723,21 @@ argoconfig:
         source:
           repoURL: 'https://helm.influxdata.com'
           targetRevision: 2.1.2
+          chart: influxdb2
+        destination:
+          server: 'https://kubernetes.default.svc'
+          namespace: influx
+        syncPolicy:
+          syncOptions:
+            - CreateNamespace=true
+            - ServerSideApply=true
+    - name: chronograf
+      enabled: true
+      spec:
+        project: default
+        source:
+          repoURL: 'https://helm.influxdata.com'
+          targetRevision: 1.2.6
           helm:
             values: |-
               ingress:
@@ -735,7 +750,7 @@ argoconfig:
                   ingress.cilium.io/loadbalancer-mode: shared
                   cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
                 path: /
-          chart: influxdb2
+          chart: cronograf
         destination:
           server: 'https://kubernetes.default.svc'
           namespace: influx
