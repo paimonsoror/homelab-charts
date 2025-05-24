@@ -723,6 +723,18 @@ argoconfig:
         source:
           repoURL: 'https://helm.influxdata.com'
           targetRevision: 2.1.2
+          helm:
+            values: |-
+              ingress:
+                enabled: true
+                className: cilium
+                tls: true
+                secretName: influx-tls
+                hostname: influxdb.homelab
+                annotations: {}
+                  ingress.cilium.io/loadbalancer-mode: shared
+                  cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
+                path: /
           chart: influxdb2
         destination:
           server: 'https://kubernetes.default.svc'
