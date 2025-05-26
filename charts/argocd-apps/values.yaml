@@ -337,7 +337,7 @@ argoconfig:
                     name: immich-postgres-user
                     key: password
               image:
-                tag: v1.133.0
+                tag: v1.133.1
               immich:
                 metrics:
                   enabled: true
