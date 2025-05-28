@@ -619,7 +619,7 @@ argoconfig:
           helm:
             values: |-
               loki:
-                config: |
+                structuredConfig:
                   limits_config:
                     enforce_metric_name: false
                     reject_old_samples: true
