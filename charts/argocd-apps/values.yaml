@@ -634,10 +634,16 @@ argoconfig:
                   filesystem:
                     directory: /var/loki/chunks
 
-                compactor:
+                compactor:  
+                  working_directory: /var/loki
                   sharedStore: filesystem
               compactor:
                 enabled: true
+                persistence:
+                  enabled: true
+                  size: 5Gi
+                  storageClass: local-path
+              querier:
                 persistence:
                   enabled: true
                   size: 5Gi
