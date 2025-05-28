@@ -744,7 +744,7 @@ argoconfig:
                 persistence:
                   enabled: true
                   type: sts
-                  storageClassName: "storageClassName"
+                  storageClassName: local-path
                   accessModes:
                     - ReadWriteOnce
                   size: 20Gi
