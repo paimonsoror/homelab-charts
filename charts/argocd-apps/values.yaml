@@ -701,7 +701,7 @@ argoconfig:
         project: default
         source:
           repoURL: 'https://prometheus-community.github.io/helm-charts'
-          targetRevision: 70.3.0
+          targetRevision: 72.6.3
           helm:
             values: |-
               prometheus:
