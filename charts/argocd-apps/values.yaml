@@ -47,7 +47,8 @@ argoconfig:
                     inputs:
                       - syslog_in
                     source: |
-                      parts = parse_regex(.message, "^CEF:(?P<version>\\d+)\\|(?P<device_vendor>[^|]*)\\|(?P<device_product>[^|]*)\\|(?P<device_version>[^|]*)\\|(?P<signature_id>[^|]*)\\|(?P<name>[^|]*)\\|(?P<severity>[^|]*)\\|(?P<kvpairs>.*)")
+                      pattern = regex("^CEF:(?P<version>\\d+)\\|(?P<device_vendor>[^|]*)\\|(?P<device_product>[^|]*)\\|(?P<device_version>[^|]*)\\|(?P<signature_id>[^|]*)\\|(?P<name>[^|]*)\\|(?P<severity>[^|]*)\\|(?P<kvpairs>.*)")
+                      parts = parse_regex(.message, pattern)
 
                       .timestamp = now()
                       if is_null(parts) {
