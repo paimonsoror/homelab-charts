@@ -56,7 +56,6 @@ argoconfig:
                       } else {
                         .version = parts.version
                         .device_vendor = parts.device_vendor
-                        .host = parts.device_product
                         .device_product = parts.device_product
                         .device_version = parts.device_version
                         .signature_id = parts.signature_id
@@ -94,7 +93,7 @@ argoconfig:
                     type: loki
                     inputs:
                       - ensure_host      
-                      - parse_syslog_cef:
+                      - parse_syslog_cef
                     endpoint: http://loki-loki-distributed-distributor.loki.svc.cluster.local:3100
                     encoding:
                       codec: json
