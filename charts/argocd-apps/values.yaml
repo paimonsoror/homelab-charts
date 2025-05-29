@@ -42,14 +42,37 @@ argoconfig:
                     address: 0.0.0.0:8080
                     encoding: json
                 transforms:
-                  tag_syslog:
+                  parse_syslog_cef:
                     type: remap
                     inputs:
                       - syslog_in
                     source: |
-                      .job = "syslog"
-                      .source_type = "syslog"
+                      parts = parse_regex(.message, r"^CEF:(?P<version>\d+)\|(?P<device_vendor>[^|]*)\|(?P<device_product>[^|]*)\|(?P<device_version>[^|]*)\|(?P<signature_id>[^|]*)\|(?P<name>[^|]*)\|(?P<severity>[^|]*)\|(?P<kvpairs>.*)")
+
                       .timestamp = now()
+                      if is_null(parts) {
+                        .job = "syslog"
+                        .source_type = "syslog"
+                      } else {
+                        .version = parts.version
+                        .device_vendor = parts.device_vendor
+                        .host = parts.device_product
+                        .device_product = parts.device_product
+                        .device_version = parts.device_version
+                        .signature_id = parts.signature_id
+                        .name = parts.name
+                        .severity = parts.severity
+
+                        kv_pairs = split(parts.kvpairs, " ")
+                        for_each(kv_pairs) -> |kv| {
+                          kv_split = split(kv, "=")
+                          if length(kv_split) == 2 {
+                            key = kv_split[0]
+                            value = kv_split[1]
+                            set!(., key, value)
+                          }
+                        }
+                      }
                   ensure_host:
                     type: remap
                     inputs:
@@ -71,7 +94,7 @@ argoconfig:
                     type: loki
                     inputs:
                       - ensure_host      
-                      - tag_syslog
+                      - parse_syslog_cef:
                     endpoint: http://loki-loki-distributed-distributor.loki.svc.cluster.local:3100
                     encoding:
                       codec: json
