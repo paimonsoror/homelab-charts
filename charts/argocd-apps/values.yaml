@@ -47,30 +47,33 @@ argoconfig:
                     inputs:
                       - syslog_in
                     source: |
-                      parts = parse_regex(.message, r"^CEF:(?P<version>\\\\d+)\\\\|(?P<device_vendor>[^|]*)\\\\|(?P<device_product>[^|]*)\\\\|(?P<device_version>[^|]*)\\\\|(?P<signature_id>[^|]*)\\\\|(?P<name>[^|]*)\\\\|(?P<severity>[^|]*)\\\\|(?P<kvpairs>.*)")
+                      pattern = r'^CEF:(?P<version>\d+)\|(?P<device_vendor>[^|]*)\|(?P<device_product>[^|]*)\|(?P<device_version>[^|]*)\|(?P<signature_id>[^|]*)\|(?P<name>[^|]*)\|(?P<severity>[^|]*)\|(?P<kvpairs>.*)'
+                      parts = parse_regex!(.message, pattern)
 
                       .timestamp = now()
                       if is_null(parts) {
-                        .job = "syslog"
-                        .source_type = "syslog"
+                          .job = "syslog"
+                          .source_type = "syslog"
                       } else {
-                        .version = parts.version
-                        .device_vendor = parts.device_vendor
-                        .device_product = parts.device_product
-                        .device_version = parts.device_version
-                        .signature_id = parts.signature_id
-                        .name = parts.name
-                        .severity = parts.severity
+                          .job = "syslog"
+                          .source_type = "CEF"
+                          .version = parts.version
+                          .device_vendor = parts.device_vendor
+                          .device_product = parts.device_product
+                          .device_version = parts.device_version
+                          .signature_id = parts.signature_id
+                          .name = parts.name
+                          .severity = parts.severity
 
-                        kv_pairs = split(parts.kvpairs, " ")
-                        for_each(kv_pairs) -> |kv| {
-                          kv_split = split(kv, "=")
-                          if length(kv_split) == 2 {
-                            key = kv_split[0]
-                            value = kv_split[1]
-                            set!(., key, value)
+                          kv_pairs = split(parts.kvpairs, " ")
+                          for_each(kv_pairs) -> |_, kv| {
+                              kv_split = split(kv, "=")
+                              if length(kv_split) == 2 {
+                                  key = kv_split[0]
+                                  value = kv_split[1]
+                                  . = set!(., [key], value)
+                              }
                           }
-                        }
                       }
                   ensure_host:
                     type: remap
