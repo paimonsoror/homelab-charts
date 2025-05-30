@@ -36,7 +36,7 @@ argoconfig:
                     type: syslog
                     address: 0.0.0.0:9000
                     mode: udp
-                    host_key: host
+                    host_key: syslog_host
                   fluentbit_in:
                     type: http
                     address: 0.0.0.0:8080
@@ -54,6 +54,7 @@ argoconfig:
                       if is_null(parts) {
                           .job = "syslog"
                           .source_type = "syslog"
+                          .host = coalesce(.syslog_host, "unknown")
                       } else {
                           .job = "syslog"
                           .source_type = "CEF"
@@ -65,14 +66,27 @@ argoconfig:
                           .name = parts.name
                           .severity = parts.severity
 
+                          .host = if exists(.syslog_host) {
+                              .syslog_host
+                          } else if exists(.device_product) {
+                              .device_product
+                          } else {
+                              "unknown"
+                          }
+
+                          # Avoid .host being set to timestamp accidentally
+                          if match(to_string!(.host), r'^\d{4}-\d{2}-\d{2}T') {
+                              .host = "unknown"
+                          }
+
                           kv_pairs = split(parts.kvpairs, " ")
                           for_each(kv_pairs) -> |_, kv| {
-                              kv_split = split(kv, "=")
-                              if length(kv_split) == 2 {
-                                  key = kv_split[0]
-                                  value = kv_split[1]
-                                  . = set!(., [key], value)
-                              }
+                            kv_split = split(kv, "=")
+                            if length(kv_split) == 2 {
+                                key = kv_split[0]
+                                value = kv_split[1]
+                                . = set!(., [key], value)
+                            }
                           }
                       }
                   ensure_host:
