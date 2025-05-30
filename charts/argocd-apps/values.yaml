@@ -54,7 +54,11 @@ argoconfig:
                       if is_null(parts) {
                           .job = "syslog"
                           .source_type = "syslog"
-                          .host = coalesce(.syslog_host, "unknown")
+                          .host = if exists(.syslog_host) {
+                            .syslog_host
+                          } else {
+                            "unknown"
+                          }
                       } else {
                           .job = "syslog"
                           .source_type = "CEF"
