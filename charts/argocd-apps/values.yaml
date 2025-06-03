@@ -18,7 +18,7 @@ argoconfig:
                   ingress.cilium.io/loadbalancer-mode: shared
                   cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
                 hosts:
-                  - host: portainer.homelab
+                  - host: openspeedtest.homelab
                     paths:
                       - path: "/"
                         pathType: Prefix
