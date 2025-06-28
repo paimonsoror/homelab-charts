@@ -12,6 +12,7 @@ argoconfig:
           targetRevision: HEAD
           helm:
             values: |-
+              existingSecret: code-password
               ingress:
                 enabled: true
                 ingressClassName: cilium
