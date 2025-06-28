@@ -26,6 +26,11 @@ argoconfig:
                   - secretName: code-tls
                     hosts:
                       - code.homelab
+              extraVolumeMounts:
+                - name: extra-volume
+                  mountPath: /mnt/homelab-charts
+                  readOnly: true
+                  hostPath: /home/homelab/GitHub/homelab-charts
         destination:
           server: 'https://kubernetes.default.svc'
           namespace: code
