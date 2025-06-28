@@ -9,7 +9,7 @@ argoconfig:
         source:
           repoURL: https://github.com/coder/code-server
           path: ci/helm-chart
-          targetRevision: HEAD
+          targetRevision: v4.101.2
           helm:
             values: |-
               existingSecret: code-password
