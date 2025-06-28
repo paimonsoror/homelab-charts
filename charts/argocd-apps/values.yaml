@@ -30,7 +30,7 @@ argoconfig:
               extraVolumeMounts:
                 - name: extra-volume
                   mountPath: /mnt/homelab-charts
-                  readOnly: true
+                  readOnly: false
                   hostPath: /home/homelab/GitHub/homelab-charts
         destination:
           server: 'https://kubernetes.default.svc'
