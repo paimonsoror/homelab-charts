@@ -36,7 +36,7 @@ argoconfig:
           syncOptions:
             - CreateNamespace=true
     - name: anythingllm
-      enabled: false
+      enabled: true
       spec:
         project: default
         source:
