@@ -47,6 +47,7 @@ argoconfig:
               ingress:
                 enabled: true
                 ingressClassName: "cilium"
+                pathType: ImplementationSpecific
                 annotations:
                   ingress.cilium.io/loadbalancer-mode: shared
                   cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
@@ -54,7 +55,6 @@ argoconfig:
                   - host: flowise.homelab
                     paths:
                       - path: /
-                        pathType: Prefix
                 tls:
                   - secretName: flowise-tls
                     hosts:
