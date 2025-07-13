@@ -25,7 +25,7 @@ argoconfig:
                 tls:
                   - secretName: chromadb-tls
                     hosts:
-                      - chromadb.local
+                      - chromadb.homelab
 
           chart: chromadb
         destination:
