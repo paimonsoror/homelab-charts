@@ -2,6 +2,39 @@
 
 argoconfig:
   application:
+    - name: chromadb
+      enabled: true
+      spec:
+        project: default
+        source:
+          repoURL: 'https://amikos-tech.github.io/chromadb-chart/'
+          targetRevision: 0.1.24
+          helm:
+            values: |-
+              ingress:
+                enabled: true
+                className: "cilium"
+                annotations:
+                  ingress.cilium.io/loadbalancer-mode: shared
+                  cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
+                hosts:
+                  - host: chromadb.homelab
+                    paths:
+                      - path: /
+                        pathType: ImplementationSpecific
+                tls:
+                  - secretName: chromadb-tls
+                    hosts:
+                      - chromadb.local
+
+          chart: chromadb
+        destination:
+          server: 'https://kubernetes.default.svc'
+          namespace: chromadb
+        syncPolicy:
+          automated: {}
+          syncOptions:
+            - CreateNamespace=true
     - name: openwebui
       enabled: true
       spec:
