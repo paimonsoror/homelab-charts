@@ -12,7 +12,7 @@ argoconfig:
           helm:
             values: |-
               ollamaUrls:
-                - https://ollama.homelab
+                - ollama.ollama.svc.cluster.local
               ingress:
                 enabled: true
                 class: "cilium"
