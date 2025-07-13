@@ -2,6 +2,43 @@
 
 argoconfig:
   application:
+    - name: ollama
+      enabled: true
+      spec:
+        project: default
+        source:
+          repoURL: 'https://helm.otwld.com/'
+          targetRevision: 1.24.0
+          helm:
+            values: |-
+              ollama:
+                models:
+                  pull:
+                    - llama2
+              ingress:
+                enabled: true
+                className: "cilium"
+                annotations:
+                  ingress.cilium.io/loadbalancer-mode: shared
+                  cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
+                hosts:
+                    - host: ollama.homelab
+                      paths:
+                        - path: /
+                          pathType: Prefix
+                tls:
+                  - secretName: ollama-tls
+                    hosts:
+                      - ollama.homelab
+
+          chart: ollama
+        destination:
+          server: 'https://kubernetes.default.svc'
+          namespace: ollama
+        syncPolicy:
+          automated: {}
+          syncOptions:
+            - CreateNamespace=true
     - name: code-server
       enabled: true
       spec:
