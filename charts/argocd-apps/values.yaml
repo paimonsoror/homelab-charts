@@ -2,6 +2,7 @@
 
 argoconfig:
   application:
+    ### Start of LLM Related Charts ###
     - name: chromadb
       enabled: true
       spec:
@@ -108,6 +109,8 @@ argoconfig:
           automated: {}
           syncOptions:
             - CreateNamespace=true
+
+    ### Start of Homelab Productivity ###
     - name: code-server
       enabled: true
       spec:
@@ -145,40 +148,7 @@ argoconfig:
           automated: {}
           syncOptions:
             - CreateNamespace=true
-            - ServerSideApply=true
-    - name: uptimekuma
-      enabled: true
-      spec:
-        project: default
-        source:
-          repoURL: https://helm.irsigler.cloud
-          targetRevision: 2.21.3
-          helm:
-            values: |-
-              ingress:
-                enabled: true
-                className: cilium
-                annotations:
-                  ingress.cilium.io/loadbalancer-mode: shared
-                  cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
-                hosts:
-                  - host: kuma.homelab
-                    paths:
-                      - path: "/"
-                        pathType: Prefix
-                tls: 
-                  - secretName: kuma-tls
-                    hosts:
-                      - kuma.homelab
-          chart: uptime-kuma
-        destination:
-          server: 'https://kubernetes.default.svc'
-          namespace: uptimekuma
-        syncPolicy:
-          automated: {}
-          syncOptions:
-            - CreateNamespace=true
-            - ServerSideApply=true
+            - ServerSideApply=true 
     - name: openspeedtest
       enabled: true
       spec:
@@ -207,137 +177,6 @@ argoconfig:
         destination:
           server: 'https://kubernetes.default.svc'
           namespace: openspeedtest
-        syncPolicy:
-          automated: {}
-          syncOptions:
-            - CreateNamespace=true
-            - ServerSideApply=true
-    - name: vector
-      enabled: true
-      spec:
-        project: default
-        source:
-          repoURL: https://helm.vector.dev
-          targetRevision: 0.43.0
-          helm:
-            values: |-
-              containerPorts:
-                - name: http
-                  containerPort: 8080
-                - name: syslog
-                  containerPort: 9000
-                  protocol: UDP
-              service:
-                enabled: true
-                type: "NodePort"
-                ports:
-                  - name: http
-                    port: 8080
-                    targetPort: 8080
-                  - name: syslog
-                    port: 9000
-                    protocol: UDP
-                    nodePort: 30000
-              serviceHeadless:
-                enabled: false
-              customConfig:
-                sources:
-                  syslog_in:
-                    type: syslog
-                    address: 0.0.0.0:9000
-                    mode: udp
-                    host_key: syslog_host
-                  fluentbit_in:
-                    type: http
-                    address: 0.0.0.0:8080
-                    encoding: json
-                transforms:
-                  parse_syslog_cef:
-                    type: remap
-                    inputs:
-                      - syslog_in
-                    source: |
-                      pattern = r'^CEF:(?P<version>\d+)\|(?P<device_vendor>[^|]*)\|(?P<device_product>[^|]*)\|(?P<device_version>[^|]*)\|(?P<signature_id>[^|]*)\|(?P<name>[^|]*)\|(?P<severity>[^|]*)\|(?P<kvpairs>.*)'
-                      parts = parse_regex!(.message, pattern)
-
-                      .timestamp = now()
-                      if is_null(parts) {
-                          .job = "syslog"
-                          .source_type = "syslog"
-                          .host = if exists(.syslog_host) {
-                            .syslog_host
-                          } else {
-                            "unknown"
-                          }
-                      } else {
-                          .job = "syslog"
-                          .source_type = "CEF"
-                          .version = parts.version
-                          .device_vendor = parts.device_vendor
-                          .device_product = parts.device_product
-                          .device_version = parts.device_version
-                          .signature_id = parts.signature_id
-                          .name = parts.name
-                          .severity = parts.severity
-
-                          .host = if exists(.syslog_host) {
-                              .syslog_host
-                          } else if exists(.device_product) {
-                              .device_product
-                          } else {
-                              "unknown"
-                          }
-
-                          # Avoid .host being set to timestamp accidentally
-                          if match(to_string!(.host), r'^\d{4}-\d{2}-\d{2}T') {
-                              .host = "unknown"
-                          }
-
-                          kv_pairs = split(parts.kvpairs, " ")
-                          for_each(kv_pairs) -> |_, kv| {
-                            kv_split = split(kv, "=")
-                            if length(kv_split) == 2 {
-                                key = kv_split[0]
-                                value = kv_split[1]
-                                . = set!(., [key], value)
-                            }
-                          }
-                      }
-                  ensure_host:
-                    type: remap
-                    inputs:
-                      - fluentbit_in
-                    source: |
-                      .job = "fluentbit"
-                      .source_type = "fluentbit"
-                      .host = if exists(.kubernetes.namespace_name ) {
-                        .kubernetes.namespace_name
-                      } else if exists(.host) {
-                        .host
-                      } else if exists(.hostname) {
-                        .hostname
-                      } else {
-                        "unknown"
-                      }
-                sinks:
-                  loki_out:
-                    type: loki
-                    inputs:
-                      - ensure_host      
-                      - parse_syslog_cef
-                    endpoint: http://loki-loki-distributed-distributor.loki.svc.cluster.local:3100
-                    encoding:
-                      codec: json
-                    labels:
-                      job: "{{`{{ job }}`}}"
-                      host: "{{`{{ host }}`}}"
-                      source: "{{`{{ source_type }}`}}"
-                    remove_label_fields: true
-                    remove_timestamp: false
-          chart: vector
-        destination:
-          server: 'https://kubernetes.default.svc'
-          namespace: vector
         syncPolicy:
           automated: {}
           syncOptions:
@@ -478,76 +317,6 @@ argoconfig:
           syncOptions:
             - CreateNamespace=true
             - ServerSideApply=true
-    - name: fluentbit
-      enabled: true
-      spec:
-        project: default
-        source:
-          repoURL: https://fluent.github.io/helm-charts
-          targetRevision: 0.49.0
-          helm:
-            values: |-
-              ## https://docs.fluentbit.io/manual/administration/configuring-fluent-bit/classic-mode/configuration-file
-              config:
-                service: |
-                  [SERVICE]
-                      Daemon Off
-                      Flush {{ .Values.flush }}
-                      Log_Level {{ .Values.logLevel }}
-                      Parsers_File /fluent-bit/etc/parsers.conf
-                      Parsers_File /fluent-bit/etc/conf/custom_parsers.conf
-                      HTTP_Server On
-                      HTTP_Listen 0.0.0.0
-                      HTTP_Port {{ .Values.metricsPort }}
-                      Health_Check On
-
-                ## https://docs.fluentbit.io/manual/pipeline/inputs
-                inputs: |
-                  [INPUT]
-                      Name tail
-                      Path /var/log/containers/*.log
-                      multiline.parser docker, cri
-                      Tag kube.*
-                      Mem_Buf_Limit 5MB
-                      Skip_Long_Lines On
-
-                  [INPUT]
-                      Name systemd
-                      Tag host.*
-                      Systemd_Filter _SYSTEMD_UNIT=kubelet.service
-                      Read_From_Tail On
-
-                ## https://docs.fluentbit.io/manual/pipeline/filters
-                filters: |
-                  [FILTER]
-                      Name kubernetes
-                      Match kube.*
-                      Merge_Log On
-                      Keep_Log Off
-                      K8S-Logging.Parser On
-                      K8S-Logging.Exclude On
-
-                ## https://docs.fluentbit.io/manual/pipeline/outputs
-                outputs: |
-                  [OUTPUT]
-                      Name            http
-                      Match           *
-                      Host            vector.vector.svc.cluster.local
-                      Port            8080
-                      URI             /
-                      Format          json
-                      Json_date_key   timestamp
-                      Json_date_format iso8601
-                      Header          Content-Type application/json
-          chart: fluent-bit
-        destination:
-          server: 'https://kubernetes.default.svc'
-          namespace: fluent
-        syncPolicy:
-          automated: {}
-          syncOptions:
-            - CreateNamespace=true
-            - ServerSideApply=true
     - name: cloudnative-pg-operator
       enabled: true
       spec:
@@ -633,90 +402,6 @@ argoconfig:
         destination:
           server: 'https://kubernetes.default.svc'
           namespace: immich
-        syncPolicy:
-          automated: {}
-          syncOptions:
-            - CreateNamespace=true
-    - name: opensearch-dashboards
-      enabled: false
-      spec:
-        project: default
-        source:
-          repoURL: https://opensearch-project.github.io/helm-charts
-          targetRevision: 2.28.0
-          helm:
-            values: |-
-              ingress:
-                enabled: true
-                ingressClassName: "cilium"
-                annotations:
-                  ingress.cilium.io/loadbalancer-mode: shared
-                  cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
-                hosts:
-                    - host: opensearch-dash.homelab
-                      paths:
-                        - path: /
-                          backend:
-                            serviceName: ""
-                            servicePort: ""
-                tls:
-                  - secretName: opensearch-dash-tls
-                    hosts:
-                      - opensearch-dash.homelab
-          chart: opensearch-dashboards
-        destination:
-          server: 'https://kubernetes.default.svc'
-          namespace: opensearch
-        syncPolicy:
-          automated: {}
-          syncOptions:
-            - CreateNamespace=true
-    - name: opensearch
-      enabled: false
-      spec:
-        project: default
-        source:
-          repoURL: https://opensearch-project.github.io/helm-charts
-          targetRevision: 2.32.0
-          helm:
-            values: |-
-              config:
-                opensearch.yml: |
-                  cluster.name: opensearch-cluster
-
-                  # Bind to all interfaces because we don't know what IP address Docker will assign to us.
-                  network.host: 0.0.0.0
-
-                  # Setting network.host to a non-loopback address enables the annoying bootstrap checks. "Single-node" mode disables them again.
-                  # Implicitly done if ".singleNode" is set to "true".
-                  # discovery.type: single-node
-
-                  # Start OpenSearch Security Demo Configuration
-                  # WARNING: revise all the lines below before you go into production
-                  
-              persistence:
-                enabled: false
-              singleNode: true
-              extraEnvs: 
-                - name: OPENSEARCH_INITIAL_ADMIN_PASSWORD
-                  value: Th1s1sS3cure
-              ingress:
-                enabled: true
-                ingressClassName: "cilium"
-                annotations:
-                  ingress.cilium.io/loadbalancer-mode: shared
-                  cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
-                path: /
-                hosts:
-                    - opensearch.homelab
-                tls:
-                  - secretName: opensearch-tls
-                    hosts:
-                      - opensearch.homelab
-          chart: opensearch
-        destination:
-          server: 'https://kubernetes.default.svc'
-          namespace: opensearch
         syncPolicy:
           automated: {}
           syncOptions:
@@ -832,6 +517,8 @@ argoconfig:
         syncPolicy:
           syncOptions:
             - CreateNamespace=true
+    
+    ### Start of Homelab Monitoring Charts ###
     - name: prom-push-gateway
       enabled: true
       spec:
@@ -1011,3 +698,321 @@ argoconfig:
           syncOptions:
             - CreateNamespace=true
             - ServerSideApply=true
+    - name: uptimekuma
+      enabled: true
+      spec:
+        project: default
+        source:
+          repoURL: https://helm.irsigler.cloud
+          targetRevision: 2.21.3
+          helm:
+            values: |-
+              ingress:
+                enabled: true
+                className: cilium
+                annotations:
+                  ingress.cilium.io/loadbalancer-mode: shared
+                  cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
+                hosts:
+                  - host: kuma.homelab
+                    paths:
+                      - path: "/"
+                        pathType: Prefix
+                tls: 
+                  - secretName: kuma-tls
+                    hosts:
+                      - kuma.homelab
+          chart: uptime-kuma
+        destination:
+          server: 'https://kubernetes.default.svc'
+          namespace: uptimekuma
+        syncPolicy:
+          automated: {}
+          syncOptions:
+            - CreateNamespace=true
+            - ServerSideApply=true
+    - name: opensearch-dashboards
+      enabled: false
+      spec:
+        project: default
+        source:
+          repoURL: https://opensearch-project.github.io/helm-charts
+          targetRevision: 2.28.0
+          helm:
+            values: |-
+              ingress:
+                enabled: true
+                ingressClassName: "cilium"
+                annotations:
+                  ingress.cilium.io/loadbalancer-mode: shared
+                  cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
+                hosts:
+                    - host: opensearch-dash.homelab
+                      paths:
+                        - path: /
+                          backend:
+                            serviceName: ""
+                            servicePort: ""
+                tls:
+                  - secretName: opensearch-dash-tls
+                    hosts:
+                      - opensearch-dash.homelab
+          chart: opensearch-dashboards
+        destination:
+          server: 'https://kubernetes.default.svc'
+          namespace: opensearch
+        syncPolicy:
+          automated: {}
+          syncOptions:
+            - CreateNamespace=true
+    - name: opensearch
+      enabled: false
+      spec:
+        project: default
+        source:
+          repoURL: https://opensearch-project.github.io/helm-charts
+          targetRevision: 2.32.0
+          helm:
+            values: |-
+              config:
+                opensearch.yml: |
+                  cluster.name: opensearch-cluster
+
+                  # Bind to all interfaces because we don't know what IP address Docker will assign to us.
+                  network.host: 0.0.0.0
+
+                  # Setting network.host to a non-loopback address enables the annoying bootstrap checks. "Single-node" mode disables them again.
+                  # Implicitly done if ".singleNode" is set to "true".
+                  # discovery.type: single-node
+
+                  # Start OpenSearch Security Demo Configuration
+                  # WARNING: revise all the lines below before you go into production
+                  
+              persistence:
+                enabled: false
+              singleNode: true
+              extraEnvs: 
+                - name: OPENSEARCH_INITIAL_ADMIN_PASSWORD
+                  value: Th1s1sS3cure
+              ingress:
+                enabled: true
+                ingressClassName: "cilium"
+                annotations:
+                  ingress.cilium.io/loadbalancer-mode: shared
+                  cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
+                path: /
+                hosts:
+                    - opensearch.homelab
+                tls:
+                  - secretName: opensearch-tls
+                    hosts:
+                      - opensearch.homelab
+          chart: opensearch
+        destination:
+          server: 'https://kubernetes.default.svc'
+          namespace: opensearch
+        syncPolicy:
+          automated: {}
+          syncOptions:
+            - CreateNamespace=true
+    - name: vector
+      enabled: true
+      spec:
+        project: default
+        source:
+          repoURL: https://helm.vector.dev
+          targetRevision: 0.43.0
+          helm:
+            values: |-
+              containerPorts:
+                - name: http
+                  containerPort: 8080
+                - name: syslog
+                  containerPort: 9000
+                  protocol: UDP
+              service:
+                enabled: true
+                type: "NodePort"
+                ports:
+                  - name: http
+                    port: 8080
+                    targetPort: 8080
+                  - name: syslog
+                    port: 9000
+                    protocol: UDP
+                    nodePort: 30000
+              serviceHeadless:
+                enabled: false
+              customConfig:
+                sources:
+                  syslog_in:
+                    type: syslog
+                    address: 0.0.0.0:9000
+                    mode: udp
+                    host_key: syslog_host
+                  fluentbit_in:
+                    type: http
+                    address: 0.0.0.0:8080
+                    encoding: json
+                transforms:
+                  parse_syslog_cef:
+                    type: remap
+                    inputs:
+                      - syslog_in
+                    source: |
+                      pattern = r'^CEF:(?P<version>\d+)\|(?P<device_vendor>[^|]*)\|(?P<device_product>[^|]*)\|(?P<device_version>[^|]*)\|(?P<signature_id>[^|]*)\|(?P<name>[^|]*)\|(?P<severity>[^|]*)\|(?P<kvpairs>.*)'
+                      parts = parse_regex!(.message, pattern)
+
+                      .timestamp = now()
+                      if is_null(parts) {
+                          .job = "syslog"
+                          .source_type = "syslog"
+                          .host = if exists(.syslog_host) {
+                            .syslog_host
+                          } else {
+                            "unknown"
+                          }
+                      } else {
+                          .job = "syslog"
+                          .source_type = "CEF"
+                          .version = parts.version
+                          .device_vendor = parts.device_vendor
+                          .device_product = parts.device_product
+                          .device_version = parts.device_version
+                          .signature_id = parts.signature_id
+                          .name = parts.name
+                          .severity = parts.severity
+
+                          .host = if exists(.syslog_host) {
+                              .syslog_host
+                          } else if exists(.device_product) {
+                              .device_product
+                          } else {
+                              "unknown"
+                          }
+
+                          # Avoid .host being set to timestamp accidentally
+                          if match(to_string!(.host), r'^\d{4}-\d{2}-\d{2}T') {
+                              .host = "unknown"
+                          }
+
+                          kv_pairs = split(parts.kvpairs, " ")
+                          for_each(kv_pairs) -> |_, kv| {
+                            kv_split = split(kv, "=")
+                            if length(kv_split) == 2 {
+                                key = kv_split[0]
+                                value = kv_split[1]
+                                . = set!(., [key], value)
+                            }
+                          }
+                      }
+                  ensure_host:
+                    type: remap
+                    inputs:
+                      - fluentbit_in
+                    source: |
+                      .job = "fluentbit"
+                      .source_type = "fluentbit"
+                      .host = if exists(.kubernetes.namespace_name ) {
+                        .kubernetes.namespace_name
+                      } else if exists(.host) {
+                        .host
+                      } else if exists(.hostname) {
+                        .hostname
+                      } else {
+                        "unknown"
+                      }
+                sinks:
+                  loki_out:
+                    type: loki
+                    inputs:
+                      - ensure_host      
+                      - parse_syslog_cef
+                    endpoint: http://loki-loki-distributed-distributor.loki.svc.cluster.local:3100
+                    encoding:
+                      codec: json
+                    labels:
+                      job: "{{`{{ job }}`}}"
+                      host: "{{`{{ host }}`}}"
+                      source: "{{`{{ source_type }}`}}"
+                    remove_label_fields: true
+                    remove_timestamp: false
+          chart: vector
+        destination:
+          server: 'https://kubernetes.default.svc'
+          namespace: vector
+        syncPolicy:
+          automated: {}
+          syncOptions:
+            - CreateNamespace=true
+            - ServerSideApply=true
+    - name: fluentbit
+      enabled: true
+      spec:
+        project: default
+        source:
+          repoURL: https://fluent.github.io/helm-charts
+          targetRevision: 0.49.0
+          helm:
+            values: |-
+              ## https://docs.fluentbit.io/manual/administration/configuring-fluent-bit/classic-mode/configuration-file
+              config:
+                service: |
+                  [SERVICE]
+                      Daemon Off
+                      Flush {{ .Values.flush }}
+                      Log_Level {{ .Values.logLevel }}
+                      Parsers_File /fluent-bit/etc/parsers.conf
+                      Parsers_File /fluent-bit/etc/conf/custom_parsers.conf
+                      HTTP_Server On
+                      HTTP_Listen 0.0.0.0
+                      HTTP_Port {{ .Values.metricsPort }}
+                      Health_Check On
+
+                ## https://docs.fluentbit.io/manual/pipeline/inputs
+                inputs: |
+                  [INPUT]
+                      Name tail
+                      Path /var/log/containers/*.log
+                      multiline.parser docker, cri
+                      Tag kube.*
+                      Mem_Buf_Limit 5MB
+                      Skip_Long_Lines On
+
+                  [INPUT]
+                      Name systemd
+                      Tag host.*
+                      Systemd_Filter _SYSTEMD_UNIT=kubelet.service
+                      Read_From_Tail On
+
+                ## https://docs.fluentbit.io/manual/pipeline/filters
+                filters: |
+                  [FILTER]
+                      Name kubernetes
+                      Match kube.*
+                      Merge_Log On
+                      Keep_Log Off
+                      K8S-Logging.Parser On
+                      K8S-Logging.Exclude On
+
+                ## https://docs.fluentbit.io/manual/pipeline/outputs
+                outputs: |
+                  [OUTPUT]
+                      Name            http
+                      Match           *
+                      Host            vector.vector.svc.cluster.local
+                      Port            8080
+                      URI             /
+                      Format          json
+                      Json_date_key   timestamp
+                      Json_date_format iso8601
+                      Header          Content-Type application/json
+          chart: fluent-bit
+        destination:
+          server: 'https://kubernetes.default.svc'
+          namespace: fluent
+        syncPolicy:
+          automated: {}
+          syncOptions:
+            - CreateNamespace=true
+            - ServerSideApply=true    
