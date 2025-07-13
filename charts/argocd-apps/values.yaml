@@ -47,7 +47,7 @@ argoconfig:
               ingress:
                 enabled: true
                 ingressClassName: "cilium"
-                pathType: ImplementationSpecific
+                pathType: Prefix
                 annotations:
                   ingress.cilium.io/loadbalancer-mode: shared
                   cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
