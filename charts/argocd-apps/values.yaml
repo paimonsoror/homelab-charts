@@ -50,9 +50,6 @@ argoconfig:
                 SERVER_PORT: 3001
                 UID: 1000
                 GID: 1000
-                SIG_KEY: "AGXXD8@QFLEqDgRnWor296L^t3jJ@fhz"
-                SIG_SALT: "AGXXD8@QFLEqDgRnWor296L^t3jJ@fhz"
-                JWT_SECRET: "my-random-string-for-seeding"
 
                 # -- Configuration for the embedding model.
                 EMBEDDING_MODEL_PREF: "nomic-embed-text:1.5"
