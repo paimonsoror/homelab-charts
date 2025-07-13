@@ -45,6 +45,7 @@ argoconfig:
           helm:
             values: |-
               config:
+                DEBUG: true
                 STORAGE_DIR: "/app/server/storage"
                 # -- Configuration for the embedding model.
                 EMBEDDING_MODEL_PREF: "nomic-embed-text:1.5"
