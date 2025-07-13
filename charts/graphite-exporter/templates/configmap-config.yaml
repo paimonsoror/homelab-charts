@@ -1,8 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-    name: graphite-config
-    namespace: prometheus
-data:
-    config.conf: |-
-{{ .Files.Get "config.conf" | indent 8 }}
