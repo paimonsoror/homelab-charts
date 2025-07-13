@@ -2,7 +2,9 @@
 
 argoconfig:
   application:
+    ####################################
     ### Start of LLM Related Charts ###
+    ####################################
     - name: chromadb
       enabled: true
       spec:
@@ -110,7 +112,9 @@ argoconfig:
           syncOptions:
             - CreateNamespace=true
 
+    ####################################
     ### Start of Photo Storage
+    ####################################
     - name: cloudnative-pg-operator
       enabled: true
       spec:
@@ -201,7 +205,9 @@ argoconfig:
           syncOptions:
             - CreateNamespace=true
 
+    ####################################
     ### Start of Homelab Productivity ###
+    ####################################
     - name: code-server
       enabled: true
       spec:
@@ -487,7 +493,9 @@ argoconfig:
           syncOptions:
             - CreateNamespace=true
     
+    ####################################
     ### Start of Homelab Monitoring Charts ###
+    ####################################
     - name: prom-push-gateway
       enabled: true
       spec:
