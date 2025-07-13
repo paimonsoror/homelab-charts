@@ -84,6 +84,10 @@ argoconfig:
                 annotations:
                   ingress.cilium.io/loadbalancer-mode: shared
                   cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
+                  nginx.ingress.kubernetes.io/proxy-connect-timeout: "600"
+                  nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+                  nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+                  cilium.io/proxy-timeout-seconds: "600"
                 hosts:
                     - host: ollama.homelab
                       paths:
