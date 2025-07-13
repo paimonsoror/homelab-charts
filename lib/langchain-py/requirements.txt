@@ -1,0 +1,6 @@
+fastapi
+uvicorn
+langchain-community
+chromadb
+langchain_ollama
+numpy
