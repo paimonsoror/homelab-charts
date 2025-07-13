@@ -20,10 +20,8 @@ argoconfig:
                   ingress.cilium.io/loadbalancer-mode: shared
                   cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
                 host: "open-webui.homelab"
-                tls:
-                  - secretName: open-webui-tls
-                    hosts:
-                      - open-webui.homelab
+                tls: true
+                existingSecret: open-webui-tls
 
           chart: open-webui
         destination:
