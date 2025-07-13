@@ -17,16 +17,16 @@ argoconfig:
                 annotations:
                   ingress.cilium.io/loadbalancer-mode: shared
                   cilium.io/https-redirect: "false"
-                  cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
+                #  cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
                 hosts:
                   - host: chromadb.homelab
                     paths:
                       - path: /
                         pathType: Prefix
-                tls:
-                  - secretName: chromadb-tls
-                    hosts:
-                      - chromadb.homelab
+                #tls:
+                #  - secretName: chromadb-tls
+                #    hosts:
+                #      - chromadb.homelab
 
           chart: chromadb
         destination:
