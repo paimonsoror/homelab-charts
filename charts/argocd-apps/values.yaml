@@ -21,7 +21,7 @@ argoconfig:
                   - host: chromadb.homelab
                     paths:
                       - path: /
-                        pathType: ImplementationSpecific
+                        pathType: Prefix
                 tls:
                   - secretName: chromadb-tls
                     hosts:
