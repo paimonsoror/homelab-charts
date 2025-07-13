@@ -16,7 +16,6 @@ argoconfig:
                 className: "cilium"
                 annotations:
                   ingress.cilium.io/loadbalancer-mode: shared
-                  cilium.io/https-redirect: "false"
                   cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
                 hosts:
                   - host: chromadb.homelab
