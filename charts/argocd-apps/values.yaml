@@ -110,6 +110,97 @@ argoconfig:
           syncOptions:
             - CreateNamespace=true
 
+    ### Start of Photo Storage
+    - name: cloudnative-pg-operator
+      enabled: true
+      spec:
+        project: default
+        source:
+          repoURL: https://cloudnative-pg.github.io/charts
+          targetRevision: 0.23.2
+          chart: cloudnative-pg
+        destination:
+          server: 'https://kubernetes.default.svc'
+          namespace: cnpg-system
+        syncPolicy:
+          automated: {}
+          syncOptions:
+            - CreateNamespace=true
+    - name: immich
+      enabled: true
+      spec:
+        project: default
+        source:
+          repoURL: https://immich-app.github.io/immich-charts
+          targetRevision: 0.9.1
+          helm:
+            values: |-
+              env:
+                DB_HOSTNAME:
+                  secretKeyRef:
+                    name: immich-postgres-user
+                    key: host
+                DB_USERNAME:
+                  secretKeyRef:
+                    name: immich-postgres-user
+                    key: username
+                DB_DATABASE_NAME:
+                  secretKeyRef:
+                    name: immich-postgres-user
+                    key: dbname
+                DB_PASSWORD:
+                  secretKeyRef:
+                    name: immich-postgres-user
+                    key: password
+              image:
+                tag: v1.135.3
+              immich:
+                metrics:
+                  enabled: true
+                persistence:
+                  library:
+                    existingClaim: immich-pvc
+              postgresql:
+                enabled: false
+                primary:
+                  resources:
+                    requests:
+                      cpu: 200m
+                      memory: 512Mi
+                    limits:
+                      cpu: 400m
+                      memory: 1024Mi
+              redis:
+                enabled: true
+              server:
+                enabled: true
+                image:
+                  repository: ghcr.io/immich-app/immich-server
+                  pullPolicy: IfNotPresent
+                ingress:
+                  main:
+                    enabled: true
+                    ingressClassName: "cilium"
+                    annotations:
+                      ingress.cilium.io/loadbalancer-mode: shared
+                      cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
+                    hosts:
+                      - host: immich.homelab
+                        paths:
+                          - path: "/"
+                    tls: 
+                      - secretName: immich-tls
+                        hosts:
+                          - immich.homelab
+          chart: immich
+        destination:
+          server: 'https://kubernetes.default.svc'
+          namespace: immich
+        syncPolicy:
+          automated: {}
+          syncOptions:
+            - CreateNamespace=true
+
     ### Start of Homelab Productivity ###
     - name: code-server
       enabled: true
@@ -149,39 +240,6 @@ argoconfig:
           syncOptions:
             - CreateNamespace=true
             - ServerSideApply=true 
-    - name: openspeedtest
-      enabled: true
-      spec:
-        project: default
-        source:
-          repoURL: https://openspeedtest.github.io/Helm-chart/
-          targetRevision: 0.1.2
-          helm:
-            values: |-
-              ingress:
-                enabled: true
-                className: "cilium"
-                annotations:
-                  ingress.cilium.io/loadbalancer-mode: shared
-                  cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
-                hosts:
-                  - host: openspeedtest.homelab
-                    paths:
-                      - path: "/"
-                        pathType: Prefix
-                tls: 
-                  - secretName: openspeedtest-tls
-                    hosts:
-                      - openspeedtest.homelab
-          chart: openspeedtest
-        destination:
-          server: 'https://kubernetes.default.svc'
-          namespace: openspeedtest
-        syncPolicy:
-          automated: {}
-          syncOptions:
-            - CreateNamespace=true
-            - ServerSideApply=true
     - name: nextcloud
       enabled: false
       spec:
@@ -316,96 +374,7 @@ argoconfig:
           automated: {}
           syncOptions:
             - CreateNamespace=true
-            - ServerSideApply=true
-    - name: cloudnative-pg-operator
-      enabled: true
-      spec:
-        project: default
-        source:
-          repoURL: https://cloudnative-pg.github.io/charts
-          targetRevision: 0.23.2
-          chart: cloudnative-pg
-        destination:
-          server: 'https://kubernetes.default.svc'
-          namespace: cnpg-system
-        syncPolicy:
-          automated: {}
-          syncOptions:
-            - CreateNamespace=true
-    - name: immich
-      enabled: true
-      spec:
-        project: default
-        source:
-          repoURL: https://immich-app.github.io/immich-charts
-          targetRevision: 0.9.1
-          helm:
-            values: |-
-              env:
-                DB_HOSTNAME:
-                  secretKeyRef:
-                    name: immich-postgres-user
-                    key: host
-                DB_USERNAME:
-                  secretKeyRef:
-                    name: immich-postgres-user
-                    key: username
-                DB_DATABASE_NAME:
-                  secretKeyRef:
-                    name: immich-postgres-user
-                    key: dbname
-                DB_PASSWORD:
-                  secretKeyRef:
-                    name: immich-postgres-user
-                    key: password
-              image:
-                tag: v1.135.3
-              immich:
-                metrics:
-                  enabled: true
-                persistence:
-                  library:
-                    existingClaim: immich-pvc
-              postgresql:
-                enabled: false
-                primary:
-                  resources:
-                    requests:
-                      cpu: 200m
-                      memory: 512Mi
-                    limits:
-                      cpu: 400m
-                      memory: 1024Mi
-              redis:
-                enabled: true
-              server:
-                enabled: true
-                image:
-                  repository: ghcr.io/immich-app/immich-server
-                  pullPolicy: IfNotPresent
-                ingress:
-                  main:
-                    enabled: true
-                    ingressClassName: "cilium"
-                    annotations:
-                      ingress.cilium.io/loadbalancer-mode: shared
-                      cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
-                    hosts:
-                      - host: immich.homelab
-                        paths:
-                          - path: "/"
-                    tls: 
-                      - secretName: immich-tls
-                        hosts:
-                          - immich.homelab
-          chart: immich
-        destination:
-          server: 'https://kubernetes.default.svc'
-          namespace: immich
-        syncPolicy:
-          automated: {}
-          syncOptions:
-            - CreateNamespace=true
+            - ServerSideApply=true 
     - name: hivemq-mqtt-platform
       enabled: false
       spec:
@@ -1016,3 +985,36 @@ argoconfig:
           syncOptions:
             - CreateNamespace=true
             - ServerSideApply=true    
+    - name: openspeedtest
+      enabled: true
+      spec:
+        project: default
+        source:
+          repoURL: https://openspeedtest.github.io/Helm-chart/
+          targetRevision: 0.1.2
+          helm:
+            values: |-
+              ingress:
+                enabled: true
+                className: "cilium"
+                annotations:
+                  ingress.cilium.io/loadbalancer-mode: shared
+                  cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
+                hosts:
+                  - host: openspeedtest.homelab
+                    paths:
+                      - path: "/"
+                        pathType: Prefix
+                tls: 
+                  - secretName: openspeedtest-tls
+                    hosts:
+                      - openspeedtest.homelab
+          chart: openspeedtest
+        destination:
+          server: 'https://kubernetes.default.svc'
+          namespace: openspeedtest
+        syncPolicy:
+          automated: {}
+          syncOptions:
+            - CreateNamespace=true
+            - ServerSideApply=true
