@@ -35,8 +35,41 @@ argoconfig:
           automated: {}
           syncOptions:
             - CreateNamespace=true
-    - name: anythingllm
+    - name: flowise
       enabled: true
+      spec:
+        project: default 
+        source:
+          repoURL: 'https://cowboysysop.github.io/charts/'
+          targetRevision: 5.1.1
+          helm:
+            values: |-
+              ingress:
+                enabled: true
+                ingressClassName: "cilium"
+                annotations:
+                  ingress.cilium.io/loadbalancer-mode: shared
+                  cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
+                hosts:
+                  - host: flowise.homelab
+                    paths:
+                      - path: /
+                        pathType: Prefix
+                tls:
+                  - secretName: flowise-tls
+                    hosts:
+                      - flowise.homelab
+          chart: flowise
+        destination:
+          server: 'https://kubernetes.default.svc'
+          namespace: flowise
+        syncPolicy:
+          automated: {}
+          syncOptions:
+            - CreateNamespace=true
+
+    - name: anythingllm
+      enabled: false
       spec:
         project: default
         source:
