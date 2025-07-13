@@ -54,7 +54,7 @@ argoconfig:
                 hosts:
                   - host: flowise.homelab
                     paths:
-                      - path: /
+                      - /
                 tls:
                   - secretName: flowise-tls
                     hosts:
