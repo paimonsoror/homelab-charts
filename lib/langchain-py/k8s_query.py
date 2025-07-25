@@ -33,7 +33,7 @@ class ChromaV1Wrapper:
             chroma_server_host=api_host,
             chroma_server_http_port=api_port,
             chroma_server_ssl_enabled=ssl,
-            chroma_server_ssl_verify=False
+            chroma_server_ssl_verify=False,
             anonymized_telemetry=False
         )
         self.client = Client(settings=settings)
@@ -41,7 +41,7 @@ class ChromaV1Wrapper:
 
         embedding = OllamaEmbeddings(
             model="mistral",
-            base_url="https://ollama.homelab",
+            base_url="http://truenas.homelab:30068",
             client_kwargs= {
                 "verify":False
             }
@@ -90,10 +90,7 @@ for doc in results:
 # Optionally, use Ollama LLM to answer based on retrieved docs
 llm = Ollama(
   model="mistral", 
-  base_url="https://ollama.homelab",
-  client_kwargs= {
-        "verify":False
-    }
+  base_url="http://truenas.homelab:30068"
 )
 response = llm.invoke(f"Answer the question based on:\n\n{results}\n\nQuestion: {query}")
 print("LLM response:", response)
