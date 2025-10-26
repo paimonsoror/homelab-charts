@@ -314,6 +314,9 @@ argoconfig:
           chart: pihole
           helm:
             values: |-
+              image:
+                repository: "pihole/pihole"
+                tag: "2025.10.0"
               extraEnvVars:
                 PIHOLE_UID: 3005
                 PIHOLE_GID: 3003
