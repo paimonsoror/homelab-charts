@@ -320,6 +320,11 @@ argoconfig:
                     io.cilium/lb-ipam-ips: 192.168.5.112
                     io.cilium/lb-ipam-sharing-key: technitium
                   type: LoadBalancer
+                webTls:
+                  annotations:             
+                    io.cilium/lb-ipam-ips: 192.168.5.112
+                    io.cilium/lb-ipam-sharing-key: technitium
+                  type: LoadBalancer
                 dns:
                   annotations:             
                     io.cilium/lb-ipam-ips: 192.168.5.112
