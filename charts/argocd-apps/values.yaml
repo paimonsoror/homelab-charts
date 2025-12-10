@@ -314,6 +314,9 @@ argoconfig:
           targetRevision: HEAD
           helm:
             values: |-
+              dnsServer:
+                webServiceEnableHttp: false
+                webServiceEnableHttps: true
               service:
                 web:
                   annotations:             
