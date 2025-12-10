@@ -319,11 +319,12 @@ argoconfig:
                   annotations:             
                     io.cilium/lb-ipam-ips: 192.168.5.103
                     io.cilium/lb-ipam-sharing-key: technitium
-                  type: LoadBalancer
+                  type: ClusterIP
                 dns:
                   annotations:             
                     io.cilium/lb-ipam-ips: 192.168.5.103
                     io.cilium/lb-ipam-sharing-key: technitium
+                  type: NodePort
         destination:
           server: 'https://kubernetes.default.svc'
           namespace: technitium
