@@ -314,7 +314,16 @@ argoconfig:
           targetRevision: HEAD
           helm:
             values: |-
-              
+              service:
+                web:
+                  annotations:             
+                    io.cilium/lb-ipam-ips: 192.168.5.103
+                    io.cilium/lb-ipam-sharing-key: technitium
+                  type: LoadBalancer
+                dns:
+                  annotations:             
+                    io.cilium/lb-ipam-ips: 192.168.5.103
+                    io.cilium/lb-ipam-sharing-key: technitium
         destination:
           server: 'https://kubernetes.default.svc'
           namespace: technitium
