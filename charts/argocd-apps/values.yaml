@@ -304,6 +304,25 @@ argoconfig:
           syncOptions:
             - CreateNamespace=true
             - ServerSideApply=true
+    - name: technitium
+      enabled: true 
+      spec:
+        project: default
+        source: 
+          repoURL: https://github.com/paimonsoror/technitium-dns
+          path: .
+          targetRevision: HEAD
+          helm:
+            values: |-
+              
+        destination:
+          server: 'https://kubernetes.default.svc'
+          namespace: technitium
+        syncPolicy:
+          automated: {}
+          syncOptions:
+            - CreateNamespace=true
+            - ServerSideApply=true 
     - name: pihole
       enabled: true 
       spec:
