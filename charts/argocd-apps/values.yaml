@@ -315,6 +315,7 @@ argoconfig:
           helm:
             values: |-
               dnsServer:
+                domain: "technitium.homelab"
                 webServiceEnableHttp: true
                 webServiceEnableHttps: true
               service:
