@@ -315,7 +315,7 @@ argoconfig:
           helm:
             values: |-
               dnsServer:
-                webServiceEnableHttp: false
+                webServiceEnableHttp: true
                 webServiceEnableHttps: true
               service:
                 web:
