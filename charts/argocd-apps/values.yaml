@@ -317,7 +317,7 @@ argoconfig:
               dnsServer:
                 domain: "technitium.homelab"
                 webServiceEnableHttp: true
-                webServiceEnableHttps: true
+                webServiceEnableHttps: false
               service:
                 web:
                   annotations:             
