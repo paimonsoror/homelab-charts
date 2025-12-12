@@ -305,7 +305,7 @@ argoconfig:
             - CreateNamespace=true
             - ServerSideApply=true
     - name: technitium
-      enabled: false 
+      enabled: enable 
       spec:
         project: default
         source: 
