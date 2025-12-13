@@ -315,9 +315,19 @@ argoconfig:
           helm:
             values: |-
               dnsServer:
-                domain: "technitium.homelab"
+                domain: "technitium2"
                 webServiceEnableHttp: true
                 webServiceEnableHttps: false
+              customCA:
+                enabled: true
+                secret:
+                  name: my-ca-cert
+                  key: ca.crt
+              pfxCertificate:
+                enabled: true
+                secret:
+                  name: technitium-pfx-cert
+                  pfxKey: certificate.pfx
               service:
                 web:
                   annotations:             
