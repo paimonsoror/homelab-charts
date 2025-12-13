@@ -317,7 +317,7 @@ argoconfig:
               dnsServer:
                 domain: "technitium2"
                 webServiceEnableHttp: true
-                webServiceEnableHttps: false
+                webServiceEnableHttps: true
               customCA:
                 enabled: true
                 secret:
