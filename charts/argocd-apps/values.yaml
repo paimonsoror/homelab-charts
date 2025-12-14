@@ -330,6 +330,7 @@ argoconfig:
                   key: ca.crt
               pfxCertificate:
                 enabled: true
+                mountPath: "/certs"
                 secret:
                   name: technitium-pfx-cert
                   pfxKey: certificate.pfx
