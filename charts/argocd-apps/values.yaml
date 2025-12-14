@@ -318,6 +318,11 @@ argoconfig:
                 domain: "technitium2"
                 webServiceEnableHttp: true
                 webServiceEnableHttps: true
+              persistence:
+                enabled: true
+                accessMode: ReadWriteOnce
+                size: 1Gi
+                existingClaim: "technitium-pvc"
               customCA:
                 enabled: true
                 secret:
