@@ -741,6 +741,11 @@ argoconfig:
           targetRevision: 2.24.0
           helm:
             values: |-
+              image:
+                repository: louislam/uptime-kuma
+                pullPolicy: IfNotPresent
+                # Overrides the image tag whose default is the chart appVersion.
+                tag: "2.0.2"
               ingress:
                 enabled: true
                 className: cilium
