@@ -738,7 +738,7 @@ argoconfig:
         project: default
         source:
           repoURL: https://helm.irsigler.cloud
-          targetRevision: 2.24
+          targetRevision: 2.24.0
           helm:
             values: |-
               ingress:
