@@ -314,6 +314,8 @@ argoconfig:
           targetRevision: HEAD
           helm:
             values: |-
+              image:
+                tag: 15.0.1
               dnsServer:
                 domain: "technitium2"
                 webServiceEnableHttp: true
