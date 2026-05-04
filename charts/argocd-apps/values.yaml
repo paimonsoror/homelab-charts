@@ -237,7 +237,7 @@ argoconfig:
                   - host: immich-pt.homelab
                     paths:
                       - path: /
-                        pathType: ImplementationSpecific
+                        pathType: Prefix
                 tls:
                   - secretName: immich-pt-tls
                     hosts:
