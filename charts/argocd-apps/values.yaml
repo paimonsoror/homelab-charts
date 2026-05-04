@@ -157,7 +157,7 @@ argoconfig:
                     name: immich-postgres-user
                     key: password
               image:
-                tag: v2.7.2
+                tag: v2.7.5
               immich:
                 metrics:
                   enabled: true
@@ -315,7 +315,7 @@ argoconfig:
           helm:
             values: |-
               image:
-                tag: 15.0.1
+                tag: 15.1
               dnsServer:
                 domain: "technitium2"
                 webServiceEnableHttp: true
