@@ -204,6 +204,51 @@ argoconfig:
           automated: {}
           syncOptions:
             - CreateNamespace=true
+    - name: immich-power-tools
+      enabled: true
+      spec:
+        project: default
+        source:
+          repoURL: https://gitlab.alexware.systems/api/v4/projects/645/packages/helm/stable
+          targetRevision: 0.1.0
+          chart: immich-power-tools
+          helm:
+            values: |-
+              config:
+                immichUrl: http://immich-server.immich.svc.cluster.local:2283
+                externalImmichUrl: https://immich.homelab
+                database:
+                  host: immich-postgres-rw.immich.svc.cluster.local
+                  port: 5432
+                  databaseName: immich
+              secrets:
+                immichSecretName: immich-power-tools-api
+                immichSecretApiKeyKey: IMMICH_API_KEY
+                databaseSecretName: immich-postgres-user
+                databaseSecretUsernameKey: username
+                databaseSecretPasswordKey: password
+              ingress:
+                enabled: true
+                className: cilium
+                annotations:
+                  ingress.cilium.io/loadbalancer-mode: shared
+                  cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
+                hosts:
+                  - host: immich-pt.homelab
+                    paths:
+                      - path: /
+                        pathType: ImplementationSpecific
+                tls:
+                  - secretName: immich-pt-tls
+                    hosts:
+                      - immich-pt.homelab
+        destination:
+          server: 'https://kubernetes.default.svc'
+          namespace: immich
+        syncPolicy:
+          automated: {}
+          syncOptions:
+            - CreateNamespace=true
 
     ####################################
     ### Start of Homelab Productivity ###
