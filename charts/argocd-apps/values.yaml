@@ -164,7 +164,7 @@ argoconfig:
                 persistence:
                   library:
                     existingClaim: immich-pvc
-              redis:
+              valkey:
                 enabled: true
               server:
                 enabled: true
