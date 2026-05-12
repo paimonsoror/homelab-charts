@@ -982,7 +982,7 @@ argoconfig:
                               .host = "unknown"
                           }
 
-                          kv_pairs = split(parts.kvpairs, " ")
+                          kv_pairs = split!(parts.kvpairs, " ")
                           for_each(kv_pairs) -> |_, kv| {
                             kv_split = split(kv, "=")
                             if length(kv_split) == 2 {
