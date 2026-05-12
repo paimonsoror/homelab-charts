@@ -139,25 +139,33 @@ argoconfig:
           targetRevision: 0.11.1
           helm:
             values: |-
-              env:
-                DB_HOSTNAME:
-                  secretKeyRef:
-                    name: immich-postgres-user
-                    key: host
-                DB_USERNAME:
-                  secretKeyRef:
-                    name: immich-postgres-user
-                    key: username
-                DB_DATABASE_NAME:
-                  secretKeyRef:
-                    name: immich-postgres-user
-                    key: dbname
-                DB_PASSWORD:
-                  secretKeyRef:
-                    name: immich-postgres-user
-                    key: password
-              image:
-                tag: v2.7.5
+              controllers:
+                main:
+                  containers:
+                    main:
+                      image:
+                        tag: v2.7.5
+                      env:
+                        DB_HOSTNAME:
+                          valueFrom:
+                            secretKeyRef:
+                              name: immich-postgres-user
+                              key: host
+                        DB_USERNAME:
+                          valueFrom:
+                            secretKeyRef:
+                              name: immich-postgres-user
+                              key: username
+                        DB_DATABASE_NAME:
+                          valueFrom:
+                            secretKeyRef:
+                              name: immich-postgres-user
+                              key: dbname
+                        DB_PASSWORD:
+                          valueFrom:
+                            secretKeyRef:
+                              name: immich-postgres-user
+                              key: password
               immich:
                 metrics:
                   enabled: true
@@ -168,13 +176,17 @@ argoconfig:
                 enabled: true
               server:
                 enabled: true
-                image:
-                  repository: ghcr.io/immich-app/immich-server
-                  pullPolicy: IfNotPresent
+                controllers:
+                  main:
+                    containers:
+                      main:
+                        image:
+                          repository: ghcr.io/immich-app/immich-server
+                          pullPolicy: IfNotPresent
                 ingress:
                   main:
                     enabled: true
-                    ingressClassName: "cilium"
+                    className: "cilium"
                     annotations:
                       ingress.cilium.io/loadbalancer-mode: shared
                       cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
@@ -182,10 +194,14 @@ argoconfig:
                       - host: immich.homelab
                         paths:
                           - path: "/"
-                    tls: 
+                            service:
+                              identifier: main
+                    tls:
                       - secretName: immich-tls
                         hosts:
                           - immich.homelab
+              machine-learning:
+                enabled: true
           chart: immich
         destination:
           server: 'https://kubernetes.default.svc'
