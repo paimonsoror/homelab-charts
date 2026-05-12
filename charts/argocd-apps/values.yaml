@@ -11,7 +11,7 @@ argoconfig:
         project: default
         source:
           repoURL: 'https://amikos-tech.github.io/chromadb-chart/'
-          targetRevision: 0.1.24
+          targetRevision: 0.2.2
           helm:
             values: |-
               ingress:
@@ -44,7 +44,7 @@ argoconfig:
         project: default 
         source:
           repoURL: 'https://cowboysysop.github.io/charts/'
-          targetRevision: 5.1.1
+          targetRevision: 6.0.0
           helm:
             values: |-
               ingress:
@@ -76,7 +76,7 @@ argoconfig:
         project: default
         source:
           repoURL: 'https://helm.otwld.com/'
-          targetRevision: 1.24.0
+          targetRevision: 1.56.0
           helm:
             values: |-
               ollama:
@@ -121,7 +121,7 @@ argoconfig:
         project: default
         source:
           repoURL: https://cloudnative-pg.github.io/charts
-          targetRevision: 0.23.2
+          targetRevision: 0.28.1
           chart: cloudnative-pg
         destination:
           server: 'https://kubernetes.default.svc'
@@ -136,7 +136,7 @@ argoconfig:
         project: default
         source:
           repoURL: https://immich-app.github.io/immich-charts
-          targetRevision: 0.9.1
+          targetRevision: 0.11.1
           helm:
             values: |-
               env:
@@ -316,7 +316,7 @@ argoconfig:
         project: default
         source:
           repoURL: https://portainer.github.io/k8s/
-          targetRevision: 1.0.58
+          targetRevision: 239.2.0
           helm:
             values: |-
               enterpriseEdition: 
@@ -411,7 +411,7 @@ argoconfig:
         project: default
         source: 
           repoURL: https://mojo2600.github.io/pihole-kubernetes
-          targetRevision: 2.31.0
+          targetRevision: 2.35.0
           chart: pihole
           helm:
             values: |-
@@ -528,7 +528,7 @@ argoconfig:
         project: default
         source:
           repoURL: 'https://pajikos.github.io/home-assistant-helm-chart'
-          targetRevision: 0.3.41
+          targetRevision: 0.3.58
           helm:
             values: |-
               ingress:
@@ -606,7 +606,7 @@ argoconfig:
         project: default
         source:
           repoURL: 'https://prometheus-community.github.io/helm-charts'
-          targetRevision: 2.15.0
+          targetRevision: 3.6.0
           helm:
             values: |-
               ingress:
@@ -636,7 +636,7 @@ argoconfig:
         project: default
         source:
           repoURL: https://grafana.github.io/helm-charts
-          targetRevision: 0.80.2
+          targetRevision: 0.80.6
           helm:
             values: |-
               loki:
@@ -722,7 +722,7 @@ argoconfig:
         project: default
         source:
           repoURL: 'https://prometheus-community.github.io/helm-charts'
-          targetRevision: 75.9.0
+          targetRevision: 85.0.1
           helm:
             values: |-
               prometheus:
@@ -785,7 +785,7 @@ argoconfig:
         project: default
         source:
           repoURL: https://helm.irsigler.cloud
-          targetRevision: 2.24.0
+          targetRevision: 4.1.0
           helm:
             values: |-
               image:
@@ -1038,7 +1038,7 @@ argoconfig:
         project: default
         source:
           repoURL: https://fluent.github.io/helm-charts
-          targetRevision: 0.49.0
+          targetRevision: 0.57.3
           helm:
             values: |-
               ## https://docs.fluentbit.io/manual/administration/configuring-fluent-bit/classic-mode/configuration-file
