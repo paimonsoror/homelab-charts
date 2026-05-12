@@ -947,10 +947,10 @@ argoconfig:
                       - syslog_in
                     source: |
                       pattern = r'^CEF:(?P<version>\d+)\|(?P<device_vendor>[^|]*)\|(?P<device_product>[^|]*)\|(?P<device_version>[^|]*)\|(?P<signature_id>[^|]*)\|(?P<name>[^|]*)\|(?P<severity>[^|]*)\|(?P<kvpairs>.*)'
-                      parts = parse_regex!(.message, pattern)
+                      parts, err = parse_regex(.message, pattern)
 
                       .timestamp = now()
-                      if is_null(parts) {
+                      if err != null {
                           .job = "syslog"
                           .source_type = "syslog"
                           .host = if exists(.syslog_host) {
