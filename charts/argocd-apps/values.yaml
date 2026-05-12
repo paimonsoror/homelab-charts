@@ -656,7 +656,7 @@ argoconfig:
                     ingestion_rate_mb: 4
                     ingestion_burst_size_mb: 6
                     max_streams_per_user: 10000
-                    retention_period: 168h
+                    retention_period: 720h
                     volume_enabled: true
                 schemaConfig:
                   configs:
@@ -676,6 +676,10 @@ argoconfig:
                 compactor:  
                   working_directory: /var/loki
                   sharedStore: filesystem
+                  retention_enabled: true
+                  retention_delete_delay: 2h
+                  retention_delete_worker_count: 150
+                  compaction_interval: 10m
               compactor:
                 enabled: true
                 persistence:
