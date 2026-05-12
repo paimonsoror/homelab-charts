@@ -6,7 +6,7 @@ argoconfig:
     ### Start of LLM Related Charts ###
     ####################################
     - name: chromadb
-      enabled: true
+      enabled: false
       spec:
         project: default
         source:
@@ -39,7 +39,7 @@ argoconfig:
           syncOptions:
             - CreateNamespace=true
     - name: flowise
-      enabled: true
+      enabled: false
       spec:
         project: default 
         source:
@@ -71,7 +71,7 @@ argoconfig:
           syncOptions:
             - CreateNamespace=true
     - name: ollama
-      enabled: true
+      enabled: false
       spec:
         project: default
         source:
