@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "technitium-exporter.fullname" . }}
+  labels:
+    {{- include "technitium-exporter.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "technitium-exporter.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "technitium-exporter.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: exporter
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: metrics
+              containerPort: 9105
+              protocol: TCP
+          env:
+            - name: TECHNITIUM_BASE_URL
+              value: {{ .Values.technitium.baseUrl | quote }}
+            - name: TECHNITIUM_VERIFY_SSL
+              value: {{ .Values.technitium.verifySsl | quote }}
+            - name: TECHNITIUM_STATS_RANGE
+              value: {{ .Values.technitium.statsRange | quote }}
+            - name: TECHNITIUM_TOP_LIMIT
+              value: {{ .Values.technitium.topLimit | quote }}
+            - name: TECHNITIUM_NODES
+              value: {{ .Values.technitium.nodes | quote }}
+            - name: EXPORTER_PORT
+              value: "9105"
+            - name: TECHNITIUM_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.existingSecret.name }}
+                  key: {{ .Values.existingSecret.key }}
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: metrics
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: metrics
+            initialDelaySeconds: 30
+            periodSeconds: 30
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}

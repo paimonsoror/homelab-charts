@@ -411,6 +411,34 @@ argoconfig:
           syncOptions:
             - CreateNamespace=true
             - ServerSideApply=true 
+    - name: technitium-exporter
+      enabled: true
+      spec:
+        project: default
+        source:
+          repoURL: https://github.com/paimonsoror/homelab-charts
+          path: charts/technitium-exporter
+          targetRevision: HEAD
+          helm:
+            values: |-
+              technitium:
+                baseUrl: "https://192.168.5.112:53443"
+                verifySsl: false
+                statsRange: LastHour
+                nodes: "technitium1.dnscluster,technitium2.dnscluster"
+              existingSecret:
+                name: technitium-exporter-token
+                key: token
+              serviceMonitor:
+                enabled: true
+        destination:
+          server: "https://kubernetes.default.svc"
+          namespace: technitium
+        syncPolicy:
+          automated: {}
+          syncOptions:
+            - CreateNamespace=true
+            - ServerSideApply=true
     - name: pihole
       enabled: true 
       spec:

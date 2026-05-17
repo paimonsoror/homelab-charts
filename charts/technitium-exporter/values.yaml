@@ -1,0 +1,35 @@
+image:
+  repository: ghcr.io/guycalledseven/technitium-dns-prometheus-exporter
+  tag: latest
+  pullPolicy: IfNotPresent
+
+# Controller URL — single Technitium node that owns the cluster API
+technitium:
+  baseUrl: "https://192.168.5.112:53443"
+  verifySsl: false
+  statsRange: LastHour
+  topLimit: 50
+  # Comma-separated list of cluster node FQDNs
+  nodes: "technitium1.dnscluster,technitium2.dnscluster"
+
+# Reference to a pre-existing Secret containing the API token.
+# Create with: kubectl -n technitium create secret generic technitium-exporter-token --from-literal=token=<TOKEN>
+existingSecret:
+  name: technitium-exporter-token
+  key: token
+
+service:
+  port: 9105
+
+serviceMonitor:
+  enabled: true
+  interval: 30s
+  scrapeTimeout: 10s
+
+resources:
+  requests:
+    cpu: 10m
+    memory: 32Mi
+  limits:
+    cpu: 100m
+    memory: 128Mi
