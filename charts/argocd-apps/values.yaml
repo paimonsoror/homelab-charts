@@ -21,14 +21,14 @@ argoconfig:
                   ingress.cilium.io/loadbalancer-mode: shared
                   cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
                 hosts:
-                  - host: chromadb.homelab
+                  - host: chromadb.homelab.io
                     paths:
                       - path: /
                         pathType: Prefix
                 tls:
                   - secretName: chromadb-tls
                     hosts:
-                      - chromadb.homelab
+                      - chromadb.homelab.io
 
           chart: chromadb
         destination:
@@ -55,13 +55,13 @@ argoconfig:
                   ingress.cilium.io/loadbalancer-mode: shared
                   cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
                 hosts:
-                  - host: flowise.homelab
+                  - host: flowise.homelab.io
                     paths:
                       - /
                 tls:
                   - secretName: flowise-tls
                     hosts:
-                      - flowise.homelab
+                      - flowise.homelab.io
           chart: flowise
         destination:
           server: 'https://kubernetes.default.svc'
@@ -95,14 +95,14 @@ argoconfig:
                   nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
                   cilium.io/proxy-timeout-seconds: "600"
                 hosts:
-                    - host: ollama.homelab
+                    - host: ollama.homelab.io
                       paths:
                         - path: /
                           pathType: Prefix
                 tls:
                   - secretName: ollama-tls
                     hosts:
-                      - ollama.homelab                     
+                      - ollama.homelab.io                     
           chart: ollama
         destination:
           server: 'https://kubernetes.default.svc'
@@ -191,7 +191,7 @@ argoconfig:
                       ingress.cilium.io/loadbalancer-mode: shared
                       cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
                     hosts:
-                      - host: immich.homelab
+                      - host: immich.homelab.io
                         paths:
                           - path: "/"
                             service:
@@ -199,7 +199,7 @@ argoconfig:
                     tls:
                       - secretName: immich-tls
                         hosts:
-                          - immich.homelab
+                          - immich.homelab.io
               machine-learning:
                 enabled: true
           chart: immich
@@ -222,7 +222,7 @@ argoconfig:
             values: |-
               config:
                 immichUrl: http://immich-server.immich.svc.cluster.local:2283
-                externalImmichUrl: https://immich.homelab
+                externalImmichUrl: https://immich.homelab.io
                 database:
                   host: immich-postgres-rw.immich.svc.cluster.local
                   port: 5432
@@ -240,14 +240,14 @@ argoconfig:
                   ingress.cilium.io/loadbalancer-mode: shared
                   cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
                 hosts:
-                  - host: immich-pt.homelab
+                  - host: immich-pt.homelab.io
                     paths:
                       - path: /
                         pathType: Prefix
                 tls:
                   - secretName: immich-pt-tls
                     hosts:
-                      - immich-pt.homelab
+                      - immich-pt.homelab.io
         destination:
           server: 'https://kubernetes.default.svc'
           namespace: immich
@@ -277,13 +277,13 @@ argoconfig:
                   ingress.cilium.io/loadbalancer-mode: shared
                   cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
                 hosts:
-                  - host: code.homelab
+                  - host: code.homelab.io
                     paths:
                       - /
                 tls: 
                   - secretName: code-tls
                     hosts:
-                      - code.homelab
+                      - code.homelab.io
               extraVolumeMounts:
                 - name: extra-volume
                   mountPath: /mnt/homelab-charts
@@ -338,13 +338,13 @@ argoconfig:
                   ingress.cilium.io/loadbalancer-mode: shared
                   cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
                 hosts:
-                  - host: portainer.homelab
+                  - host: portainer.homelab.io
                     paths:
                       - path: "/"
                 tls: 
                   - secretName: portainer-tls
                     hosts:
-                      - portainer.homelab
+                      - portainer.homelab.io
 
           chart: portainer
         destination:
@@ -459,7 +459,7 @@ argoconfig:
                 enabled: true
                 existingSecret: pihole-password
                 passwordKey: "password"
-              virtualHost: pihole.homelab
+              virtualHost: pihole.homelab.io
               DNS1: "1.1.1.1"
               DNS2: "1.0.0.1"
               serviceDns:
@@ -488,19 +488,19 @@ argoconfig:
                   ingress.cilium.io/loadbalancer-mode: dedicated
                   cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
                 hosts:
-                  - pihole.homelab
+                  - pihole.homelab.io
                 path: /
                 pathType: Prefix
                 tls: 
                   - secretName: pihole-tls
                     hosts:
-                      - pihole.homelab
+                      - pihole.homelab.io
               dnsmasq:
                 additionalDnsEntries:
-                  - address=/pihole.homelab/192.168.5.102
+                  - address=/pihole.homelab.io/192.168.5.102
                   - address=/pihole.pi/192.168.3.2
                 additionalHostsEntries:
-                  - 127.0.0.1 pihole.homelab
+                  - 127.0.0.1 pihole.homelab.io
               persistentVolumeClaim:
                 enabled: true
                 existingClaim: pihole-pvc
@@ -573,14 +573,14 @@ argoconfig:
                   ingress.cilium.io/loadbalancer-mode: shared
                   cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
                 hosts:
-                    - host: homeassistant.homelab
+                    - host: homeassistant.homelab.io
                       paths:
                         - path: /
                           pathType: Prefix
                 tls:
                   - secretName: homeassistant-tls
                     hosts:
-                      - homeassistant.homelab
+                      - homeassistant.homelab.io
 
               configuration:
                 enabled: true
@@ -612,7 +612,7 @@ argoconfig:
           path: charts/vaultwarden
           helm:
             values: |-
-              domain: "https://vaultwarden.homelab"
+              domain: "https://vaultwarden.homelab.io"
               storage:
                 existingVolumeClaim: 
                   claimName: vaultwarden-pvc
@@ -622,7 +622,7 @@ argoconfig:
                 additionalAnnotations:
                   ingress.cilium.io/loadbalancer-mode: shared
                   cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
-                hostname: vaultwarden.homelab
+                hostname: vaultwarden.homelab.io
                 tlsSecret: vaultwarden-tls
         destination:
           server: 'https://kubernetes.default.svc'
@@ -651,11 +651,11 @@ argoconfig:
                   ingress.cilium.io/loadbalancer-mode: shared
                   cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
                 hosts:
-                  - prompushgtwy.homelab
+                  - prompushgtwy.homelab.io
                 tls:
                   - secretName: prompush-tls
                     hosts:
-                      - prompushgtwy.homelab
+                      - prompushgtwy.homelab.io
           chart: prometheus-pushgateway
         destination:
           server: 'https://kubernetes.default.svc'
@@ -738,14 +738,14 @@ argoconfig:
                     ingress.cilium.io/loadbalancer-mode: shared
                     cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
                   hosts:
-                    - host: loki.gateway.homelab
+                    - host: loki.gateway.homelab.io
                       paths:
                         - path: /
                           pathType: Prefix
                   tls:
                     - secretName: loki-gateway-tls
                       hosts:
-                        - loki.gateway.homelab
+                        - loki.gateway.homelab.io
           chart: loki-distributed
         destination:
           server: 'https://kubernetes.default.svc'
@@ -785,7 +785,7 @@ argoconfig:
                       honor_labels: true
 
                       static_configs:
-                        - targets: [ 'truenas.homelab:20489' ]
+                        - targets: [ 'truenas.homelab.io:20489' ]
               grafana:
                 enabled: true
                 ingress:
@@ -795,11 +795,11 @@ argoconfig:
                     ingress.cilium.io/loadbalancer-mode: shared
                     cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
                   hosts:
-                    - grafana.homelab
+                    - grafana.homelab.io
                   tls:
                     - secretName: grafana-tls
                       hosts:
-                        - grafana.homelab
+                        - grafana.homelab.io
                 persistence:
                   enabled: true
                   type: sts
@@ -838,14 +838,14 @@ argoconfig:
                   ingress.cilium.io/loadbalancer-mode: shared
                   cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
                 hosts:
-                  - host: kuma.homelab
+                  - host: kuma.homelab.io
                     paths:
                       - path: "/"
                         pathType: Prefix
                 tls: 
                   - secretName: kuma-tls
                     hosts:
-                      - kuma.homelab
+                      - kuma.homelab.io
           chart: uptime-kuma
         destination:
           server: 'https://kubernetes.default.svc'
@@ -871,7 +871,7 @@ argoconfig:
                   ingress.cilium.io/loadbalancer-mode: shared
                   cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
                 hosts:
-                    - host: opensearch-dash.homelab
+                    - host: opensearch-dash.homelab.io
                       paths:
                         - path: /
                           backend:
@@ -880,7 +880,7 @@ argoconfig:
                 tls:
                   - secretName: opensearch-dash-tls
                     hosts:
-                      - opensearch-dash.homelab
+                      - opensearch-dash.homelab.io
           chart: opensearch-dashboards
         destination:
           server: 'https://kubernetes.default.svc'
@@ -926,11 +926,11 @@ argoconfig:
                   cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
                 path: /
                 hosts:
-                    - opensearch.homelab
+                    - opensearch.homelab.io
                 tls:
                   - secretName: opensearch-tls
                     hosts:
-                      - opensearch.homelab
+                      - opensearch.homelab.io
           chart: opensearch
         destination:
           server: 'https://kubernetes.default.svc'
@@ -1156,14 +1156,14 @@ argoconfig:
                   ingress.cilium.io/loadbalancer-mode: shared
                   cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
                 hosts:
-                  - host: openspeedtest.homelab
+                  - host: openspeedtest.homelab.io
                     paths:
                       - path: "/"
                         pathType: Prefix
                 tls: 
                   - secretName: openspeedtest-tls
                     hosts:
-                      - openspeedtest.homelab
+                      - openspeedtest.homelab.io
           chart: openspeedtest
         destination:
           server: 'https://kubernetes.default.svc'
