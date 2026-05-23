@@ -19,7 +19,7 @@ argoconfig:
                 className: "cilium"
                 annotations:
                   ingress.cilium.io/loadbalancer-mode: shared
-                  cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
+                  cert-manager.io/cluster-issuer: letsencrypt-prod
                 hosts:
                   - host: chromadb.sororlab.dev
                     paths:
@@ -53,7 +53,7 @@ argoconfig:
                 pathType: Prefix
                 annotations:
                   ingress.cilium.io/loadbalancer-mode: shared
-                  cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
+                  cert-manager.io/cluster-issuer: letsencrypt-prod
                 hosts:
                   - host: flowise.sororlab.dev
                     paths:
@@ -89,7 +89,7 @@ argoconfig:
                 className: "cilium"
                 annotations:
                   ingress.cilium.io/loadbalancer-mode: shared
-                  cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
+                  cert-manager.io/cluster-issuer: letsencrypt-prod
                   nginx.ingress.kubernetes.io/proxy-connect-timeout: "600"
                   nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
                   nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
@@ -130,6 +130,29 @@ argoconfig:
           automated: {}
           syncOptions:
             - CreateNamespace=true
+    - name: cert-manager
+      enabled: true
+      spec:
+        project: default
+        source:
+          repoURL: https://charts.jetstack.io
+          targetRevision: v1.15.1
+          chart: cert-manager
+          helm:
+            values: |-
+              installCRDs: true
+              extraArgs:
+                - --feature-gates=ExperimentalGatewayAPISupport=true
+                - --dns01-recursive-nameservers-only
+                - --dns01-recursive-nameservers=8.8.8.8:53,1.1.1.1:53
+        destination:
+          server: 'https://kubernetes.default.svc'
+          namespace: cert-manager
+        syncPolicy:
+          automated: {}
+          syncOptions:
+            - CreateNamespace=true
+            - ServerSideApply=true
     - name: immich
       enabled: true
       spec:
@@ -189,7 +212,7 @@ argoconfig:
                     className: "cilium"
                     annotations:
                       ingress.cilium.io/loadbalancer-mode: shared
-                      cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
+                      cert-manager.io/cluster-issuer: letsencrypt-prod
                     hosts:
                       - host: immich.sororlab.dev
                         paths:
@@ -238,7 +261,7 @@ argoconfig:
                 className: cilium
                 annotations:
                   ingress.cilium.io/loadbalancer-mode: shared
-                  cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
+                  cert-manager.io/cluster-issuer: letsencrypt-prod
                 hosts:
                   - host: immich-pt.sororlab.dev
                     paths:
@@ -275,7 +298,7 @@ argoconfig:
                 ingressClassName: cilium
                 annotations:
                   ingress.cilium.io/loadbalancer-mode: shared
-                  cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
+                  cert-manager.io/cluster-issuer: letsencrypt-prod
                 hosts:
                   - host: code.sororlab.dev
                     paths:
@@ -336,7 +359,7 @@ argoconfig:
                 ingressClassName: cilium
                 annotations:
                   ingress.cilium.io/loadbalancer-mode: shared
-                  cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
+                  cert-manager.io/cluster-issuer: letsencrypt-prod
                 hosts:
                   - host: portainer.sororlab.dev
                     paths:
@@ -486,7 +509,7 @@ argoconfig:
                 ingressClassName: cilium
                 annotations:
                   ingress.cilium.io/loadbalancer-mode: dedicated
-                  cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
+                  cert-manager.io/cluster-issuer: letsencrypt-prod
                 hosts:
                   - pihole.sororlab.dev
                 path: /
@@ -571,7 +594,7 @@ argoconfig:
                 className: "cilium"
                 annotations:
                   ingress.cilium.io/loadbalancer-mode: shared
-                  cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
+                  cert-manager.io/cluster-issuer: letsencrypt-prod
                 hosts:
                     - host: homeassistant.sororlab.dev
                       paths:
@@ -621,7 +644,7 @@ argoconfig:
                 class: cilium
                 additionalAnnotations:
                   ingress.cilium.io/loadbalancer-mode: shared
-                  cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
+                  cert-manager.io/cluster-issuer: letsencrypt-prod
                 hostname: vaultwarden.sororlab.dev
                 tlsSecret: vaultwarden-tls
         destination:
@@ -649,7 +672,7 @@ argoconfig:
                 pathType: Prefix
                 annotations:
                   ingress.cilium.io/loadbalancer-mode: shared
-                  cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
+                  cert-manager.io/cluster-issuer: letsencrypt-prod
                 hosts:
                   - prompushgtwy.sororlab.dev
                 tls:
@@ -736,7 +759,7 @@ argoconfig:
                   ingressClassName: cilium
                   annotations:
                     ingress.cilium.io/loadbalancer-mode: shared
-                    cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
+                    cert-manager.io/cluster-issuer: letsencrypt-prod
                   hosts:
                     - host: loki.gateway.sororlab.dev
                       paths:
@@ -793,7 +816,7 @@ argoconfig:
                   ingressClassName: cilium
                   annotations:
                     ingress.cilium.io/loadbalancer-mode: shared
-                    cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
+                    cert-manager.io/cluster-issuer: letsencrypt-prod
                   hosts:
                     - grafana.sororlab.dev
                   tls:
@@ -836,7 +859,7 @@ argoconfig:
                 className: cilium
                 annotations:
                   ingress.cilium.io/loadbalancer-mode: shared
-                  cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
+                  cert-manager.io/cluster-issuer: letsencrypt-prod
                 hosts:
                   - host: kuma.sororlab.dev
                     paths:
@@ -869,7 +892,7 @@ argoconfig:
                 ingressClassName: "cilium"
                 annotations:
                   ingress.cilium.io/loadbalancer-mode: shared
-                  cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
+                  cert-manager.io/cluster-issuer: letsencrypt-prod
                 hosts:
                     - host: opensearch-dash.sororlab.dev
                       paths:
@@ -923,7 +946,7 @@ argoconfig:
                 ingressClassName: "cilium"
                 annotations:
                   ingress.cilium.io/loadbalancer-mode: shared
-                  cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
+                  cert-manager.io/cluster-issuer: letsencrypt-prod
                 path: /
                 hosts:
                     - opensearch.sororlab.dev
@@ -1154,7 +1177,7 @@ argoconfig:
                 className: "cilium"
                 annotations:
                   ingress.cilium.io/loadbalancer-mode: shared
-                  cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
+                  cert-manager.io/cluster-issuer: letsencrypt-prod
                 hosts:
                   - host: openspeedtest.sororlab.dev
                     paths:
