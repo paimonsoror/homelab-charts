@@ -639,7 +639,12 @@ argoconfig:
               image:
                 registry: docker.io
                 repository: vaultwarden/server
-                tag: "latest"
+                tag: "1.36.0"                # pin instead of "latest"
+              podSecurityContext:            # NEW block
+                runAsUser: 1000
+                runAsGroup: 3008             # ← matches TrueNAS group GID
+                fsGroup: 3008                # supplementary group for the volume
+                runAsNonRoot: true
               domain: "https://vaultwarden.sororlab.dev"
               storage:
                 existingVolumeClaim: 
