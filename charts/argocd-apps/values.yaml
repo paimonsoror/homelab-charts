@@ -630,7 +630,8 @@ argoconfig:
       spec:
         project: default
         source:
-          repoURL: 'https://github.com/paimonsoror/vaultwarden.git'
+          #repoURL: 'https://github.com/paimonsoror/vaultwarden.git'
+          repoURL: 'https://github.com/guerzon/vaultwarden.git'
           targetRevision: main
           path: charts/vaultwarden
           helm:
