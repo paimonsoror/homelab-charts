@@ -635,6 +635,10 @@ argoconfig:
           path: charts/vaultwarden
           helm:
             values: |-
+              image:
+                registry: docker.io
+                repository: vaultwarden/server
+                tag: "latest"
               domain: "https://vaultwarden.sororlab.dev"
               storage:
                 existingVolumeClaim: 
