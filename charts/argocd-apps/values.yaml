@@ -195,6 +195,8 @@ argoconfig:
                 persistence:
                   library:
                     existingClaim: immich-pvc
+                existingConfiguration: immich-oauth-config
+                configurationKind: Secret
               valkey:
                 enabled: true
               server:
