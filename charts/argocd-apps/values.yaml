@@ -695,10 +695,10 @@ argoconfig:
                     ingress.cilium.io/loadbalancer-mode: shared
                     cert-manager.io/cluster-issuer: letsencrypt-prod
                   hosts:
-                    - host: auth.sororlab.dev
-                      paths:
-                        - path: /
-                          pathType: Prefix
+                    - auth.sororlab.dev
+                  paths:
+                    - /
+                  pathType: Prefix
                   tls:
                     - secretName: auth-tls
                       hosts:
