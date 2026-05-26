@@ -659,6 +659,18 @@ argoconfig:
                   cert-manager.io/cluster-issuer: letsencrypt-prod
                 hostname: vaultwarden.sororlab.dev
                 tlsSecret: vaultwarden-tls
+              sso:
+                enabled: true
+                onlySSO: false
+                signupsMatchEmail: true
+                authority: https://auth.sororlab.dev/application/o/vaultwarden
+                pkce: true
+                scopes: "email profile"
+                existingSecret: vaultwarden-sso
+                clientId:
+                  existingSecretKey: client_id
+                clientSecret:
+                  existingSecretKey: client_secret
         destination:
           server: 'https://kubernetes.default.svc'
           namespace: vaultwarden
