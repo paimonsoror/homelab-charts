@@ -664,6 +664,86 @@ argoconfig:
           syncOptions:
             - CreateNamespace=true
     
+    - name: authentik
+      enabled: true
+      spec:
+        project: default
+        source:
+          repoURL: https://charts.goauthentik.io
+          targetRevision: 2026.5.0
+          chart: authentik
+          helm:
+            values: |-
+              global:
+                envFrom:
+                  - secretRef:
+                      name: authentik-bootstrap
+              authentik:
+                error_reporting:
+                  enabled: false
+                postgresql:
+                  host: authentik-postgresql
+                  name: authentik
+                  user: authentik
+                redis:
+                  host: authentik-redis-master
+              server:
+                ingress:
+                  enabled: true
+                  ingressClassName: cilium
+                  annotations:
+                    ingress.cilium.io/loadbalancer-mode: shared
+                    cert-manager.io/cluster-issuer: letsencrypt-prod
+                  hosts:
+                    - host: auth.sororlab.dev
+                      paths:
+                        - path: /
+                          pathType: Prefix
+                  tls:
+                    - secretName: auth-tls
+                      hosts:
+                        - auth.sororlab.dev
+                metrics:
+                  enabled: true
+                  serviceMonitor:
+                    enabled: true
+              worker:
+                metrics:
+                  enabled: true
+                  serviceMonitor:
+                    enabled: true
+              postgresql:
+                enabled: true
+                auth:
+                  username: authentik
+                  database: authentik
+                  existingSecret: authentik-bootstrap
+                  secretKeys:
+                    adminPasswordKey: postgres-password
+                    userPasswordKey: password
+                primary:
+                  persistence:
+                    enabled: true
+                    size: 8Gi
+                    storageClass: local-path
+              redis:
+                enabled: true
+                auth:
+                  enabled: false
+                master:
+                  persistence:
+                    enabled: true
+                    size: 2Gi
+                    storageClass: local-path
+        destination:
+          server: 'https://kubernetes.default.svc'
+          namespace: authentik
+        syncPolicy:
+          automated: {}
+          syncOptions:
+            - CreateNamespace=true
+            - ServerSideApply=true
+
     ####################################
     ### Start of Homelab Monitoring Charts ###
     ####################################
