@@ -663,7 +663,7 @@ argoconfig:
                 enabled: true
                 onlySSO: false
                 signupsMatchEmail: true
-                authority: https://auth.sororlab.dev/application/o/vaultwarden
+                authority: https://auth.sororlab.dev/application/o/vaultwarden/
                 pkce: true
                 scopes: "email profile"
                 existingSecret: vaultwarden-sso
