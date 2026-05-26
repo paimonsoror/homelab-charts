@@ -665,7 +665,7 @@ argoconfig:
                 signupsMatchEmail: true
                 authority: https://auth.sororlab.dev/application/o/vaultwarden/
                 pkce: true
-                scopes: "email profile"
+                scopes: "email profile offline_access"
                 existingSecret: vaultwarden-sso
                 clientId:
                   existingSecretKey: client_id
