@@ -167,7 +167,7 @@ argoconfig:
                   containers:
                     main:
                       image:
-                        tag: v3.0.0
+                        tag: v3.0.1
                       env:
                         DB_HOSTNAME:
                           valueFrom:
