@@ -1300,3 +1300,39 @@ argoconfig:
           syncOptions:
             - CreateNamespace=true
             - ServerSideApply=true
+    - name: mila-spell-tumble
+      enabled: true
+      spec:
+        project: default
+        source:
+          repoURL: https://github.com/paimonsoror/milas-spell-and-tumble
+          path: "."
+          targetRevision: HEAD
+          helm:
+            values: |-
+              image:
+                repository: ghcr.io/paimonsoror/milas-spell-and-tumble
+                tag: latest
+              ingress:
+                enabled: true
+                className: "cilium"
+                annotations:
+                  ingress.cilium.io/loadbalancer-mode: shared
+                  cert-manager.io/cluster-issuer: letsencrypt-prod
+                hosts:
+                  - host: spelltumble.sororlab.dev
+                    paths:
+                      - path: "/"
+                        pathType: Prefix
+                tls:
+                  - secretName: mila-spell-tumble-tls
+                    hosts:
+                      - spelltumble.sororlab.dev
+        destination:
+          server: 'https://kubernetes.default.svc'
+          namespace: mila-spell-tumble
+        syncPolicy:
+          automated: {}
+          syncOptions:
+            - CreateNamespace=true
+            - ServerSideApply=true
