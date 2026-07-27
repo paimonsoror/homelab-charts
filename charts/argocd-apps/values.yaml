@@ -1325,10 +1325,17 @@ argoconfig:
                         pathType: Prefix
                         service: server
                         port: 8081
+                      - path: "/admin"
+                        pathType: Prefix
+                        service: server
+                        port: 8081
                 tls:
                   - secretName: mila-spell-tumble-tls
                     hosts:
                       - spelltumble.sororlab.dev
+              server:
+                adminPasswordSecretName: mila-spell-tumble-admin
+                adminPasswordSecretKey: password
         destination:
           server: 'https://kubernetes.default.svc'
           namespace: mila-spell-tumble
