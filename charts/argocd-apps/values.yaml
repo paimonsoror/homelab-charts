@@ -1310,9 +1310,6 @@ argoconfig:
           targetRevision: HEAD
           helm:
             values: |-
-              image:
-                repository: ghcr.io/paimonsoror/milas-spell-and-tumble
-                tag: latest
               ingress:
                 enabled: true
                 className: "cilium"
@@ -1324,6 +1321,10 @@ argoconfig:
                     paths:
                       - path: "/"
                         pathType: Prefix
+                      - path: "/api"
+                        pathType: Prefix
+                        service: server
+                        port: 8081
                 tls:
                   - secretName: mila-spell-tumble-tls
                     hosts:
