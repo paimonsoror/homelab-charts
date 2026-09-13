@@ -136,7 +136,7 @@ argoconfig:
         project: default
         source:
           repoURL: https://charts.jetstack.io
-          targetRevision: v1.15.1
+          targetRevision: v1.16.5
           chart: cert-manager
           helm:
             values: |-
