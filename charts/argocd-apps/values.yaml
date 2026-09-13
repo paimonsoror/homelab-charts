@@ -162,6 +162,9 @@ argoconfig:
                   registry: ghcr.io
                   repository: paimonsoror/backstage
                   tag: latest
+                args:
+                  - "--config"
+                  - "app-config.production.yaml"
                 extraEnvVars:
                   - name: POSTGRES_HOST
                     value: backstage-postgres-rw
