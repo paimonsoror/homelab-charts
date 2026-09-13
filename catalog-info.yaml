@@ -1,0 +1,12 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: homelab-charts
+  description: GitOps source of truth for the homelab k3s cluster -- ArgoCD app-of-apps chart and infra manifests for every deployed app.
+  annotations:
+    github.com/project-slug: paimonsoror/homelab-charts
+    backstage.io/techdocs-ref: dir:.
+spec:
+  type: library
+  owner: group:sororlab
+  lifecycle: production
