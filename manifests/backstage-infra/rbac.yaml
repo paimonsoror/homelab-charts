@@ -10,7 +10,7 @@ metadata:
   name: backstage-k8s-reader
 rules:
   - apiGroups: [""]
-    resources: ["pods", "services", "configmaps", "limitranges", "namespaces", "events"]
+    resources: ["pods", "services", "configmaps", "limitranges", "resourcequotas", "namespaces", "events"]
     verbs: ["get", "list", "watch"]
   - apiGroups: ["apps"]
     resources: ["deployments", "replicasets", "statefulsets", "daemonsets"]
@@ -23,9 +23,6 @@ rules:
     verbs: ["get", "list", "watch"]
   - apiGroups: ["networking.k8s.io"]
     resources: ["ingresses"]
-    verbs: ["get", "list", "watch"]
-  - apiGroups: ["metrics.k8s.io"]
-    resources: ["pods"]
     verbs: ["get", "list", "watch"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
