@@ -988,6 +988,22 @@ argoconfig:
             - CreateNamespace=true
             - ServerSideApply=true
 
+    - name: courier
+      enabled: true
+      spec:
+        project: default
+        source:
+          # AppProject + ApplicationSet (team requests) + controller Application
+          repoURL: https://github.com/paimonsoror/courier.git
+          targetRevision: main
+          path: deploy/argocd
+        destination:
+          server: 'https://kubernetes.default.svc'
+          namespace: argocd
+        syncPolicy:
+          automated:
+            selfHeal: true
+
     ####################################
     ### Start of Homelab Monitoring Charts ###
     ####################################
