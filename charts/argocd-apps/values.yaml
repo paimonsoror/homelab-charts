@@ -922,6 +922,8 @@ argoconfig:
                         - targets: [ 'truenas.sororlab.dev:20489' ]
               grafana:
                 enabled: true
+                admin:
+                  existingSecret: prometheus-grafana-admin
                 ingress:
                   enabled: true
                   ingressClassName: cilium
