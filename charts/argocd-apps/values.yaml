@@ -688,7 +688,7 @@ argoconfig:
         project: default
         source:
           repoURL: https://charts.goauthentik.io
-          targetRevision: 2026.5.0
+          targetRevision: 2026.8.2
           chart: authentik
           helm:
             values: |-
@@ -706,6 +706,9 @@ argoconfig:
                 redis:
                   host: authentik-redis-master
               server:
+                env:
+                  - name: AUTHENTIK_LISTEN__TRUSTED_PROXY_CIDRS
+                    value: "192.168.5.2/32,10.0.0.0/24"
                 ingress:
                   enabled: true
                   ingressClassName: cilium
