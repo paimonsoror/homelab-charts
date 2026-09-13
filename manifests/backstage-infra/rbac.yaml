@@ -40,3 +40,14 @@ roleRef:
   kind: ClusterRole
   name: backstage-k8s-reader
   apiGroup: rbac.authorization.k8s.io
+---
+# Long-lived token for the kubernetes plugin. Kubernetes auto-populates
+# .data.token from the annotated ServiceAccount -- no secret material here.
+apiVersion: v1
+kind: Secret
+metadata:
+  name: backstage-k8s-token
+  namespace: backstage
+  annotations:
+    kubernetes.io/service-account.name: backstage
+type: kubernetes.io/service-account-token
