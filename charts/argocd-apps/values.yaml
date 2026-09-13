@@ -194,6 +194,11 @@ argoconfig:
                         key: client_secret
                   - name: AUTH_OIDC_METADATA_URL
                     value: https://auth.sororlab.dev/application/o/backstage/.well-known/openid-configuration
+                  - name: K8S_SERVICE_ACCOUNT_TOKEN
+                    valueFrom:
+                      secretKeyRef:
+                        name: backstage-k8s-token
+                        key: token
               serviceAccount:
                 create: false
                 name: backstage
