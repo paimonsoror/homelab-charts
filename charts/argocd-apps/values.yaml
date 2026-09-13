@@ -147,6 +147,74 @@ argoconfig:
           syncOptions:
             - CreateNamespace=true
             - ServerSideApply=true
+    - name: backstage
+      enabled: true
+      spec:
+        project: default
+        source:
+          repoURL: https://backstage.github.io/charts
+          targetRevision: 2.10.1
+          chart: backstage
+          helm:
+            values: |-
+              backstage:
+                image:
+                  registry: ghcr.io
+                  repository: paimonsoror/backstage
+                  tag: latest
+                extraEnvVars:
+                  - name: POSTGRES_HOST
+                    value: backstage-postgres-rw
+                  - name: POSTGRES_PORT
+                    value: "5432"
+                  - name: POSTGRES_USER
+                    valueFrom:
+                      secretKeyRef:
+                        name: backstage-postgres-user
+                        key: username
+                  - name: POSTGRES_PASSWORD
+                    valueFrom:
+                      secretKeyRef:
+                        name: backstage-postgres-user
+                        key: password
+                  - name: AUTH_SESSION_SECRET
+                    valueFrom:
+                      secretKeyRef:
+                        name: backstage-session
+                        key: session-secret
+                  - name: AUTH_OIDC_CLIENT_ID
+                    valueFrom:
+                      secretKeyRef:
+                        name: backstage-sso
+                        key: client_id
+                  - name: AUTH_OIDC_CLIENT_SECRET
+                    valueFrom:
+                      secretKeyRef:
+                        name: backstage-sso
+                        key: client_secret
+                  - name: AUTH_OIDC_METADATA_URL
+                    value: https://auth.sororlab.dev/application/o/backstage/.well-known/openid-configuration
+              serviceAccount:
+                create: false
+                name: backstage
+              ingress:
+                enabled: true
+                className: cilium
+                annotations:
+                  ingress.cilium.io/loadbalancer-mode: shared
+                  cert-manager.io/cluster-issuer: letsencrypt-prod
+                host: backstage.sororlab.dev
+                tls:
+                  enabled: true
+                  secretName: backstage-tls
+        destination:
+          server: 'https://kubernetes.default.svc'
+          namespace: backstage
+        syncPolicy:
+          automated: {}
+          syncOptions:
+            - CreateNamespace=true
+            - ServerSideApply=true
     - name: cert-manager
       enabled: true
       spec:
