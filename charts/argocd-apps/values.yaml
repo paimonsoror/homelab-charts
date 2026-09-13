@@ -1073,7 +1073,7 @@ argoconfig:
         project: default
         source:
           repoURL: https://helm.vector.dev
-          targetRevision: 0.43.0
+          targetRevision: 0.58.0
           helm:
             values: |-
               containerPorts:
