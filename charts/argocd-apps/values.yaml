@@ -199,6 +199,11 @@ argoconfig:
                       secretKeyRef:
                         name: backstage-k8s-token
                         key: token
+                  - name: ARGOCD_AUTH_TOKEN
+                    valueFrom:
+                      secretKeyRef:
+                        name: backstage-argocd-token
+                        key: token
               serviceAccount:
                 create: false
                 name: backstage
