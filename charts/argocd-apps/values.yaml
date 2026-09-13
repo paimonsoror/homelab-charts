@@ -130,6 +130,7 @@ argoconfig:
           automated: {}
           syncOptions:
             - CreateNamespace=true
+            - ServerSideApply=true
     - name: cert-manager
       enabled: true
       spec:
