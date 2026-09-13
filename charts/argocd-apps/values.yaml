@@ -768,7 +768,7 @@ argoconfig:
         project: default
         source:
           repoURL: 'https://prometheus-community.github.io/helm-charts'
-          targetRevision: 3.6.0
+          targetRevision: 3.8.0
           helm:
             values: |-
               ingress:
