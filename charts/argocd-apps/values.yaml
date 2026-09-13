@@ -164,6 +164,8 @@ argoconfig:
                   tag: latest
                 args:
                   - "--config"
+                  - "app-config.yaml"
+                  - "--config"
                   - "app-config.production.yaml"
                 extraEnvVars:
                   - name: POSTGRES_HOST
