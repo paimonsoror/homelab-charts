@@ -642,7 +642,10 @@ argoconfig:
               image:
                 registry: docker.io
                 repository: vaultwarden/server
-                tag: "1.36.0"                # pin instead of "latest"
+                tag: "1.37.2"                # pin instead of "latest"
+              adminToken:
+                existingSecret: vaultwarden-admin-token
+                existingSecretKey: ADMIN_TOKEN
               podSecurityContext:            # NEW block
                 runAsUser: 1000
                 runAsGroup: 3008             # ← matches TrueNAS group GID
