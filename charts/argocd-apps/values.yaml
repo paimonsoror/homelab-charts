@@ -1204,7 +1204,7 @@ argoconfig:
         project: default
         source:
           repoURL: https://fluent.github.io/helm-charts
-          targetRevision: 0.57.3
+          targetRevision: 0.58.2
           helm:
             values: |-
               ## https://docs.fluentbit.io/manual/administration/configuring-fluent-bit/classic-mode/configuration-file
