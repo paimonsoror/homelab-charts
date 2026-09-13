@@ -1,0 +1,234 @@
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: authentik
+  description: "Deployed via ArgoCD in the authentik namespace."
+  annotations:
+    argocd/app-name: authentik
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=authentik
+spec:
+  type: service
+  owner: group:sororlab
+  lifecycle: production
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: cert-manager
+  description: "Issues and renews TLS certificates cluster-wide via Let's Encrypt."
+  annotations:
+    argocd/app-name: cert-manager
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=cert-manager
+spec:
+  type: service
+  owner: group:sororlab
+  lifecycle: production
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: cloudnative-pg-operator
+  description: "CloudNativePG operator -- manages the Postgres Clusters used by immich, authentik, and backstage."
+  annotations:
+    argocd/app-name: cloudnative-pg-operator
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=cloudnative-pg-operator
+spec:
+  type: service
+  owner: group:sororlab
+  lifecycle: production
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: code-server
+  description: "Deployed via ArgoCD in the code namespace."
+  annotations:
+    argocd/app-name: code-server
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=code-server
+spec:
+  type: service
+  owner: group:sororlab
+  lifecycle: production
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: fluentbit
+  description: "Collects container logs cluster-wide, forwards to vector."
+  annotations:
+    argocd/app-name: fluentbit
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=fluentbit
+spec:
+  type: service
+  owner: group:sororlab
+  lifecycle: production
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: homeassistant
+  description: "Deployed via ArgoCD in the homeassistant namespace."
+  annotations:
+    argocd/app-name: homeassistant
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=homeassistant
+spec:
+  type: service
+  owner: group:sororlab
+  lifecycle: production
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: immich
+  description: "Deployed via ArgoCD in the immich namespace."
+  annotations:
+    argocd/app-name: immich
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=immich
+spec:
+  type: service
+  owner: group:sororlab
+  lifecycle: production
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: immich-power-tools
+  description: "Deployed via ArgoCD in the immich namespace."
+  annotations:
+    argocd/app-name: immich-power-tools
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=immich-power-tools
+spec:
+  type: service
+  owner: group:sororlab
+  lifecycle: production
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: loki
+  description: "Log storage/query backend (loki-distributed chart -- deprecated, pending migration to the unified loki chart)."
+  annotations:
+    argocd/app-name: loki
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=loki
+spec:
+  type: service
+  owner: group:sororlab
+  lifecycle: production
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: openspeedtest
+  description: "Deployed via ArgoCD in the openspeedtest namespace."
+  annotations:
+    argocd/app-name: openspeedtest
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=openspeedtest
+spec:
+  type: service
+  owner: group:sororlab
+  lifecycle: production
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: pihole
+  description: "Legacy DNS filtering -- superseded by Technitium, kept running but not actively maintained."
+  annotations:
+    argocd/app-name: pihole
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=pihole
+spec:
+  type: service
+  owner: group:sororlab
+  lifecycle: production
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: portainer
+  description: "Deployed via ArgoCD in the portainer namespace."
+  annotations:
+    argocd/app-name: portainer
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=portainer
+spec:
+  type: service
+  owner: group:sororlab
+  lifecycle: production
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: prom-push-gateway
+  description: "Prometheus Pushgateway, for batch/cron job metrics."
+  annotations:
+    argocd/app-name: prom-push-gateway
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=prom-push-gateway
+spec:
+  type: service
+  owner: group:sororlab
+  lifecycle: production
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: prometheus
+  description: "kube-prometheus-stack: Prometheus, Alertmanager, and Grafana."
+  annotations:
+    argocd/app-name: prometheus
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=prometheus
+spec:
+  type: service
+  owner: group:sororlab
+  lifecycle: production
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: technitium-exporter
+  description: "Prometheus exporter for Technitium DNS stats."
+  annotations:
+    argocd/app-name: technitium-exporter
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=technitium-exporter
+spec:
+  type: service
+  owner: group:sororlab
+  lifecycle: production
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: uptimekuma
+  description: "Deployed via ArgoCD in the uptimekuma namespace."
+  annotations:
+    argocd/app-name: uptimekuma
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=uptimekuma
+spec:
+  type: service
+  owner: group:sororlab
+  lifecycle: production
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: vaultwarden
+  description: "Deployed via ArgoCD in the vaultwarden namespace."
+  annotations:
+    argocd/app-name: vaultwarden
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=vaultwarden
+spec:
+  type: service
+  owner: group:sororlab
+  lifecycle: production
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: vector
+  description: "Log pipeline: ingests UniFi syslog + fluent-bit forwarded logs, ships to Loki."
+  annotations:
+    argocd/app-name: vector
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=vector
+spec:
+  type: service
+  owner: group:sororlab
+  lifecycle: production
