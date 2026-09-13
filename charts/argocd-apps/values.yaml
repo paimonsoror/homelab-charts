@@ -131,6 +131,22 @@ argoconfig:
           syncOptions:
             - CreateNamespace=true
             - ServerSideApply=true
+    - name: backstage-infra
+      enabled: true
+      spec:
+        project: default
+        source:
+          repoURL: https://github.com/paimonsoror/homelab-charts
+          path: manifests/backstage-infra
+          targetRevision: HEAD
+        destination:
+          server: 'https://kubernetes.default.svc'
+          namespace: backstage
+        syncPolicy:
+          automated: {}
+          syncOptions:
+            - CreateNamespace=true
+            - ServerSideApply=true
     - name: cert-manager
       enabled: true
       spec:

@@ -1,0 +1,40 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: backstage-postgres
+  namespace: backstage
+spec:
+  instances: 1
+  imageName: ghcr.io/cloudnative-pg/postgresql:16
+  bootstrap:
+    initdb:
+      database: backstage
+      owner: backstage
+      secret:
+        name: backstage-postgres-user
+  managed:
+    roles:
+      - name: backstage
+        login: true
+        superuser: true
+  storage:
+    pvcTemplate:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 2Gi
+      storageClassName: local-path
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 400m
+      memory: 512Mi
+  monitoring:
+    enablePodMonitor: false
+    disableDefaultQueries: false
+    customQueriesConfigMap:
+      - name: cnpg-default-monitoring
+        key: queries
