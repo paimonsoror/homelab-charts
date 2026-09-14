@@ -209,6 +209,14 @@ argoconfig:
                       secretKeyRef:
                         name: backstage-argocd-token
                         key: token
+                  # Scaffolder pull requests + GitHub catalog reads. Optional so the
+                  # pod still starts before the token Secret exists.
+                  - name: GITHUB_TOKEN
+                    valueFrom:
+                      secretKeyRef:
+                        name: backstage-github-token
+                        key: token
+                        optional: true
               serviceAccount:
                 create: false
                 name: backstage
