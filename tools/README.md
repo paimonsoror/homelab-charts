@@ -91,9 +91,16 @@ A CronJob in the `argocd` namespace, every two minutes:
    any child's spec is current.
 2. Compares `.status.sync.revision` against the last one it recorded in the
    `argocd-sync-watcher-state` ConfigMap. Unchanged → exits.
-3. Reads the new commit's `Argocd-Sync:` trailer from the GitHub API and syncs
-   exactly those Applications, waiting for each operation to reach a terminal
-   phase and logging `phase=` and `health=`.
+3. Reads the `Argocd-Sync:` trailer from **every commit introduced since the
+   last run** (`GET /compare/{last}...{rev}`) and syncs exactly those
+   Applications, waiting for each operation to reach a terminal phase and
+   logging `phase=` and `health=`.
+
+   The range matters. A merge commit's own message is
+   `Merge pull request #N from ...` — the trailer is on the branch commit
+   underneath it, so reading only the tip finds nothing and syncs nothing.
+   If the range is not comparable (force push, rewritten history) it falls
+   back to the tip commit alone.
 
 Precision is the point of step 3. Syncing everything `OutOfSync` would also
 pick up apps deliberately left unsynced, so with no trailer it syncs nothing

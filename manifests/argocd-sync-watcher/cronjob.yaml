@@ -64,14 +64,32 @@ data:
       log "no new commit (still $SHORT)"; exit 0
     fi
 
-    # ---- 2. work out what the commit wants synced -----------------------
-    MSG="$(curl -fsSL -H 'Accept: application/vnd.github+json' \
-           "https://api.github.com/repos/$REPO/commits/$REV" \
-           | jq -r '.commit.message // ""')"
-    SUBJECT="$(printf '%s\n' "$MSG" | head -1)"
-    APPS="$(printf '%s\n' "$MSG" \
-            | sed -n 's/^[Aa]rgocd-[Ss]ync:[[:space:]]*//p' | tr ',' ' ')"
-    log "new commit $SHORT: $SUBJECT"
+    # ---- 2. work out what the range wants synced ------------------------
+    # Every commit introduced since the last run, not just the tip. A PR
+    # merge puts "Merge pull request #N from ..." on the tip commit and
+    # leaves the Argocd-Sync trailer on the branch commit underneath it, so
+    # reading only the tip finds nothing.
+    RANGE="$(curl -fsSL -H 'Accept: application/vnd.github+json' \
+             "https://api.github.com/repos/$REPO/compare/$LAST...$REV" 2>/dev/null || true)"
+    NCOMMITS="$(printf '%s' "$RANGE" | jq -r '.commits | length' 2>/dev/null || echo 0)"
+
+    if [ "${NCOMMITS:-0}" -gt 0 ]; then
+      MSGS="$(printf '%s' "$RANGE" | jq -r '.commits[].commit.message')"
+      SUBJECT="$(printf '%s' "$RANGE" | jq -r '.commits[-1].commit.message' | head -1)"
+    else
+      # Not a comparable range -- force push, rewritten history, or a
+      # revision GitHub does not know. Fall back to the tip commit alone.
+      MSGS="$(curl -fsSL -H 'Accept: application/vnd.github+json' \
+              "https://api.github.com/repos/$REPO/commits/$REV" \
+              | jq -r '.commit.message // ""')"
+      SUBJECT="$(printf '%s\n' "$MSGS" | head -1)"
+      NCOMMITS=1
+    fi
+
+    APPS="$(printf '%s\n' "$MSGS" \
+            | sed -n 's/^[Aa]rgocd-[Ss]ync:[[:space:]]*//p' \
+            | tr ', ' '\n\n' | sed '/^$/d' | sort -u | tr '\n' ' ' || true)"
+    log "new revision $SHORT ($NCOMMITS commit(s) since $(echo "$LAST" | cut -c1-7)): $SUBJECT"
 
     if [ -z "$APPS" ] && [ "$FALLBACK" = "outofsync" ]; then
       APPS="$(kubectl -n "$NS" get applications \
