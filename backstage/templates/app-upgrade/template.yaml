@@ -1,0 +1,109 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: homelab-app-upgrade
+  title: Upgrade an app
+  description: >-
+    Requests a version bump for an app in the homelab app-of-apps. Opens a pull
+    request against homelab-charts; once you approve and merge it, the
+    in-cluster sync watcher refreshes ArgoCD and syncs that app. Nobody edits
+    values.yaml on the box.
+  tags:
+    - homelab
+    - argocd
+    - version
+  links:
+    - url: https://github.com/paimonsoror/homelab-charts/blob/main/tools/README.md
+      title: How the upgrade pipeline works
+      icon: docs
+spec:
+  owner: group:default/sororlab
+  type: service
+
+  parameters:
+    - title: What to upgrade
+      required:
+        - app
+        - kind
+        - version
+      properties:
+        app:
+          title: App
+          type: string
+          description: >-
+            The ArgoCD Application to bump. Must match a `- name:` entry in
+            charts/argocd-apps/values.yaml.
+          ui:field: EntityPicker
+          ui:options:
+            catalogFilter:
+              kind: Component
+            defaultKind: Component
+            allowArbitraryValues: true
+        kind:
+          title: Which version
+          type: string
+          default: image
+          enum:
+            - image
+            - chart
+          enumNames:
+            - Container image tag (image.tag in the helm values block)
+            - Helm chart version (spec.source.targetRevision)
+        version:
+          title: Target version
+          type: string
+          description: >-
+            Exactly as it appears upstream, e.g. 15.5.0 or v1.21.2. Run
+            `tools/bump.py check` to see what is available.
+          pattern: '^[A-Za-z0-9][A-Za-z0-9._-]*$'
+          ui:autofocus: true
+        path:
+          title: Field path
+          type: string
+          description: >-
+            Only needed when an app has more than one image tag, e.g.
+            `server.image.tag` for vault. Leave blank otherwise.
+
+    - title: Why
+      required:
+        - reason
+      properties:
+        reason:
+          title: Why is this being upgraded?
+          type: string
+          description: Goes into the pull request so the reviewer has the context.
+          ui:widget: textarea
+
+  steps:
+    # The edit is a surgical rewrite inside a YAML block scalar, which the
+    # scaffolder's file actions cannot do. So the template dispatches the
+    # workflow that runs tools/bump.py, keeping one implementation of the
+    # edit logic, in the repo it edits.
+    - id: dispatch
+      name: Request the bump
+      action: github:actions:dispatch
+      input:
+        repoUrl: github.com?owner=paimonsoror&repo=homelab-charts
+        workflowId: version-bump.yml
+        branchOrTagName: main
+        workflowInputs:
+          app: ${{ parameters.app | parseEntityRef | pick('name') }}
+          version: ${{ parameters.version }}
+          kind: ${{ parameters.kind }}
+          path: ${{ parameters.path }}
+          reason: ${{ parameters.reason }}
+          requested_by: ${{ user.entity.metadata.name if user.entity else 'backstage' }}
+
+  output:
+    text:
+      - title: Requested
+        content: |
+          A pull request for **${{ parameters.app | parseEntityRef | pick('name') }}
+          → ${{ parameters.version }}** is being opened. It appears in the list
+          below within a few seconds. Approve and merge it, and the app syncs
+          within about two minutes.
+    links:
+      - title: Open pull requests
+        url: https://github.com/paimonsoror/homelab-charts/pulls
+      - title: Workflow runs
+        url: https://github.com/paimonsoror/homelab-charts/actions/workflows/version-bump.yml

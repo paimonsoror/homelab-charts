@@ -1,0 +1,129 @@
+name: Version bump
+
+# Triggered from the Backstage "Upgrade an app" template (github:actions:dispatch),
+# from the Actions tab, or with `gh workflow run version-bump.yml`.
+#
+# It only opens the pull request. Approval is the PR review; the ArgoCD sync
+# happens after merge, driven by the in-cluster argocd-sync-watcher CronJob
+# reading the `Argocd-Sync:` trailer this workflow writes into the commit.
+#
+# Every input reaches the shell as an environment variable, never as a `${{ }}`
+# expression inside a `run:` block -- `reason` is free text, and textual
+# interpolation of free text into a shell script is an injection.
+
+on:
+  workflow_dispatch:
+    inputs:
+      app:
+        description: "App name as it appears in charts/argocd-apps/values.yaml"
+        required: true
+        type: string
+      version:
+        description: "Target version, e.g. 15.5.0"
+        required: true
+        type: string
+      kind:
+        description: "Which version to change"
+        required: true
+        default: image
+        type: choice
+        options: [image, chart]
+      path:
+        description: "Exact field path, only needed when an app has several (e.g. server.image.tag)"
+        required: false
+        type: string
+      reason:
+        description: "Why -- goes into the PR body for the reviewer"
+        required: false
+        type: string
+      requested_by:
+        description: "Who asked (filled in automatically by Backstage)"
+        required: false
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    env:
+      APP: ${{ inputs.app }}
+      VERSION: ${{ inputs.version }}
+      KIND: ${{ inputs.kind }}
+      FIELD_PATH: ${{ inputs.path }}
+      REASON: ${{ inputs.reason }}
+      REQUESTED_BY: ${{ inputs.requested_by || github.actor }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Apply the version change
+        id: bump
+        run: |
+          set -eu
+          if [ -n "$FIELD_PATH" ]; then
+            python3 tools/bump.py set "$APP" --to "$VERSION" --kind "$KIND" --path "$FIELD_PATH"
+          else
+            python3 tools/bump.py set "$APP" --to "$VERSION" --kind "$KIND"
+          fi
+
+      - name: Fail if nothing changed
+        run: |
+          set -eu
+          if git diff --quiet; then
+            echo "::error::$APP is already at $VERSION -- nothing to do."
+            exit 1
+          fi
+          git --no-pager diff
+
+      # Catches a values.yaml that stopped being valid YAML, or a helm.values
+      # block that no longer parses, before a human is asked to review it.
+      - uses: azure/setup-helm@v4
+      - name: Render the chart
+        run: helm template argocd-apps charts/argocd-apps > /dev/null
+
+      - name: Commit and open the pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FROM: ${{ steps.bump.outputs.from }}
+          TO: ${{ steps.bump.outputs.to }}
+          FIELD: ${{ steps.bump.outputs.field }}
+        run: |
+          set -eu
+          BRANCH="bump/$APP-$TO"
+          SUBJECT="$APP: upgrade $FROM -> $TO"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git add charts/argocd-apps/values.yaml
+
+          # Subject follows this repo's existing convention. The Argocd-Sync
+          # trailer is what argocd-sync-watcher reads after merge to decide
+          # which child Application to sync.
+          {
+            printf '%s\n\n' "$SUBJECT"
+            printf '%s\n\n' "${REASON:-Requested via the version-bump workflow.}"
+            printf 'Argocd-Sync: %s\n' "$APP"
+          } > "$RUNNER_TEMP/commit-msg"
+          git commit -F "$RUNNER_TEMP/commit-msg"
+          git push -u origin "$BRANCH"
+
+          {
+            printf '## Version bump\n\n'
+            printf '| | |\n|---|---|\n'
+            printf '| App | `%s` |\n' "$APP"
+            printf '| Field | `%s` (%s) |\n' "$FIELD" "$KIND"
+            printf '| From | `%s` |\n' "$FROM"
+            printf '| To | `%s` |\n' "$TO"
+            printf '| Requested by | %s |\n\n' "$REQUESTED_BY"
+            printf '**Reason:** %s\n\n' "${REASON:-_not given_}"
+            printf '`helm template charts/argocd-apps` renders cleanly with this change.\n\n'
+            printf 'On merge, the in-cluster `argocd-sync-watcher` CronJob hard-refreshes\n'
+            printf '`argocd-apps`, waits for it to reconcile, then syncs `%s` (it reads the\n' "$APP"
+            printf '`Argocd-Sync` trailer on the merge commit). Expect it within ~2 minutes:\n\n'
+            printf '```\nkubectl -n argocd logs -l batch.kubernetes.io/job-name --tail=50 --prefix\n```\n'
+          } > "$RUNNER_TEMP/pr-body"
+
+          gh pr create --title "$SUBJECT" --body-file "$RUNNER_TEMP/pr-body"

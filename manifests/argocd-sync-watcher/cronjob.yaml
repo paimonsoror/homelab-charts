@@ -1,0 +1,173 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-sync-watcher
+  namespace: argocd
+data:
+  watch.sh: |
+    #!/bin/sh
+    # Turns a merge to main into an ArgoCD sync, without anything outside the
+    # cluster needing to reach in. GitHub-hosted runners and ArgoCD webhooks
+    # cannot get here (letsencrypt-prod uses DNS-01, nothing is exposed), so
+    # this polls instead.
+    #
+    # Each run:
+    #   1. hard-refreshes the parent app-of-apps so it re-reads git
+    #   2. compares the revision it settled on against the last one seen
+    #   3. reads the new commit's `Argocd-Sync:` trailer to learn which child
+    #      Application the change was for, and syncs exactly that one
+    #
+    # Step 3 is what keeps this precise. Without the trailer it syncs nothing
+    # (see FALLBACK), because "sync everything that is OutOfSync" would also
+    # pick up apps that are deliberately left unsynced.
+    set -eu
+
+    NS=argocd
+    PARENT="${PARENT_APP:-argocd-apps}"
+    STATE="${STATE_CM:-argocd-sync-watcher-state}"
+    REPO="${GITHUB_REPO:-paimonsoror/homelab-charts}"
+    FALLBACK="${FALLBACK:-none}"     # none | outofsync
+
+    log() { echo "[$(date -u +%H:%M:%SZ)] $*"; }
+
+    app_field() {
+      kubectl -n "$NS" get application "$1" -o "jsonpath={$2}" 2>/dev/null || true
+    }
+
+    record() {
+      kubectl -n "$NS" create configmap "$STATE" --from-literal=revision="$1" \
+        --dry-run=client -o yaml | kubectl -n "$NS" apply -f - >/dev/null
+    }
+
+    # ---- 1. refresh the parent ------------------------------------------
+    # ArgoCD removes the refresh annotation once it has finished, so its
+    # disappearance is the signal that .status.sync.revision is current.
+    kubectl -n "$NS" annotate application "$PARENT" \
+      argocd.argoproj.io/refresh=hard --overwrite >/dev/null
+    i=0
+    while [ "$i" -lt 60 ]; do
+      [ -z "$(app_field "$PARENT" '.metadata.annotations.argocd\.argoproj\.io/refresh')" ] && break
+      i=$((i + 1)); sleep 2
+    done
+
+    REV="$(app_field "$PARENT" '.status.sync.revision')"
+    [ -n "$REV" ] || { log "$PARENT has no synced revision yet, nothing to do"; exit 0; }
+    SHORT="$(echo "$REV" | cut -c1-7)"
+    LAST="$(kubectl -n "$NS" get configmap "$STATE" -o jsonpath='{.data.revision}' 2>/dev/null || true)"
+
+    if [ -z "$LAST" ]; then
+      log "first run: recording $SHORT as the baseline, not syncing"
+      record "$REV"; exit 0
+    fi
+    if [ "$REV" = "$LAST" ]; then
+      log "no new commit (still $SHORT)"; exit 0
+    fi
+
+    # ---- 2. work out what the commit wants synced -----------------------
+    MSG="$(curl -fsSL -H 'Accept: application/vnd.github+json' \
+           "https://api.github.com/repos/$REPO/commits/$REV" \
+           | jq -r '.commit.message // ""')"
+    SUBJECT="$(printf '%s\n' "$MSG" | head -1)"
+    APPS="$(printf '%s\n' "$MSG" \
+            | sed -n 's/^[Aa]rgocd-[Ss]ync:[[:space:]]*//p' | tr ',' ' ')"
+    log "new commit $SHORT: $SUBJECT"
+
+    if [ -z "$APPS" ] && [ "$FALLBACK" = "outofsync" ]; then
+      APPS="$(kubectl -n "$NS" get applications \
+              -o jsonpath='{range .items[?(@.status.sync.status=="OutOfSync")]}{.metadata.name}{" "}{end}')"
+      log "no Argocd-Sync trailer; FALLBACK=outofsync selected: ${APPS:-<none>}"
+    fi
+
+    # Record now, not at the end: a sync that keeps failing should shout in
+    # the job logs, not re-run every two minutes forever.
+    record "$REV"
+
+    if [ -z "$APPS" ]; then
+      log "no Argocd-Sync trailer on $SHORT; nothing to sync explicitly."
+      log "apps with syncPolicy.automated will still pick this up on their own."
+      exit 0
+    fi
+
+    # ---- 3. wait for the parent, then sync each named child -------------
+    i=0
+    while [ "$i" -lt 60 ]; do
+      [ "$(app_field "$PARENT" '.status.sync.status')" = "Synced" ] && break
+      i=$((i + 1)); sleep 2
+    done
+    if [ "$(app_field "$PARENT" '.status.sync.status')" != "Synced" ]; then
+      log "ERROR: $PARENT did not reach Synced; child specs may be stale"
+      exit 1
+    fi
+
+    rc=0
+    for app in $APPS; do
+      if [ -z "$(app_field "$app" '.metadata.name')" ]; then
+        log "ERROR: no Application named '$app' -- check the Argocd-Sync trailer"
+        rc=1; continue
+      fi
+      log "syncing $app"
+      kubectl -n "$NS" patch application "$app" --type merge \
+        -p '{"operation":{"sync":{}}}' >/dev/null
+
+      i=0; phase=""
+      while [ "$i" -lt 150 ]; do
+        phase="$(app_field "$app" '.status.operationState.phase')"
+        case "$phase" in Succeeded|Failed|Error) break ;; esac
+        i=$((i + 1)); sleep 2
+      done
+      health="$(app_field "$app" '.status.health.status')"
+      log "$app: phase=${phase:-timeout} health=${health:-unknown}"
+      case "$phase" in Succeeded) ;; *) rc=1 ;; esac
+    done
+    exit "$rc"
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: argocd-sync-watcher
+  namespace: argocd
+spec:
+  schedule: "*/2 * * * *"
+  concurrencyPolicy: Forbid
+  startingDeadlineSeconds: 60
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 0            # a failed sync is reported, not retried blindly
+      activeDeadlineSeconds: 600
+      template:
+        spec:
+          restartPolicy: Never
+          serviceAccountName: argocd-sync-watcher
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+          containers:
+            - name: watcher
+              # kubectl + curl + jq in one image; tag tracks the cluster's
+              # server version (k3s v1.36.4).
+              image: alpine/k8s:1.36.4
+              imagePullPolicy: IfNotPresent
+              command: ["/bin/sh", "/scripts/watch.sh"]
+              env:
+                - name: GITHUB_REPO
+                  value: paimonsoror/homelab-charts
+                - name: PARENT_APP
+                  value: argocd-apps
+                - name: FALLBACK
+                  value: "none"
+              volumeMounts:
+                - name: scripts
+                  mountPath: /scripts
+              resources:
+                requests:
+                  cpu: 10m
+                  memory: 32Mi
+                limits:
+                  memory: 128Mi
+          volumes:
+            - name: scripts
+              configMap:
+                name: argocd-sync-watcher

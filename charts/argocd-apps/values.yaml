@@ -131,6 +131,21 @@ argoconfig:
           syncOptions:
             - CreateNamespace=true
             - ServerSideApply=true
+    - name: argocd-sync-watcher
+      enabled: true
+      spec:
+        project: default
+        source:
+          repoURL: https://github.com/paimonsoror/homelab-charts
+          path: manifests/argocd-sync-watcher
+          targetRevision: HEAD
+        destination:
+          server: 'https://kubernetes.default.svc'
+          namespace: argocd
+        syncPolicy:
+          automated: {}
+          syncOptions:
+            - ServerSideApply=true
     - name: backstage-infra
       enabled: true
       spec:
