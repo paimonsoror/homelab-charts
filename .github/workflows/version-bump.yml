@@ -108,7 +108,11 @@ jobs:
             printf 'Argocd-Sync: %s\n' "$APP"
           } > "$RUNNER_TEMP/commit-msg"
           git commit -F "$RUNNER_TEMP/commit-msg"
-          git push -u origin "$BRANCH"
+          # --force is correct here: bump/<app>-<version> is created only by
+          # this workflow and names the exact change, so a re-run after a
+          # failed step should replace the branch rather than be rejected as
+          # a non-fast-forward.
+          git push --force -u origin "$BRANCH"
 
           {
             printf '## Version bump\n\n'
@@ -126,4 +130,15 @@ jobs:
             printf '```\nkubectl -n argocd logs -l batch.kubernetes.io/job-name --tail=50 --prefix\n```\n'
           } > "$RUNNER_TEMP/pr-body"
 
-          gh pr create --title "$SUBJECT" --body-file "$RUNNER_TEMP/pr-body"
+          if gh pr view "$BRANCH" --json number >/dev/null 2>&1; then
+            echo "PR already open for $BRANCH, updating its body instead."
+            gh pr edit "$BRANCH" --title "$SUBJECT" --body-file "$RUNNER_TEMP/pr-body"
+          elif ! gh pr create --title "$SUBJECT" --body-file "$RUNNER_TEMP/pr-body"; then
+            # The branch is pushed and correct at this point, so say what to
+            # do rather than leaving a bare non-zero exit. This is almost
+            # always the repo setting below being off.
+            echo "::error::Branch '$BRANCH' pushed, but opening the PR failed."
+            echo "::error::Check Settings -> Actions -> General -> Workflow permissions ->"
+            echo "::error::'Allow GitHub Actions to create and approve pull requests'."
+            exit 1
+          fi
