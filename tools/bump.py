@@ -113,10 +113,23 @@ class App:
 
     @property
     def image_repo(self):
+        """Fully qualified image repository, e.g. ghcr.io/paimonsoror/backstage.
+
+        Charts split this two ways: immich writes the registry into
+        `repository` itself, backstage keeps a separate `registry` key. Both
+        have to end up qualified or the lookup goes to the wrong registry.
+        """
+        repo = registry = None
         for f in self.fields:
-            if f.kind == "image" and f.path.endswith("repository"):
-                return f.value
-        return KNOWN_IMAGES.get(self.name)
+            if f.kind != "image":
+                continue
+            if f.path.endswith("repository"):
+                repo = f.value
+            elif f.path.endswith("registry"):
+                registry = f.value
+        if repo and registry and not repo.startswith(registry + "/"):
+            repo = registry.rstrip("/") + "/" + repo
+        return repo or KNOWN_IMAGES.get(self.name)
 
 
 def split_scalar(text):
