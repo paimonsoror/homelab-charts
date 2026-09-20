@@ -514,7 +514,7 @@ argoconfig:
           helm:
             values: |-
               image:
-                tag: 15.4.0
+                tag: 15.5.0
               dnsServer:
                 domain: "technitium2"
                 webServiceEnableHttp: true
