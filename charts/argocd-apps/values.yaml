@@ -570,7 +570,7 @@ argoconfig:
           helm:
             values: |-
               technitium:
-                baseUrl: "https://192.168.5.112:53443"
+                baseUrl: "https://192.168.5.122:53443"
                 verifySsl: false
                 statsRange: LastHour
                 nodes: "technitium1.dnscluster,technitium2.dnscluster"
@@ -683,6 +683,111 @@ argoconfig:
                 [[route]]
                 match_suffix = ["sororlab.dev"]
                 upstream_group = "internal"
+
+                # sororlab.dev, imported from Technitium (telltale import zone, 2026-10-04): TelltaleDNS
+                # answers these itself. The route above stays during the move, so anything not listed
+                # here still resolves through Technitium; remove it once answers match.
+                [[record]]
+                name = "argo.sororlab.dev"
+                type = "CNAME"
+                value = "cilium.sororlab.dev"
+                ttl = 3600
+
+                [[record]]
+                name = "auth.sororlab.dev"
+                type = "CNAME"
+                value = "cilium.sororlab.dev"
+                ttl = 3600
+
+                [[record]]
+                name = "backstage.sororlab.dev"
+                type = "CNAME"
+                value = "cilium.sororlab.dev"
+                ttl = 3600
+
+                [[record]]
+                name = "cilium.sororlab.dev"
+                type = "A"
+                value = "192.168.5.100"
+                ttl = 3600
+
+                [[record]]
+                name = "code.sororlab.dev"
+                type = "CNAME"
+                value = "cilium.sororlab.dev"
+                ttl = 3600
+
+                [[record]]
+                name = "grafana.sororlab.dev"
+                type = "CNAME"
+                value = "cilium.sororlab.dev"
+                ttl = 3600
+
+                [[record]]
+                name = "homeassistant.sororlab.dev"
+                type = "CNAME"
+                value = "cilium.sororlab.dev"
+                ttl = 3600
+
+                [[record]]
+                name = "immich.sororlab.dev"
+                type = "CNAME"
+                value = "cilium.sororlab.dev"
+                ttl = 3600
+
+                [[record]]
+                name = "immich-pt.sororlab.dev"
+                type = "CNAME"
+                value = "cilium.sororlab.dev"
+                ttl = 3600
+
+                [[record]]
+                name = "kuma.sororlab.dev"
+                type = "CNAME"
+                value = "cilium.sororlab.dev"
+                ttl = 3600
+
+                [[record]]
+                name = "orders.sororlab.dev"
+                type = "CNAME"
+                value = "cilium.sororlab.dev"
+                ttl = 3600
+
+                [[record]]
+                name = "portainer.sororlab.dev"
+                type = "CNAME"
+                value = "cilium.sororlab.dev"
+                ttl = 3600
+
+                [[record]]
+                name = "spelltumble.sororlab.dev"
+                type = "CNAME"
+                value = "cilium.sororlab.dev"
+                ttl = 3600
+
+                [[record]]
+                name = "telltale.sororlab.dev"
+                type = "CNAME"
+                value = "cilium.sororlab.dev"
+                ttl = 3600
+
+                [[record]]
+                name = "truenas.sororlab.dev"
+                type = "A"
+                value = "192.168.3.3"
+                ttl = 3600
+
+                [[record]]
+                name = "vault.sororlab.dev"
+                type = "CNAME"
+                value = "cilium.sororlab.dev"
+                ttl = 3600
+
+                [[record]]
+                name = "vaultwarden.sororlab.dev"
+                type = "CNAME"
+                value = "cilium.sororlab.dev"
+                ttl = 3600
 
                 [[list]]
                 name = "hagezi-pro"
