@@ -50,3 +50,18 @@ config: |
 # A ConfigMap with the TelltaleDNS dashboard for the Grafana sidecar (label grafana_dashboard=1).
 grafanaDashboard:
   enabled: false
+
+# The UI and API behind an ingress (TLS). Set [api] trusted_proxies in config to the
+# ingress's source network so sign-in lockouts and the audit log see real client addresses.
+ingress:
+  enabled: false
+  className: ""
+  host: ""
+  annotations: {}
+  tlsSecretName: ""
+
+# An existing Secret holding OIDC client secrets, mounted read-only at /etc/telltale-oidc
+# (point client_secret_file at /etc/telltale-oidc/<key>). Optional: the pod starts without it
+# and TelltaleDNS logs that OIDC is off.
+oidcSecret:
+  name: ""

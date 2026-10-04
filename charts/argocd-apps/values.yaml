@@ -599,6 +599,18 @@ argoconfig:
             values: |-
               grafanaDashboard:
                 enabled: true
+              ingress:
+                enabled: true
+                className: cilium
+                host: telltale.sororlab.dev
+                tlsSecretName: telltale-tls
+                annotations:
+                  cert-manager.io/cluster-issuer: letsencrypt-prod
+                  ingress.cilium.io/loadbalancer-mode: shared
+              # Client secret for Authentik: kubectl -n telltaledns create secret generic
+              #   telltaledns-oidc --from-literal=client_secret=...
+              oidcSecret:
+                name: telltaledns-oidc
               service:
                 dns:
                   annotations:
@@ -611,6 +623,26 @@ argoconfig:
               config: |
                 [node]
                 workers = 2
+
+                # The ingress reaches the pod from the pod network.
+                [api]
+                trusted_proxies = ["10.0.0.0/8"]
+
+                # Sign in with Authentik (application slug telltaledns).
+                [auth.oidc]
+                public_url = "https://telltale.sororlab.dev"
+
+                [[auth.oidc.provider]]
+                id = "authentik"
+                name = "Authentik"
+                issuer = "https://auth.sororlab.dev/application/o/telltaledns/"
+                client_id = "telltaledns"
+                client_secret_file = "/etc/telltale-oidc/client_secret"
+                default_role = "viewer"
+
+                [[auth.oidc.provider.role]]
+                group = "authentik Admins"
+                role = "admin"
 
                 # Quad9 (filtered, DNSSEC) and Cloudflare over DoT, hedged: the fastest answers.
                 [[upstream]]

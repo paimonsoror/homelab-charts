@@ -72,10 +72,21 @@ spec:
               readOnly: true
             - name: data
               mountPath: /var/lib/telltale
+            {{- if .Values.oidcSecret.name }}
+            - name: oidc
+              mountPath: /etc/telltale-oidc
+              readOnly: true
+            {{- end }}
       volumes:
         - name: config
           configMap:
             name: {{ include "telltaledns.fullname" . }}
+        {{- if .Values.oidcSecret.name }}
+        - name: oidc
+          secret:
+            secretName: {{ .Values.oidcSecret.name }}
+            optional: true
+        {{- end }}
         - name: data
           {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:
