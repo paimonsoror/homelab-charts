@@ -49,6 +49,11 @@ spec:
             - name: api
               containerPort: {{ .Values.service.api.port }}
               protocol: TCP
+            {{- if .Values.service.cluster.enabled }}
+            - name: cluster
+              containerPort: {{ .Values.service.cluster.port }}
+              protocol: TCP
+            {{- end }}
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true

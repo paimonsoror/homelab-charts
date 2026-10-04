@@ -620,6 +620,9 @@ argoconfig:
                   annotations:
                     io.cilium/lb-ipam-ips: 192.168.5.112
                     io.cilium/lb-ipam-sharing-key: telltaledns
+                # TelltaleDNS cluster primary: the Pi (192.168.3.2) connects to 192.168.5.112:8443.
+                cluster:
+                  enabled: true
               config: |
                 [node]
                 workers = 2

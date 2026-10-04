@@ -20,3 +20,9 @@ spec:
       port: {{ .Values.service.api.port }}
       targetPort: api
       protocol: TCP
+    {{- if .Values.service.cluster.enabled }}
+    - name: cluster
+      port: {{ .Values.service.cluster.port }}
+      targetPort: cluster
+      protocol: TCP
+    {{- end }}

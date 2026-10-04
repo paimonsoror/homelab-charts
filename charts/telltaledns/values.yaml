@@ -21,6 +21,11 @@ service:
     annotations: {}
   metrics:
     port: 9153
+  # The TelltaleDNS cluster port (mTLS between nodes). When enabled, the API Service also
+  # carries it, so other nodes (the Pi) can reach this node at <api IP>:8443.
+  cluster:
+    enabled: false
+    port: 8443
 
 serviceMonitor:
   enabled: true
