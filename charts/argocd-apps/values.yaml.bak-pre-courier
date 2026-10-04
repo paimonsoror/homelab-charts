@@ -131,21 +131,6 @@ argoconfig:
           syncOptions:
             - CreateNamespace=true
             - ServerSideApply=true
-    - name: argocd-sync-watcher
-      enabled: true
-      spec:
-        project: default
-        source:
-          repoURL: https://github.com/paimonsoror/homelab-charts
-          path: manifests/argocd-sync-watcher
-          targetRevision: HEAD
-        destination:
-          server: 'https://kubernetes.default.svc'
-          namespace: argocd
-        syncPolicy:
-          automated: {}
-          syncOptions:
-            - ServerSideApply=true
     - name: backstage-infra
       enabled: true
       spec:
@@ -224,14 +209,6 @@ argoconfig:
                       secretKeyRef:
                         name: backstage-argocd-token
                         key: token
-                  # Scaffolder pull requests + GitHub catalog reads. Optional so the
-                  # pod still starts before the token Secret exists.
-                  - name: GITHUB_TOKEN
-                    valueFrom:
-                      secretKeyRef:
-                        name: backstage-github-token
-                        key: token
-                        optional: true
               serviceAccount:
                 create: false
                 name: backstage
@@ -290,7 +267,7 @@ argoconfig:
                   containers:
                     main:
                       image:
-                        tag: v3.2.2
+                        tag: v3.2.0
                       env:
                         DB_HOSTNAME:
                           valueFrom:
@@ -514,7 +491,7 @@ argoconfig:
           helm:
             values: |-
               image:
-                tag: 15.5.1
+                tag: 15.4.0
               dnsServer:
                 domain: "technitium2"
                 webServiceEnableHttp: true
@@ -538,17 +515,17 @@ argoconfig:
               service:
                 web:
                   annotations:             
-                    io.cilium/lb-ipam-ips: 192.168.5.123
+                    io.cilium/lb-ipam-ips: 192.168.5.112
                     io.cilium/lb-ipam-sharing-key: technitium
                   type: LoadBalancer
                 webTls:
                   annotations:             
-                    io.cilium/lb-ipam-ips: 192.168.5.123
+                    io.cilium/lb-ipam-ips: 192.168.5.112
                     io.cilium/lb-ipam-sharing-key: technitium
                   type: LoadBalancer
                 dns:
                   annotations:             
-                    io.cilium/lb-ipam-ips: 192.168.5.123
+                    io.cilium/lb-ipam-ips: 192.168.5.112
                     io.cilium/lb-ipam-sharing-key: technitium
                   type: LoadBalancer
         destination:
@@ -582,118 +559,6 @@ argoconfig:
         destination:
           server: "https://kubernetes.default.svc"
           namespace: technitium
-        syncPolicy:
-          automated: {}
-          syncOptions:
-            - CreateNamespace=true
-            - ServerSideApply=true
-    - name: telltaledns
-      enabled: true
-      spec:
-        project: default
-        source:
-          repoURL: https://github.com/paimonsoror/homelab-charts
-          path: charts/telltaledns
-          targetRevision: HEAD
-          helm:
-            values: |-
-              grafanaDashboard:
-                enabled: true
-              ingress:
-                enabled: true
-                className: cilium
-                host: telltale.sororlab.dev
-                tlsSecretName: telltale-tls
-                annotations:
-                  cert-manager.io/cluster-issuer: letsencrypt-prod
-                  ingress.cilium.io/loadbalancer-mode: shared
-              # Client secret for Authentik: kubectl -n telltaledns create secret generic
-              #   telltaledns-oidc --from-literal=client_secret=...
-              oidcSecret:
-                name: telltaledns-oidc
-              service:
-                dns:
-                  annotations:
-                    io.cilium/lb-ipam-ips: 192.168.5.122
-                    io.cilium/lb-ipam-sharing-key: telltaledns
-                api:
-                  annotations:
-                    io.cilium/lb-ipam-ips: 192.168.5.122
-                    io.cilium/lb-ipam-sharing-key: telltaledns
-              config: |
-                [node]
-                workers = 2
-
-                # The ingress reaches the pod from the pod network.
-                [api]
-                trusted_proxies = ["10.0.0.0/8"]
-
-                # Sign in with Authentik (application slug telltaledns).
-                [auth.oidc]
-                public_url = "https://telltale.sororlab.dev"
-
-                [[auth.oidc.provider]]
-                id = "authentik"
-                name = "Authentik"
-                issuer = "https://auth.sororlab.dev/application/o/telltaledns/"
-                client_id = "sReEaMwlGqB65Q3BN3wFEM0AzaueiKHd7AfCNnjR"
-                client_secret_file = "/etc/telltale-oidc/client_secret"
-                default_role = "viewer"
-
-                [[auth.oidc.provider.role]]
-                group = "authentik Admins"
-                role = "admin"
-
-                # Quad9 (filtered, DNSSEC) and Cloudflare over DoT, hedged: the fastest answers.
-                [[upstream]]
-                name = "quad9-tls-1"
-                url = "tls://9.9.9.9"
-                tls_server_name = "dns.quad9.net"
-
-                [[upstream]]
-                name = "quad9-tls-2"
-                url = "tls://149.112.112.112"
-                tls_server_name = "dns.quad9.net"
-
-                [[upstream]]
-                name = "cloudflare-tls-1"
-                url = "tls://1.1.1.1"
-                tls_server_name = "cloudflare-dns.com"
-
-                [[upstream]]
-                name = "cloudflare-tls-2"
-                url = "tls://1.0.0.1"
-                tls_server_name = "cloudflare-dns.com"
-
-                [[upstream_group]]
-                name = "default"
-                members = ["quad9-tls-1", "quad9-tls-2", "cloudflare-tls-1", "cloudflare-tls-2"]
-                strategy = "fastest"
-
-                # Internal names: Technitium is authoritative for sororlab.dev. Its ClusterIP
-                # doesn't change when LoadBalancer addresses move.
-                [[upstream]]
-                name = "technitium"
-                url = "udp://10.43.80.64"
-
-                [[upstream_group]]
-                name = "internal"
-                members = ["technitium"]
-
-                [[route]]
-                match_suffix = ["sororlab.dev"]
-                upstream_group = "internal"
-
-                [[list]]
-                name = "hagezi-pro"
-                url = "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/adblock/pro.txt"
-
-                [[list]]
-                name = "oisd-big"
-                url = "https://big.oisd.nl/domainswild2"
-        destination:
-          server: "https://kubernetes.default.svc"
-          namespace: telltaledns
         syncPolicy:
           automated: {}
           syncOptions:
@@ -1117,42 +982,6 @@ argoconfig:
         destination:
           server: 'https://kubernetes.default.svc'
           namespace: vault
-        syncPolicy:
-          automated: {}
-          syncOptions:
-            - CreateNamespace=true
-            - ServerSideApply=true
-
-    - name: courier
-      enabled: true
-      spec:
-        project: default
-        source:
-          # AppProject + ApplicationSet (team requests) + controller Application
-          repoURL: https://github.com/paimonsoror/courier.git
-          targetRevision: main
-          path: deploy/argocd
-        destination:
-          server: 'https://kubernetes.default.svc'
-          namespace: argocd
-        syncPolicy:
-          automated:
-            selfHeal: true
-
-    - name: external-secrets
-      enabled: true
-      spec:
-        project: default
-        source:
-          repoURL: https://charts.external-secrets.io
-          targetRevision: 2.10.0
-          chart: external-secrets
-          helm:
-            values: |-
-              installCRDs: true
-        destination:
-          server: 'https://kubernetes.default.svc'
-          namespace: external-secrets
         syncPolicy:
           automated: {}
           syncOptions:
