@@ -1,0 +1,14 @@
+{{- if .Values.grafanaDashboard.enabled }}
+# TelltaleDNS Grafana dashboard (from deploy/grafana in the TelltaleDNS repo). The Grafana
+# sidecar loads ConfigMaps labelled grafana_dashboard=1 from any namespace.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "telltaledns.fullname" . }}-grafana-dashboard
+  labels:
+    {{- include "telltaledns.labels" . | nindent 4 }}
+    grafana_dashboard: "1"
+data:
+  telltale-dashboard.json: |-
+{{ .Files.Get "dashboards/telltale-dashboard.json" | indent 4 }}
+{{- end }}

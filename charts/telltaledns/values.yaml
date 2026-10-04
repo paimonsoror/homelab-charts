@@ -46,3 +46,7 @@ resources:
 config: |
   [node]
   workers = 2
+
+# A ConfigMap with the TelltaleDNS dashboard for the Grafana sidecar (label grafana_dashboard=1).
+grafanaDashboard:
+  enabled: false

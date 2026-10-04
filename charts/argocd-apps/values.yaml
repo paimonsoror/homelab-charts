@@ -597,6 +597,8 @@ argoconfig:
           targetRevision: HEAD
           helm:
             values: |-
+              grafanaDashboard:
+                enabled: true
               service:
                 dns:
                   annotations:
