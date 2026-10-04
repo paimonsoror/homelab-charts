@@ -670,23 +670,9 @@ argoconfig:
                 members = ["quad9-tls-1", "quad9-tls-2", "cloudflare-tls-1", "cloudflare-tls-2"]
                 strategy = "fastest"
 
-                # Internal names: Technitium is authoritative for sororlab.dev. Its ClusterIP
-                # doesn't change when LoadBalancer addresses move.
-                [[upstream]]
-                name = "technitium"
-                url = "udp://10.43.80.64"
-
-                [[upstream_group]]
-                name = "internal"
-                members = ["technitium"]
-
-                [[route]]
-                match_suffix = ["sororlab.dev"]
-                upstream_group = "internal"
-
                 # sororlab.dev, imported from Technitium (telltale import zone, 2026-10-04): TelltaleDNS
-                # answers these itself. The route above stays during the move, so anything not listed
-                # here still resolves through Technitium; remove it once answers match.
+                # answers these itself. Names not listed here go to the public upstreams. (The route to
+                # Technitium was removed 2026-10-04, Pi migration phase 0, after answers matched.)
                 [[record]]
                 name = "argo.sororlab.dev"
                 type = "CNAME"
@@ -796,6 +782,16 @@ argoconfig:
                 [[list]]
                 name = "oisd-big"
                 url = "https://big.oisd.nl/domainswild2"
+
+                # Also on Technitium (matched for the Pi migration, 2026-10-04): threat intelligence
+                # feeds and dynamic-DNS domains.
+                [[list]]
+                name = "hagezi-tif"
+                url = "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/adblock/tif.txt"
+
+                [[list]]
+                name = "hagezi-dyndns"
+                url = "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/adblock/dyndns.txt"
         destination:
           server: "https://kubernetes.default.svc"
           namespace: telltaledns
