@@ -636,7 +636,7 @@ argoconfig:
                 id = "authentik"
                 name = "Authentik"
                 issuer = "https://auth.sororlab.dev/application/o/telltaledns/"
-                client_id = "telltaledns"
+                client_id = "sReEaMwlGqB65Q3BN3wFEM0AzaueiKHd7AfCNnjR"
                 client_secret_file = "/etc/telltale-oidc/client_secret"
                 default_role = "viewer"
 
