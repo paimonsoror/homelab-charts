@@ -22,6 +22,9 @@ data:
 
     [telemetry.metrics]
     listen = "0.0.0.0:{{ .Values.service.metrics.port }}"
+
+    [api]
+    listen = "0.0.0.0:{{ .Values.service.api.port }}"
   # From values.config (later files override earlier ones).
   10-values.toml: |
     {{- .Values.config | nindent 4 }}

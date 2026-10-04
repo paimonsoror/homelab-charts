@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "telltaledns.fullname" . }}-api
+  labels:
+    {{- include "telltaledns.labels" . | nindent 4 }}
+  {{- with .Values.service.api.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ .Values.service.api.type }}
+  {{- if eq .Values.service.api.type "LoadBalancer" }}
+  externalTrafficPolicy: {{ .Values.service.api.externalTrafficPolicy }}
+  {{- end }}
+  selector:
+    {{- include "telltaledns.selectorLabels" . | nindent 4 }}
+  ports:
+    - name: api
+      port: {{ .Values.service.api.port }}
+      targetPort: api
+      protocol: TCP

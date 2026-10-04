@@ -12,6 +12,13 @@ service:
     # Keep client source IPs (per-device filtering and the query log need them).
     externalTrafficPolicy: Local
     annotations: {}
+  # The REST API (and, later, the web UI). Shares the DNS service's IP when both carry the
+  # same io.cilium/lb-ipam-sharing-key.
+  api:
+    type: LoadBalancer
+    port: 8053
+    externalTrafficPolicy: Local
+    annotations: {}
   metrics:
     port: 9153
 

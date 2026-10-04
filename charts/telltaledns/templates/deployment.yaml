@@ -46,6 +46,9 @@ spec:
             - name: metrics
               containerPort: {{ .Values.service.metrics.port }}
               protocol: TCP
+            - name: api
+              containerPort: {{ .Values.service.api.port }}
+              protocol: TCP
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
