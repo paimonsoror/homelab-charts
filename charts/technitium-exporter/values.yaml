@@ -5,7 +5,7 @@ image:
 
 # Controller URL — single Technitium node that owns the cluster API
 technitium:
-  baseUrl: "https://192.168.5.112:53443"
+  baseUrl: "https://192.168.5.122:53443"
   verifySsl: false
   statsRange: LastHour
   topLimit: 50
