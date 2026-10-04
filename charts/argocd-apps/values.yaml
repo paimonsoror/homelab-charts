@@ -670,6 +670,20 @@ argoconfig:
                 members = ["quad9-tls-1", "quad9-tls-2", "cloudflare-tls-1", "cloudflare-tls-2"]
                 strategy = "fastest"
 
+                # Internal names: Technitium is authoritative for sororlab.dev. Its ClusterIP
+                # doesn't change when LoadBalancer addresses move.
+                [[upstream]]
+                name = "technitium"
+                url = "udp://10.43.80.64"
+
+                [[upstream_group]]
+                name = "internal"
+                members = ["technitium"]
+
+                [[route]]
+                match_suffix = ["sororlab.dev"]
+                upstream_group = "internal"
+
                 [[list]]
                 name = "hagezi-pro"
                 url = "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/adblock/pro.txt"
