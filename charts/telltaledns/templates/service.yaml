@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "telltaledns.fullname" . }}-dns
+  labels:
+    {{- include "telltaledns.labels" . | nindent 4 }}
+  {{- with .Values.service.dns.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ .Values.service.dns.type }}
+  {{- if eq .Values.service.dns.type "LoadBalancer" }}
+  externalTrafficPolicy: {{ .Values.service.dns.externalTrafficPolicy }}
+  {{- end }}
+  selector:
+    {{- include "telltaledns.selectorLabels" . | nindent 4 }}
+  ports:
+    - name: dns-udp
+      port: 53
+      targetPort: dns-udp
+      protocol: UDP
+    - name: dns-tcp
+      port: 53
+      targetPort: dns-tcp
+      protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "telltaledns.fullname" . }}-metrics
+  labels:
+    {{- include "telltaledns.labels" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  selector:
+    {{- include "telltaledns.selectorLabels" . | nindent 4 }}
+  ports:
+    - name: metrics
+      port: {{ .Values.service.metrics.port }}
+      targetPort: metrics
+      protocol: TCP

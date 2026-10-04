@@ -587,6 +587,65 @@ argoconfig:
           syncOptions:
             - CreateNamespace=true
             - ServerSideApply=true
+    - name: telltaledns
+      enabled: true
+      spec:
+        project: default
+        source:
+          repoURL: https://github.com/paimonsoror/homelab-charts
+          path: charts/telltaledns
+          targetRevision: HEAD
+          helm:
+            values: |-
+              service:
+                dns:
+                  annotations:
+                    io.cilium/lb-ipam-ips: 192.168.5.122
+              config: |
+                [node]
+                workers = 2
+
+                # Quad9 (filtered, DNSSEC) and Cloudflare over DoT, hedged: the fastest answers.
+                [[upstream]]
+                name = "quad9-tls-1"
+                url = "tls://9.9.9.9"
+                tls_server_name = "dns.quad9.net"
+
+                [[upstream]]
+                name = "quad9-tls-2"
+                url = "tls://149.112.112.112"
+                tls_server_name = "dns.quad9.net"
+
+                [[upstream]]
+                name = "cloudflare-tls-1"
+                url = "tls://1.1.1.1"
+                tls_server_name = "cloudflare-dns.com"
+
+                [[upstream]]
+                name = "cloudflare-tls-2"
+                url = "tls://1.0.0.1"
+                tls_server_name = "cloudflare-dns.com"
+
+                [[upstream_group]]
+                name = "default"
+                members = ["quad9-tls-1", "quad9-tls-2", "cloudflare-tls-1", "cloudflare-tls-2"]
+                strategy = "fastest"
+
+                [[list]]
+                name = "hagezi-pro"
+                url = "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/adblock/pro.txt"
+
+                [[list]]
+                name = "oisd-big"
+                url = "https://big.oisd.nl/domainswild2"
+        destination:
+          server: "https://kubernetes.default.svc"
+          namespace: telltaledns
+        syncPolicy:
+          automated: {}
+          syncOptions:
+            - CreateNamespace=true
+            - ServerSideApply=true
     - name: pihole
       enabled: true 
       spec:
