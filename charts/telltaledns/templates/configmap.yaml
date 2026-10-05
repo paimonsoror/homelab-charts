@@ -28,3 +28,20 @@ data:
   # From values.config (later files override earlier ones).
   10-values.toml: |
     {{- .Values.config | nindent 4 }}
+  {{- if .Values.resolvers.enabled }}
+  # The primary accepts resolver pods that know the join secret.
+  20-primary.toml: |
+    [cluster]
+    bootstrap_secret_file = "/etc/telltale-cluster/{{ .Values.resolvers.joinSecret.key }}"
+    ephemeral_ttl_secs = {{ .Values.resolvers.ephemeralTtlSeconds }}
+  # Resolver pods: join on start, never eligible, query log shipped to the primary.
+  20-resolver.toml: |
+    [cluster]
+    eligible = false
+    ephemeral = true
+    bootstrap_secret_file = "/etc/telltale-cluster/{{ .Values.resolvers.joinSecret.key }}"
+    join_url = {{ required "resolvers.joinUrl is required" .Values.resolvers.joinUrl | quote }}
+
+    [telemetry]
+    mode = "ship"
+  {{- end }}

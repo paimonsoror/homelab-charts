@@ -623,6 +623,13 @@ argoconfig:
                 # TelltaleDNS cluster primary: the Pi (192.168.3.2) connects to 192.168.5.112:8443.
                 cluster:
                   enabled: true
+              # Scaled (T6.14, owner go 2026-10-05): this pod stays the primary with the volume;
+              # resolver pods join it and share the DNS Service. Join secret created out of Git
+              # (see charts/telltaledns/values.yaml).
+              resolvers:
+                enabled: true
+                replicas: 2
+                joinUrl: https://192.168.5.112:8443
               config: |
                 [node]
                 workers = 2

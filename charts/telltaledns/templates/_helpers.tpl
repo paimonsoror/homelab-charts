@@ -26,3 +26,16 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 app.kubernetes.io/name: {{ include "telltaledns.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
+
+{{/* Resolver pods: their own name, so the primary's Deployment never selects them. */}}
+{{- define "telltaledns.resolverSelectorLabels" -}}
+app.kubernetes.io/name: {{ include "telltaledns.name" . }}-resolver
+app.kubernetes.io/instance: {{ .Release.Name }}
+app.kubernetes.io/component: resolver
+{{- end }}
+
+{{/* Every pod that answers DNS (the primary and the resolver pods): the DNS Service's selector. */}}
+{{- define "telltaledns.dnsSelectorLabels" -}}
+app.kubernetes.io/instance: {{ .Release.Name }}
+telltaledns.sororlab.dev/serves-dns: "true"
+{{- end }}

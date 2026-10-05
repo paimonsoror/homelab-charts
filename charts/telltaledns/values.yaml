@@ -70,3 +70,28 @@ ingress:
 # and TelltaleDNS logs that OIDC is off.
 oidcSecret:
   name: ""
+
+# Resolver pods (TelltaleDNS T6.14): stateless DNS pods that join this pod's cluster with a
+# shared join secret, serve its configuration and lists, and ship their query log to it. This
+# pod stays the primary with the volume; the DNS Service spreads queries over it and them.
+# The join secret is a credential: create it outside Git, e.g.
+#   kubectl -n telltaledns create secret generic telltaledns-cluster-join \
+#     --from-literal=secret="$(head -c 32 /dev/urandom | base64)"
+resolvers:
+  enabled: false
+  replicas: 2
+  # This pod's cluster address as it advertises it (`telltale cluster status`).
+  joinUrl: ""
+  joinSecret:
+    name: telltaledns-cluster-join
+    key: secret
+  # A resolver pod not heard from for this long leaves the cluster's member list.
+  ephemeralTtlSeconds: 600
+  resources:
+    requests:
+      cpu: 50m
+      memory: 48Mi
+    limits:
+      memory: 256Mi
+  # e.g. spread over Kubernetes nodes: podAntiAffinity on app.kubernetes.io/component: resolver
+  affinity: {}

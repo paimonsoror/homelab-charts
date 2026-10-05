@@ -14,7 +14,7 @@ spec:
   externalTrafficPolicy: {{ .Values.service.dns.externalTrafficPolicy }}
   {{- end }}
   selector:
-    {{- include "telltaledns.selectorLabels" . | nindent 4 }}
+    {{- include "telltaledns.dnsSelectorLabels" . | nindent 4 }}
   ports:
     - name: dns-udp
       port: 53
