@@ -616,10 +616,11 @@ argoconfig:
                   annotations:
                     io.cilium/lb-ipam-ips: 192.168.5.112
                     io.cilium/lb-ipam-sharing-key: telltaledns
+                # The DNS Service carries the API and cluster ports on 192.168.5.112 (resolver
+                # pods: see charts/telltaledns/templates/service.yaml); the API Service is only for
+                # the ingress.
                 api:
-                  annotations:
-                    io.cilium/lb-ipam-ips: 192.168.5.112
-                    io.cilium/lb-ipam-sharing-key: telltaledns
+                  type: ClusterIP
                 # TelltaleDNS cluster primary: the Pi (192.168.3.2) connects to 192.168.5.112:8443.
                 cluster:
                   enabled: true

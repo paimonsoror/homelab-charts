@@ -82,6 +82,8 @@ resolvers:
   replicas: 2
   # This pod's cluster address as it advertises it (`telltale cluster status`).
   joinUrl: ""
+  # The site the pods report (the primary's own site, from `telltale cluster status`).
+  site: k8s
   joinSecret:
     name: telltaledns-cluster-join
     key: secret

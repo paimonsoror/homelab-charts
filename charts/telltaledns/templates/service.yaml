@@ -13,10 +13,17 @@ spec:
   {{- if eq .Values.service.dns.type "LoadBalancer" }}
   externalTrafficPolicy: {{ .Values.service.dns.externalTrafficPolicy }}
   {{- end }}
-  # The primary only for now: Cilium shares 192.168.5.112 with the API Service only when both
-  # (externalTrafficPolicy Local) select the same pods.
+  {{- if .Values.resolvers.enabled }}
+  # Every pod that answers DNS. With resolver pods this one Service also carries the API and
+  # cluster ports: they're named ports only the primary has, so only it gets that traffic, and
+  # nothing else needs the IP (Cilium shares an externalTrafficPolicy Local IP only between
+  # Services selecting the same pods). The API Service is then ClusterIP, for the ingress.
+  selector:
+    {{- include "telltaledns.dnsSelectorLabels" . | nindent 4 }}
+  {{- else }}
   selector:
     {{- include "telltaledns.selectorLabels" . | nindent 4 }}
+  {{- end }}
   ports:
     - name: dns-udp
       port: 53
@@ -26,6 +33,18 @@ spec:
       port: 53
       targetPort: dns-tcp
       protocol: TCP
+    {{- if .Values.resolvers.enabled }}
+    - name: api
+      port: {{ .Values.service.api.port }}
+      targetPort: api
+      protocol: TCP
+    {{- if .Values.service.cluster.enabled }}
+    - name: cluster
+      port: {{ .Values.service.cluster.port }}
+      targetPort: cluster
+      protocol: TCP
+    {{- end }}
+    {{- end }}
 ---
 apiVersion: v1
 kind: Service

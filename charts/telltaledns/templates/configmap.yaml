@@ -37,6 +37,7 @@ data:
   # Resolver pods: join on start, never eligible, query log shipped to the primary.
   20-resolver.toml: |
     [cluster]
+    site = {{ .Values.resolvers.site | quote }}
     eligible = false
     ephemeral = true
     bootstrap_secret_file = "/etc/telltale-cluster/{{ .Values.resolvers.joinSecret.key }}"
