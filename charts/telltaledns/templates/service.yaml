@@ -13,8 +13,10 @@ spec:
   {{- if eq .Values.service.dns.type "LoadBalancer" }}
   externalTrafficPolicy: {{ .Values.service.dns.externalTrafficPolicy }}
   {{- end }}
+  # The primary only for now: Cilium shares 192.168.5.112 with the API Service only when both
+  # (externalTrafficPolicy Local) select the same pods.
   selector:
-    {{- include "telltaledns.dnsSelectorLabels" . | nindent 4 }}
+    {{- include "telltaledns.selectorLabels" . | nindent 4 }}
   ports:
     - name: dns-udp
       port: 53
