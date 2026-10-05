@@ -49,6 +49,9 @@ spec:
             - name: TELLTALE_POD
               valueFrom:
                 fieldRef: { fieldPath: metadata.name }
+            # Keep answering 5 s after turning not ready, while the Service drops the pod.
+            - name: TELLTALE_DRAIN_DELAY_SECS
+              value: "5"
           ports:
             - name: dns-udp
               containerPort: 5353
