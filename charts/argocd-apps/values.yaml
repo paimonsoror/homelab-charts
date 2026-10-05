@@ -791,6 +791,36 @@ argoconfig:
                 name = "oisd-big"
                 url = "https://big.oisd.nl/domainswild2"
 
+                # Groups = VLANs (TelltaleDNS ADR-050): every device is attributed to its network
+                # in the dashboard, query log, and metrics. No `lists`, so blocking is unchanged.
+                [[group]]
+                name = "Management"
+                networks = ["192.168.1.0/24"]
+
+                [[group]]
+                name = "IOT"
+                networks = ["192.168.2.0/24"]
+
+                [[group]]
+                name = "AUX"
+                networks = ["192.168.3.0/24"]
+
+                [[group]]
+                name = "LAB"
+                networks = ["192.168.5.0/24"]
+
+                [[group]]
+                name = "SONOS"
+                networks = ["192.168.6.0/24"]
+
+                [[group]]
+                name = "Surveillance"
+                networks = ["192.168.7.0/24"]
+
+                [[group]]
+                name = "Trust"
+                networks = ["192.168.10.0/24"]
+
                 # Also on Technitium (matched for the Pi migration, 2026-10-04): threat intelligence
                 # feeds and dynamic-DNS domains.
                 [[list]]
