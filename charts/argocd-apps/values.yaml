@@ -627,6 +627,11 @@ argoconfig:
                 [node]
                 workers = 2
 
+                # This node's configuration comes from Git (this file), so it may publish the
+                # TelltaleDNS cluster's configuration; the Pi can only be an emergency primary.
+                [cluster]
+                config_source = "gitops"
+
                 # The ingress reaches the pod from the pod network.
                 [api]
                 trusted_proxies = ["10.0.0.0/8"]
