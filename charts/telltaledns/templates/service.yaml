@@ -61,3 +61,23 @@ spec:
       port: {{ .Values.service.metrics.port }}
       targetPort: metrics
       protocol: TCP
+{{- if .Values.resolvers.enabled }}
+---
+# Every resolver pod's metrics (headless: the ServiceMonitor scrapes each pod). They answer
+# most queries; without this only the primary was scraped.
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "telltaledns.fullname" . }}-resolver-metrics
+  labels:
+    {{- include "telltaledns.labels" . | nindent 4 }}
+spec:
+  clusterIP: None
+  selector:
+    {{- include "telltaledns.resolverSelectorLabels" . | nindent 4 }}
+  ports:
+    - name: metrics
+      port: {{ .Values.service.metrics.port }}
+      targetPort: metrics
+      protocol: TCP
+{{- end }}
