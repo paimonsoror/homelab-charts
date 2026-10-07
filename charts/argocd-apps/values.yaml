@@ -671,7 +671,9 @@ argoconfig:
                 group = "authentik Admins"
                 role = "admin"
 
-                # Quad9 (filtered, DNSSEC) and Cloudflare over DoT, hedged: the fastest answers.
+                # Quad9 only (filtered: malware and phishing domains blocked; validates DNSSEC), over DoT
+                # at its two anycast addresses. Cloudflare's 1.1.1.1 doesn't filter, so with both in a
+                # "fastest" group the filtering depended on which answered first (2026-10-07).
                 [[upstream]]
                 name = "quad9-tls-1"
                 url = "tls://9.9.9.9"
@@ -682,20 +684,16 @@ argoconfig:
                 url = "tls://149.112.112.112"
                 tls_server_name = "dns.quad9.net"
 
-                [[upstream]]
-                name = "cloudflare-tls-1"
-                url = "tls://1.1.1.1"
-                tls_server_name = "cloudflare-dns.com"
-
-                [[upstream]]
-                name = "cloudflare-tls-2"
-                url = "tls://1.0.0.1"
-                tls_server_name = "cloudflare-dns.com"
-
                 [[upstream_group]]
                 name = "default"
-                members = ["quad9-tls-1", "quad9-tls-2", "cloudflare-tls-1", "cloudflare-tls-2"]
+                members = ["quad9-tls-1", "quad9-tls-2"]
                 strategy = "fastest"
+
+                # DNSSEC checked here too, in permissive mode for now: bogus answers are counted
+                # (telltale_dnssec_validation_total{result="bogus"}) but still served. Switch to
+                # "validate" once the counts look right (2026-10-07).
+                [dnssec]
+                mode = "permissive"
 
                 # sororlab.dev, imported from Technitium (telltale import zone, 2026-10-04): TelltaleDNS
                 # answers these itself. Names not listed here go to the public upstreams. (The route to
