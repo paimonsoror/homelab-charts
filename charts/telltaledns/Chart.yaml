@@ -1,6 +1,0 @@
-apiVersion: v2
-name: telltaledns
-description: TelltaleDNS (preview build from main) - filtering, observable DNS resolver
-type: application
-version: 0.1.0
-appVersion: "edge"
