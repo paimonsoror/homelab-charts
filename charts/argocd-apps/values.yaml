@@ -1,6 +1,10 @@
 # library chart values are purely for documentation purposes
 
 argoconfig:
+  # OCI Helm registries Argo CD may pull charts from (public: no credentials).
+  repositories:
+    - name: telltale-charts
+      url: ghcr.io/paimonsoror/charts
   application:
     ####################################
     ### Start of LLM Related Charts ###
@@ -592,45 +596,52 @@ argoconfig:
       spec:
         project: default
         source:
-          repoURL: https://github.com/paimonsoror/homelab-charts
-          path: charts/telltaledns
-          targetRevision: HEAD
+          # The published chart (telltaledns repo, deploy/helm/telltale), pinned: an edge
+          # build's chart and its immutable image. Roll forward by changing both.
+          repoURL: ghcr.io/paimonsoror/charts
+          chart: telltale
+          targetRevision: 0.2.0-edge.183
           helm:
             values: |-
-              grafanaDashboard:
-                enabled: true
-              ingress:
-                enabled: true
-                className: cilium
-                host: telltale.sororlab.dev
-                tlsSecretName: telltale-tls
-                annotations:
-                  cert-manager.io/cluster-issuer: letsencrypt-prod
-                  ingress.cilium.io/loadbalancer-mode: shared
-              # Client secret for Authentik: kubectl -n telltaledns create secret generic
-              #   telltaledns-oidc --from-literal=client_secret=...
-              oidcSecret:
-                name: telltaledns-oidc
+              mode: scaled
+              image:
+                tag: sha-60a2c30
+              # The data from the earlier chart (cluster identity, users, query log).
+              persistence:
+                existingClaim: telltaledns
+              cluster:
+                port: 8443
+                bootstrapSecret:
+                  existingSecret: telltaledns-cluster-join
+                  key: secret
+              resolvers:
+                replicas: 2
               service:
                 dns:
                   annotations:
                     io.cilium/lb-ipam-ips: 192.168.5.112
                     io.cilium/lb-ipam-sharing-key: telltaledns
-                # The DNS Service carries the API and cluster ports on 192.168.5.112 (resolver
-                # pods: see charts/telltaledns/templates/service.yaml); the API Service is only for
-                # the ingress.
+                  alsoServe:
+                    api: true
+                    cluster: true
                 api:
                   type: ClusterIP
-                # TelltaleDNS cluster primary: the Pi (192.168.3.2) connects to 192.168.5.112:8443.
-                cluster:
-                  enabled: true
-              # Scaled (T6.14, owner go 2026-10-05): this pod stays the primary with the volume;
-              # resolver pods join it and share the DNS Service. Join secret created out of Git
-              # (see charts/telltaledns/values.yaml).
-              resolvers:
+              ingress:
                 enabled: true
-                replicas: 2
-                joinUrl: https://192.168.5.112:8443
+                className: cilium
+                host: telltale.sororlab.dev
+                annotations:
+                  cert-manager.io/cluster-issuer: letsencrypt-prod
+                  ingress.cilium.io/loadbalancer-mode: shared
+                tls:
+                  secretName: telltale-tls
+              secretMounts:
+                - name: oidc
+                  secretName: telltaledns-oidc
+              serviceMonitor:
+                enabled: true
+              grafanaDashboard:
+                enabled: true
               config: |
                 [node]
                 workers = 2
@@ -653,7 +664,7 @@ argoconfig:
                 name = "Authentik"
                 issuer = "https://auth.sororlab.dev/application/o/telltaledns/"
                 client_id = "sReEaMwlGqB65Q3BN3wFEM0AzaueiKHd7AfCNnjR"
-                client_secret_file = "/etc/telltale-oidc/client_secret"
+                client_secret_file = "/etc/telltale-secrets/oidc/client_secret"
                 default_role = "viewer"
 
                 [[auth.oidc.provider.role]]

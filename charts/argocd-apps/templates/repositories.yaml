@@ -1,0 +1,16 @@
+{{- range $r := .Values.argoconfig.repositories }}
+---
+# An OCI Helm registry Argo CD may pull charts from.
+apiVersion: v1
+kind: Secret
+metadata:
+  name: repo-{{ $r.name }}
+  namespace: argocd
+  labels:
+    argocd.argoproj.io/secret-type: repository
+stringData:
+  name: {{ $r.name }}
+  type: helm
+  url: {{ $r.url }}
+  enableOCI: "true"
+{{- end }}
