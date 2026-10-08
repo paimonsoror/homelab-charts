@@ -839,6 +839,20 @@ argoconfig:
                 name = "Trust"
                 networks = ["192.168.10.0/24"]
 
+                # Named devices (TelltaleDNS [[client]], FLT-006): shown by name in the dashboard,
+                # query log, and analytics. No `groups`, so each stays in its network's group.
+                [[client]]
+                name = "Homelab Server"
+                match = ["192.168.5.2"]
+
+                [[client]]
+                name = "TrueNas"
+                match = ["192.168.3.3"]
+
+                [[client]]
+                name = "Instant NVR"
+                match = ["192.168.1.205"]
+
                 # Also on Technitium (matched for the Pi migration, 2026-10-04): threat intelligence
                 # feeds and dynamic-DNS domains.
                 [[list]]
