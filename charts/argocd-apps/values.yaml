@@ -689,11 +689,12 @@ argoconfig:
                 members = ["quad9-tls-1", "quad9-tls-2"]
                 strategy = "fastest"
 
-                # DNSSEC checked here too, in permissive mode for now: bogus answers are counted
-                # (telltale_dnssec_validation_total{result="bogus"}) but still served. Switch to
-                # "validate" once the counts look right (2026-10-07).
+                # DNSSEC validation off (2026-10-08): in permissive mode every uncached lookup took
+                # about 9 upstream exchanges (the key chain, mostly uncached), so the median went from
+                # 14 ms to ~85 ms and some lookups passed 1 s. Turn it back on ("permissive", then
+                # "validate") once the validator caches the chain.
                 [dnssec]
-                mode = "permissive"
+                mode = "off"
 
                 # sororlab.dev, imported from Technitium (telltale import zone, 2026-10-04): TelltaleDNS
                 # answers these itself. Names not listed here go to the public upstreams. (The route to
