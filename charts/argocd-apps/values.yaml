@@ -699,6 +699,15 @@ argoconfig:
                 # sororlab.dev, imported from Technitium (telltale import zone, 2026-10-04): TelltaleDNS
                 # answers these itself. Names not listed here go to the public upstreams. (The route to
                 # Technitium was removed 2026-10-04, Pi migration phase 0, after answers matched.)
+                # REQ: DNS-021 — dig +nsid names the node or pod that answered.
+                [dns]
+                nsid = true
+
+                # REQ: OBS-022 — kept out of the log and stats (still answered and counted
+                # in Prometheus): the old Technitium cluster looking for its peers every 30 s.
+                [exclusions]
+                names = ["technitium1.dnscluster", "technitium2.dnscluster"]
+
                 [[record]]
                 name = "argo.sororlab.dev"
                 type = "CNAME"
