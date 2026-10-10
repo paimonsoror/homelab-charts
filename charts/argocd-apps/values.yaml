@@ -708,6 +708,16 @@ argoconfig:
                 [exclusions]
                 names = ["technitium1.dnscluster", "technitium2.dnscluster"]
 
+                # Cache like Pi-hole's optimizer plus Technitium's TTL floor (owner, 2026-10-10):
+                # a name that expired within the last hour is answered at once from the cache
+                # and refreshed in the background (RFC 8767 with a zero client timer), and no
+                # answer is kept for less than 10 s. Review: ~77% of upstream misses were names
+                # asked again within an hour.
+                [cache]
+                min_ttl = 10
+                stale_answer_client_timeout_ms = 0
+                stale_max_age = 3600
+
                 [[record]]
                 name = "argo.sororlab.dev"
                 type = "CNAME"
