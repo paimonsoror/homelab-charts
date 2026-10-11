@@ -600,12 +600,12 @@ argoconfig:
           # build's chart and its immutable image. Roll forward by changing both.
           repoURL: ghcr.io/paimonsoror/charts
           chart: telltale
-          targetRevision: 0.4.0-edge.219
+          targetRevision: 0.4.0-edge.220
           helm:
             values: |-
               mode: scaled
               image:
-                tag: sha-0ccda20
+                tag: sha-f736b05
               # The data from the earlier chart (cluster identity, users, query log).
               persistence:
                 existingClaim: telltaledns
@@ -638,6 +638,12 @@ argoconfig:
               secretMounts:
                 - name: oidc
                   secretName: telltaledns-oidc
+                # UniFi API key, created by hand: Secret unifi-api, key `key`.
+                - name: unifi
+                  secretName: unifi-api
+                # The console's own (self-signed) certificate: Secret unifi-ca, key `ca.pem`.
+                - name: unifi-ca
+                  secretName: unifi-ca
               serviceMonitor:
                 enabled: true
               grafanaDashboard:
@@ -717,6 +723,20 @@ argoconfig:
                 min_ttl = 10
                 stale_answer_client_timeout_ms = 0
                 stale_max_age = 3600
+
+                # Device names and MACs from the UniFi console (Clients -> Discovered on your
+                # network; MAC vendors for device identification, T13.3), every 5 minutes.
+                # Verified: only the console's own certificate is trusted, checked against the
+                # name in it (unifi.local; it never names the address). Shared with the cluster:
+                # the Pi has both files at the same paths; the resolver pods don't mount them and
+                # log one warning each (2026-10-11).
+                [[router]]
+                name = "unifi"
+                type = "unifi"
+                url = "https://192.168.3.1"
+                api_key_file = "/etc/telltale-secrets/unifi/key"
+                tls_ca = "/etc/telltale-secrets/unifi-ca/ca.pem"
+                tls_server_name = "unifi.local"
 
                 [[record]]
                 name = "argo.sororlab.dev"
