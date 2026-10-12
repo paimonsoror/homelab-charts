@@ -727,9 +727,11 @@ argoconfig:
                 nsid = true
 
                 # REQ: OBS-022 — kept out of the log and stats (still answered and counted
-                # in Prometheus): the old Technitium cluster looking for its peers every 30 s.
+                # in Prometheus): the old Technitium cluster looking for its peers every 30 s,
+                # and sororlab.dev with its subdomains, mostly uptime checks (Kuma) that
+                # skewed the top lists (owner, 2026-10-11).
                 [exclusions]
-                names = ["technitium1.dnscluster", "technitium2.dnscluster"]
+                names = ["technitium1.dnscluster", "technitium2.dnscluster", "sororlab.dev"]
 
                 # Cache like Pi-hole's optimizer plus Technitium's TTL floor (owner, 2026-10-10):
                 # a name that expired within the last hour is answered at once from the cache
