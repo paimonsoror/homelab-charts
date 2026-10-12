@@ -525,7 +525,7 @@ argoconfig:
             - CreateNamespace=true
             - ServerSideApply=true
     - name: technitium
-      enabled: enable 
+      enabled: false  # retired 2026-10-12: TelltaleDNS serves DNS (Phase 2)
       spec:
         project: default
         source: 
@@ -581,7 +581,7 @@ argoconfig:
             - CreateNamespace=true
             - ServerSideApply=true 
     - name: technitium-exporter
-      enabled: true
+      enabled: false  # retired 2026-10-12: TelltaleDNS serves DNS (Phase 2)
       spec:
         project: default
         source:
