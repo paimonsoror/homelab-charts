@@ -617,12 +617,12 @@ argoconfig:
           # build's chart and its immutable image. Roll forward by changing both.
           repoURL: ghcr.io/paimonsoror/charts
           chart: telltale
-          targetRevision: 0.4.0-edge.221
+          targetRevision: 0.4.0-edge.224
           helm:
             values: |-
               mode: scaled
               image:
-                tag: sha-80d6b69
+                tag: sha-c7e0503
               # The data from the earlier chart (cluster identity, users, query log).
               persistence:
                 existingClaim: telltaledns
