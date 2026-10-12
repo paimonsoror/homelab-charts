@@ -145,11 +145,11 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: portainer
-  description: "Deployed via ArgoCD in the portainer namespace."
+  name: arcane
+  description: "Docker management UI (replaces Portainer), deployed via ArgoCD in the arcane namespace."
   annotations:
-    argocd/app-name: portainer
-    backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=portainer
+    argocd/app-name: arcane
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=arcane
 spec:
   type: service
   owner: group:sororlab

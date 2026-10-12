@@ -469,7 +469,8 @@ argoconfig:
             - CreateNamespace=true
             - ServerSideApply=true
     - name: portainer
-      enabled: true
+      # Disabled: Portainer moved to a paid licensing model; replaced by arcane.
+      enabled: false
       spec:
         project: default
         source:
@@ -502,6 +503,22 @@ argoconfig:
         destination:
           server: 'https://kubernetes.default.svc'
           namespace: portainer
+        syncPolicy:
+          automated: {}
+          syncOptions:
+            - CreateNamespace=true
+            - ServerSideApply=true
+    - name: arcane
+      enabled: true
+      spec:
+        project: default
+        source:
+          repoURL: https://github.com/paimonsoror/homelab-charts
+          path: manifests/arcane
+          targetRevision: HEAD
+        destination:
+          server: 'https://kubernetes.default.svc'
+          namespace: arcane
         syncPolicy:
           automated: {}
           syncOptions:
@@ -739,6 +756,12 @@ argoconfig:
                 tls_server_name = "unifi.local"
 
                 [[record]]
+                name = "arcane.sororlab.dev"
+                type = "CNAME"
+                value = "cilium.sororlab.dev"
+                ttl = 3600
+
+                [[record]]
                 name = "argo.sororlab.dev"
                 type = "CNAME"
                 value = "cilium.sororlab.dev"
@@ -800,12 +823,6 @@ argoconfig:
 
                 [[record]]
                 name = "orders.sororlab.dev"
-                type = "CNAME"
-                value = "cilium.sororlab.dev"
-                ttl = 3600
-
-                [[record]]
-                name = "portainer.sororlab.dev"
                 type = "CNAME"
                 value = "cilium.sororlab.dev"
                 ttl = 3600

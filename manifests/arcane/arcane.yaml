@@ -1,0 +1,116 @@
+# Arcane (Docker management UI). Replaces Portainer.
+# Secret `arcane-secrets` (keys ENCRYPTION_KEY, JWT_SECRET) is created by hand, not in Git.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: arcane-data
+  namespace: arcane
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: local-path
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: arcane
+  namespace: arcane
+  labels:
+    app.kubernetes.io/name: arcane
+    app.kubernetes.io/instance: arcane
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: arcane
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: arcane
+        app.kubernetes.io/instance: arcane
+    spec:
+      containers:
+        - name: arcane
+          image: ghcr.io/getarcaneapp/manager:v2.15.1
+          ports:
+            - name: http
+              containerPort: 3552
+          env:
+            - name: APP_URL
+              value: https://arcane.sororlab.dev
+            - name: TZ
+              value: America/New_York
+            - name: ENCRYPTION_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: arcane-secrets
+                  key: ENCRYPTION_KEY
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: arcane-secrets
+                  key: JWT_SECRET
+          volumeMounts:
+            - name: data
+              mountPath: /app/data
+            - name: docker-sock
+              mountPath: /var/run/docker.sock
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: http
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: arcane-data
+        - name: docker-sock
+          hostPath:
+            path: /var/run/docker.sock
+            type: Socket
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: arcane
+  namespace: arcane
+spec:
+  selector:
+    app.kubernetes.io/name: arcane
+  ports:
+    - name: http
+      port: 3552
+      targetPort: http
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: arcane
+  namespace: arcane
+  annotations:
+    ingress.cilium.io/loadbalancer-mode: shared
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  ingressClassName: cilium
+  tls:
+    - hosts: [arcane.sororlab.dev]
+      secretName: arcane-tls
+  rules:
+    - host: arcane.sororlab.dev
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: arcane
+                port:
+                  name: http
