@@ -665,6 +665,12 @@ argoconfig:
                 enabled: true
               grafanaDashboard:
                 enabled: true
+              # TelltaleDNS alerts and SLO rules; kube-prometheus-stack loads only rules with
+              # its release label (ruleSelector release=prometheus).
+              prometheusRule:
+                enabled: true
+                labels:
+                  release: prometheus
               config: |
                 [node]
                 workers = 2
