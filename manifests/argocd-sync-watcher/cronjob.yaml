@@ -159,6 +159,16 @@ spec:
         spec:
           restartPolicy: Never
           serviceAccountName: argocd-sync-watcher
+          # Pilot (2026-10-19): asks TelltaleDNS directly, so every run counts as one device
+          # (argocd/cronjob/argocd-sync-watcher); it resolves both kubernetes.default.svc
+          # (on to CoreDNS) and api.github.com. To undo, delete these two keys.
+          dnsPolicy: None
+          dnsConfig:
+            nameservers: ["10.43.217.63"]
+            searches: [argocd.svc.cluster.local, svc.cluster.local, cluster.local]
+            options:
+              - name: ndots
+                value: "5"
           securityContext:
             runAsNonRoot: true
             runAsUser: 65532

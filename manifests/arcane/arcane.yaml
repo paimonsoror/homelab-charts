@@ -33,6 +33,16 @@ spec:
         app.kubernetes.io/name: arcane
         app.kubernetes.io/instance: arcane
     spec:
+      # Pilot (2026-10-19): asks TelltaleDNS directly, so it's named by its workload
+      # (arcane/deploy/arcane); TelltaleDNS sends cluster.local on to CoreDNS. To undo,
+      # delete these two keys (back to the cluster's DNS).
+      dnsPolicy: None
+      dnsConfig:
+        nameservers: ["10.43.217.63"]
+        searches: [arcane.svc.cluster.local, svc.cluster.local, cluster.local]
+        options:
+          - name: ndots
+            value: "5"
       containers:
         - name: arcane
           image: ghcr.io/getarcaneapp/manager:v2.15.1
