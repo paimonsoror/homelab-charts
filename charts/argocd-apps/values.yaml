@@ -634,13 +634,12 @@ argoconfig:
               resolvers:
                 replicas: 2
               # Pods named by their workload (FLT-017): the controller watches pods and
-              # namespaces (read-only). cluster.local and the pod/service reverse zones go on
-              # to CoreDNS. Pods are Cilium's pool (10.0.0.0/8), not k3s's 10.42/16.
+              # namespaces (read-only). cluster.local goes on to CoreDNS. No podCidr/serviceCidr:
+              # CoreDNS hands reverse lookups it can't answer to the host's DNS, which includes
+              # .112, so forwarding 10.in-addr.arpa to CoreDNS could loop.
               kubernetes:
                 enabled: true
                 clusterDns: 10.43.0.10
-                podCidr: 10.0.0.0/8
-                serviceCidr: 10.43.0.0/16
                 # Pods are in no network group; the lab's group fits them.
                 defaultGroup: LAB
               service:
