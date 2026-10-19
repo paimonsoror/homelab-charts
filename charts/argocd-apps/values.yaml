@@ -633,8 +633,21 @@ argoconfig:
                   key: secret
               resolvers:
                 replicas: 2
+              # Pods named by their workload (FLT-017): the controller watches pods and
+              # namespaces (read-only). cluster.local and the pod/service reverse zones go on
+              # to CoreDNS. Pods are Cilium's pool (10.0.0.0/8), not k3s's 10.42/16.
+              kubernetes:
+                enabled: true
+                clusterDns: 10.43.0.10
+                podCidr: 10.0.0.0/8
+                serviceCidr: 10.43.0.0/16
+                # Pods are in no network group; the lab's group fits them.
+                defaultGroup: LAB
               service:
                 dns:
+                  # The address it already has (a Service's ClusterIP can't change in place):
+                  # pinned so the kubelet's cluster-dns and dnsConfig can name it for good.
+                  clusterIP: 10.43.217.63
                   annotations:
                     io.cilium/lb-ipam-ips: 192.168.5.112
                     io.cilium/lb-ipam-sharing-key: telltaledns
