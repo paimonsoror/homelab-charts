@@ -3,4 +3,4 @@
 sandboxes:
   worker:
     kind: managed-agents-worker
-    enabled: false
+    enabled: true
