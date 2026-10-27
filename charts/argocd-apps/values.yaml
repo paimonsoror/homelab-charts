@@ -2016,3 +2016,47 @@ argoconfig:
           syncOptions:
             - CreateNamespace=true
             - ServerSideApply=true
+
+    ####################################
+    ### Start of Agent Sandboxes ###
+    ####################################
+    - name: claude-sandbox
+      # Sandboxed execution environments for Claude agents (sandbox-runtime in pod user
+      # namespaces). Design records:
+      # https://github.com/paimonsoror/ps-claude-sandbox-agent-runtime/tree/main/docs/adr
+      # Flip to true once that repo's `image` workflow has pushed a sha- tag (set image.tag)
+      # and its `chart` workflow has pushed the chart version in targetRevision. Secrets
+      # (created out of git): claude-sandbox-github (optional), claude-sandbox-managed-agents
+      # (worker).
+      enabled: true
+      spec:
+        project: default
+        source:
+          # OCI chart from ghcr.io/paimonsoror/charts (registered above as telltale-charts).
+          repoURL: ghcr.io/paimonsoror/charts
+          chart: claude-sandbox
+          targetRevision: 0.1.0
+          helm:
+            values: |-
+              image:
+                tag: sha-50409b3
+              sandboxes:
+                - name: homelab
+                  kind: workspace
+                  enabled: true
+                  repo: https://github.com/paimonsoror/homelab-charts.git
+                  remoteControl:
+                    spawn: worktree
+                    capacity: 8
+                    permissionMode: default
+                - name: worker
+                  kind: managed-agents-worker
+                  enabled: false
+        destination:
+          server: 'https://kubernetes.default.svc'
+          namespace: claude-sandbox
+        syncPolicy:
+          automated: {}
+          syncOptions:
+            - CreateNamespace=true
+            - ServerSideApply=true
