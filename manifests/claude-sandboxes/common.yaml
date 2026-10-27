@@ -1,0 +1,10 @@
+# Values shared by every claude-sandbox Application the ApplicationSet generates.
+image:
+  # Roll the image for all sandboxes here (sha-<short> from the image workflow).
+  tag: sha-50409b3
+# Every sandbox is its own Helm release in one namespace, so object names must not depend on
+# the release name, and the ServiceAccount cannot be owned by several Applications.
+fullnameOverride: claude-sandbox
+serviceAccount:
+  create: false
+  name: default

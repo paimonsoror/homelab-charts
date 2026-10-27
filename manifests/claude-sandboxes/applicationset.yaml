@@ -1,0 +1,48 @@
+# One ArgoCD Application per sandbox directory under sandboxes/ (claude-sandbox ADR-0016).
+# Source of this file: github.com/paimonsoror/ps-claude-sandbox-agent-runtime, deploy/argocd/.
+# Adding a sandbox = adding sandboxes/<name>/values.yaml. Shared values live in common.yaml.
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: claude-sandboxes
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  syncPolicy:
+    preserveResourcesOnDeletion: false
+  generators:
+    - git:
+        repoURL: https://github.com/paimonsoror/homelab-charts
+        revision: HEAD
+        directories:
+          - path: manifests/claude-sandboxes/sandboxes/*
+  template:
+    metadata:
+      name: "claude-sandbox-{{ .path.basename }}"
+      labels:
+        claude-sandbox/name: "{{ .path.basename }}"
+    spec:
+      project: default
+      sources:
+        - repoURL: ghcr.io/paimonsoror/charts
+          chart: claude-sandbox
+          targetRevision: 0.1.0
+          helm:
+            releaseName: "claude-sandbox-{{ .path.basename }}"
+            valueFiles:
+              - $defs/manifests/claude-sandboxes/common.yaml
+              - "$defs/{{ .path.path }}/values.yaml"
+        - repoURL: https://github.com/paimonsoror/homelab-charts
+          targetRevision: HEAD
+          ref: defs
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: claude-sandbox
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+          - ServerSideApply=true

@@ -1,0 +1,6 @@
+# Anthropic Managed Agents self-hosted worker. Enable once the Secret
+# claude-sandbox-managed-agents exists in the claude-sandbox namespace (plan phase 3).
+sandboxes:
+  worker:
+    kind: managed-agents-worker
+    enabled: false

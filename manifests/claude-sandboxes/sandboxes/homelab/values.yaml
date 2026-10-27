@@ -1,0 +1,9 @@
+# Claude Code workspace on the homelab-charts repository, driven over Remote Control.
+sandboxes:
+  homelab:
+    kind: workspace
+    repo: https://github.com/paimonsoror/homelab-charts.git
+    remoteControl:
+      spawn: worktree
+      capacity: 8
+      permissionMode: default
