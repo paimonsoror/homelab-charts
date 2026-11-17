@@ -2029,7 +2029,7 @@ argoconfig:
       # Image tag for all sandboxes: manifests/claude-sandboxes/common.yaml. Chart version:
       # targetRevision in the ApplicationSet. Secrets (created out of git): claude-sandbox-github
       # (optional), claude-sandbox-managed-agents (worker).
-      enabled: true
+      enabled: false
       spec:
         project: default
         source:
